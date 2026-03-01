@@ -891,11 +891,11 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
     <button class="nb on" onclick="goTo(0,this)" id="nb0"><span class="nbi">&#128202;</span><span class="nbl">Dashboard</span></button>
     <button class="nb" onclick="goTo(1,this)" id="nb1"><span class="nbi">&#128138;</span><span class="nbl">Stock</span><span class="nbg" id="sbg" style="display:none;"></span></button>
     <button class="nb" onclick="goTo(2,this)" id="nb2"><span class="nbi">&#128247;</span><span class="nbl">Snap</span></button>
-    <button class="nb" onclick="goTo(7,this)" id="nb7"><span class="nbi">&#128182;</span><span class="nbl">POS</span><span class="nbg" id="posbg" style="display:none;"></span></button>
-    <button class="nb" onclick="goTo(3,this)" id="nb3"><span class="nbi">&#128200;</span><span class="nbl">Cash</span></button>
-    <button class="nb" onclick="goTo(4,this)" id="nb4"><span class="nbi">&#127981;</span><span class="nbl">Suppliers</span><span class="nbg" id="supbg" style="display:none;"></span></button>
-    <button class="nb" onclick="goTo(5,this)" id="nb5"><span class="nbi">&#129504;</span><span class="nbl">Coach</span><span class="nbg" id="coachbg" style="display:none;">!</span></button>
-    <button class="nb" onclick="goTo(6,this)" id="nb6"><span class="nbi">&#128214;</span><span class="nbl">Guide</span></button>
+    <button class="nb" onclick="goTo(3,this)" id="nb3"><span class="nbi">&#128182;</span><span class="nbl">POS</span><span class="nbg" id="posbg" style="display:none;"></span></button>
+    <button class="nb" onclick="goTo(4,this)" id="nb4"><span class="nbi">&#128200;</span><span class="nbl">Cash</span></button>
+    <button class="nb" onclick="goTo(5,this)" id="nb5"><span class="nbi">&#127981;</span><span class="nbl">Suppliers</span><span class="nbg" id="supbg" style="display:none;"></span></button>
+    <button class="nb" onclick="goTo(6,this)" id="nb6"><span class="nbi">&#129504;</span><span class="nbl">Coach</span><span class="nbg" id="coachbg" style="display:none;">!</span></button>
+    <button class="nb" onclick="goTo(7,this)" id="nb7"><span class="nbi">&#128214;</span><span class="nbl">Guide</span></button>
   </nav>
 </div>
 <!-- PAY MODAL -->
@@ -980,10 +980,14 @@ function signOut(){
 function goTo(idx,el){
   curPg=idx;
   if(idx!==2&&camStream)stopScan();
-  document.querySelectorAll('.pg').forEach(function(p,i){p.classList.toggle('on',i===idx);});
-  document.querySelectorAll('.nb').forEach(function(b,i){b.classList.toggle('on',i===idx);});
-  if(idx===0)renderDash();if(idx===1){renderPulse();renderExpiry();}
-  if(idx===4)renderCashHist();if(idx===5)renderSup();if(idx===6){renderCoach();}if(idx===7){/* guide */}if(idx===3)renderPOS();
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.toggle('on',p.id==='pg'+idx);});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.toggle('on',b.id==='nb'+idx);});
+  if(idx===0)renderDash();
+  if(idx===1){renderPulse();renderExpiry();}
+  if(idx===3)renderPOS();
+  if(idx===4)renderCashHist();
+  if(idx===5)renderSup();
+  if(idx===6)renderCoach();
 }
 function gTab(idx,el){
   document.querySelectorAll('.gp').forEach(function(p,i){p.classList.toggle('on',i===idx);});
@@ -1714,7 +1718,7 @@ function initSwipe(){
   pages.addEventListener('touchmove',function(e){var dx=Math.abs(e.touches[0].clientX-swX),dy=Math.abs(e.touches[0].clientY-swY);if(dx>dy&&dx>10)swM=true;},{passive:true});
   pages.addEventListener('touchend',function(e){
     if(!swM)return;var dx=e.changedTouches[0].clientX-swX,dy=Math.abs(e.changedTouches[0].clientY-swY);
-    if(Math.abs(dx)>50&&dy<80){var next=dx<0?Math.min(curPg+1,5):Math.max(curPg-1,0);if(next!==curPg)goTo(next,document.getElementById('nb'+next));}
+    if(Math.abs(dx)>50&&dy<80){var next=dx<0?Math.min(curPg+1,7):Math.max(curPg-1,0);if(next!==curPg)goTo(next,document.getElementById('nb'+next));}
   },{passive:true});
 }
 // ── INIT ─────────────────────────────────────────────────────────────────────
@@ -2059,7 +2063,7 @@ async function renderCoach(){
   var systemPrompt='You are PBSCoach, a world-class pharmaceutical business intelligence advisor for a Nigerian community pharmacy. You have 20 years experience. Analyse the data and give exactly 3 numbered actions with real naira figures and exact timing. Be direct and brutally honest. End with one motivational line. Under 250 words.';
   try{
     var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
+      method:'POST',headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:systemPrompt,
         messages:[{role:'user',content:'Here is my pharmacy business data for today:\n\n'+ctx2+'\n\nGive me my 3 most important actions right now.'}]})
     });
@@ -2176,7 +2180,7 @@ async function askCoach(){
   coachHistory.push({role:'user',content:'Pharmacy data:\n'+ctx+'\n\nQuestion: '+q});
   try{
     var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
+      method:'POST',headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sysP,
         messages:coachHistory.slice(-6)})
     });
@@ -2274,7 +2278,7 @@ async function processAIImage(dataUrl){
 
   try{
     var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
+      method:'POST',headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',max_tokens:1000,
         messages:[{role:'user',content:[
@@ -2662,7 +2666,7 @@ async function analyseQBScreenshot(input){
     var ctx2=buildContextSummary();
     try{
       var resp=await fetch('https://api.anthropic.com/v1/messages',{
-        method:'POST',headers:{'Content-Type':'application/json'},
+        method:'POST',headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
         body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
           messages:[{role:'user',content:[
             {type:'image',source:{type:'base64',media_type:mediaType,data:base64}},

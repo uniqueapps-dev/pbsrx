@@ -773,6 +773,17 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
       </div>
 
       <!-- BREAK-EVEN SETTINGS -->
+      <div class="sh">&#128273; Claude AI Setup</div>
+      <div class="card" id="apiKeyCard">
+        <div class="al ao" style="margin-bottom:10px;"><div class="ai">&#128161;</div><div class="at">Enter your OpenRouter API key to enable AI Coach, AI Snap, and QB analysis. Get your free key at openrouter.ai. Your key is stored only on this device.</div></div>
+        <div class="fg">
+          <label class="fl">Anthropic API Key</label>
+          <input class="fi" id="apiKeyInput" type="password" placeholder="sk-or-..." autocomplete="off">
+        </div>
+        <button class="btn bb" onclick="saveApiKey()" style="margin-top:6px;">&#128190; Save API Key</button>
+        <div id="apiKeyStatus" style="font-size:12px;color:var(--mut);margin-top:8px;font-weight:600;"></div>
+        <div style="font-size:11px;color:var(--mut);margin-top:6px;">Get your key at: <span style="color:var(--blu);">openrouter.ai</span> → Sign in → API Keys</div>
+      </div>
       <div class="sh">&#9881;&#65039; Break-Even Settings</div>
       <div class="card">
         <div class="fr">
@@ -2042,6 +2053,16 @@ function buildContextSummary(){
 }
 async function renderCoach(){
   var el=document.getElementById('coachActions');if(!el)return;
+  initApiKeyDisplay();
+  if(!getApiKey()){
+    el.innerHTML='<div class="card" style="text-align:center;padding:24px;border:2px solid var(--ora);">'+
+      '<div style="font-size:36px;margin-bottom:10px;">&#128273;</div>'+
+      '<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:8px;">API Key Required</div>'+
+      '<div style="font-size:13px;color:var(--mut);margin-bottom:14px;">Scroll down to <b>Claude AI Setup</b> below and enter your Anthropic API key to activate AI coaching.</div>'+
+      '<div style="font-size:12px;color:var(--blu);">console.anthropic.com \u2192 API Keys \u2192 Create Key</div>'+
+      '</div>';
+    return;
+  }
   var ctx=document.getElementById('coachTime');if(ctx)ctx.textContent='Generating briefing... '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
   el.innerHTML='<div class="card" style="text-align:center;padding:24px;"><div style="font-size:32px;margin-bottom:8px;">&#129504;</div><div style="font-size:13px;color:var(--mut);font-weight:600;">Claude is reading your data...</div></div>';
   updLoanBar();updBECalc();renderMVScores();renderSeasonAlerts();renderReorderCalendar();renderDemandList();
@@ -2062,13 +2083,13 @@ async function renderCoach(){
   var ctx2=buildContextSummary();
   var systemPrompt='You are PBSCoach, a world-class pharmaceutical business intelligence advisor for a Nigerian community pharmacy. You have 20 years experience. Analyse the data and give exactly 3 numbered actions with real naira figures and exact timing. Be direct and brutally honest. End with one motivational line. Under 250 words.';
   try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:systemPrompt,
+    var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+      method:'POST',headers:getApiHeaders(),
+      body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:1000,system:systemPrompt,
         messages:[{role:'user',content:'Here is my pharmacy business data for today:\n\n'+ctx2+'\n\nGive me my 3 most important actions right now.'}]})
     });
     var data=await resp.json();
-    var txt=data.content&&data.content[0]?data.content[0].text:'Unable to generate coaching. Check your data and try again.';
+    var txt=data.choices&&data.choices[0]?data.choices[0].message.content:(getApiKey()?'Unable to generate coaching. Check your data and try again.':'No API key set. Go to Coach tab \u2192 Claude AI Setup and paste your OpenRouter key.');
     coachHistory.push({role:'assistant',content:txt});
     renderActions(txt);
     if(ctx)ctx.textContent='Last updated: '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
@@ -2179,13 +2200,13 @@ async function askCoach(){
   var sysP='You are PBSCoach, expert pharmacy business advisor for a Nigerian community pharmacy. Use the data provided to answer concisely with real numbers. Be direct and practical. Under 120 words unless more detail is requested.';
   coachHistory.push({role:'user',content:'Pharmacy data:\n'+ctx+'\n\nQuestion: '+q});
   try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sysP,
+    var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+      method:'POST',headers:getApiHeaders(),
+      body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:1000,system:sysP,
         messages:coachHistory.slice(-6)})
     });
     var data=await resp.json();
-    var ans=data.content&&data.content[0]?data.content[0].text:'I could not get a response. Please try again.';
+    var ans=data.choices&&data.choices[0]?data.choices[0].message.content:(getApiKey()?'I could not get a response. Please try again.':'No API key set. Scroll down in Coach tab to Claude AI Setup.');
     coachHistory.push({role:'assistant',content:ans});
     var el=document.getElementById('thinking');if(el)el.outerHTML='<div style="background:var(--surf);border-radius:4px 10px 10px 10px;padding:10px 13px;margin-bottom:8px;font-size:14px;color:var(--txt);line-height:1.65;">'+ans.replace(/\n/g,'<br>')+'</div>';
     speak(ans);
@@ -2277,10 +2298,10 @@ async function processAIImage(dataUrl){
   var prompt='You are reading a Nigerian pharmaceutical drug pack. Extract ALL visible product information and return ONLY a JSON object with these exact keys (use empty string if not visible): genericName, brandName, strength, form (tablet/capsule/syrup/injection/cream/etc), category (Analgesic/Antibiotic/Antimalarial/Antifungal/Cardiovascular/Gastrointestinal/Vitamin/Supplement/Antihistamine/Other), batchNumber, expiryDate (format YYYY-MM), nafdacNumber, manufacturer, packSize (e.g. 10 tablets, 1 bottle 100ml). Return ONLY the JSON object, no other text.';
 
   try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+      method:'POST',headers:getApiHeaders(),
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:1000,
+        model:'anthropic/claude-sonnet-4-5',max_tokens:1000,
         messages:[{role:'user',content:[
           {type:'image',source:{type:'base64',media_type:mediaType,data:base64}},
           {type:'text',text:prompt}
@@ -2288,13 +2309,13 @@ async function processAIImage(dataUrl){
       })
     });
     var data=await resp.json();
-    var txt=data.content&&data.content[0]?data.content[0].text:'{}';
+    var txt=data.choices&&data.choices[0]?data.choices[0].message.content:'{}';
     txt=txt.replace(/```json|```/g,'').trim();
     aiExtracted=JSON.parse(txt);
     status.style.display='none';
     renderAIExtracted();
   }catch(e){
-    icon.textContent='\u274C';msg.textContent='Could not read pack. Try a clearer photo or better lighting.';
+    icon.textContent='\u274C';msg.textContent=getApiKey()?'Could not read pack. Try a clearer photo or better lighting.':'No API key set. Go to Coach tab \u2192 Claude AI Setup.';
     setTimeout(function(){status.style.display='none';document.getElementById('aiSnapUpload').style.display='block';},3000);
   }
 }
@@ -2665,16 +2686,16 @@ async function analyseQBScreenshot(input){
     var mediaType=file.type||'image/jpeg';
     var ctx2=buildContextSummary();
     try{
-      var resp=await fetch('https://api.anthropic.com/v1/messages',{
-        method:'POST',headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
+      var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+        method:'POST',headers:getApiHeaders(),
+        body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:1000,
           messages:[{role:'user',content:[
             {type:'image',source:{type:'base64',media_type:mediaType,data:base64}},
             {type:'text',text:'This is a QuickBooks report for a Nigerian community pharmacy. My current PBS data: '+ctx2+'. Analyse this report and: 1) Identify key financial metrics visible, 2) Compare with my PBS data where relevant, 3) Give 3 specific insights or action points. Be concise and practical.'}
           ]}]})
       });
       var data=await resp.json();
-      var txt=data.content&&data.content[0]?data.content[0].text:'Could not analyse screenshot.';
+      var txt=data.choices&&data.choices[0]?data.choices[0].message.content:'Could not analyse screenshot.';
       status.style.display='none';
       result.style.display='block';
       result.innerHTML=txt.replace(/\n/g,'<br>');
@@ -2701,6 +2722,30 @@ saveDay=function(){
   renderAllocSummary();
 };
 
+// ── API KEY MANAGEMENT ──────────────────────────────────────────────────────
+function saveApiKey(){
+  var key=document.getElementById('apiKeyInput').value.trim();
+  if(!key||(!key.startsWith('sk-or-')&&!key.startsWith('sk-'))){toast('Invalid key — paste your OpenRouter key');return;}
+  localStorage.setItem('pbsrx_apikey',key);
+  document.getElementById('apiKeyStatus').textContent='\u2705 API key saved. AI features now active.';
+  document.getElementById('apiKeyInput').value='';
+  toast('API key saved. Coach is now active.',3000);
+}
+function getApiKey(){return localStorage.getItem('pbsrx_apikey')||'';}
+function getApiHeaders(){
+  var key=getApiKey();
+  var h={'Content-Type':'application/json','HTTP-Referer':'https://pbsrx.github.io','X-Title':'PBSRx Pharmacy System'};
+  if(key)h['Authorization']='Bearer '+key;
+  return h;
+}
+function initApiKeyDisplay(){
+  var key=getApiKey();
+  var status=document.getElementById('apiKeyStatus');
+  if(status)status.textContent=key?'\u2705 API key active — AI features enabled':'\u26A0\uFE0F No API key set — tap Coach tab to add one';
+  var input=document.getElementById('apiKeyInput');
+  if(input&&key)input.placeholder='Key saved — enter new key to replace';
+}
+
 // ── OVERRIDE INIT ──
-var _origLoad=load;load=function(){_origLoad();initCoach();renderSalesChart(30);};
+var _origLoad=load;load=function(){_origLoad();initCoach();renderSalesChart(30);initApiKeyDisplay();};
 </script></body></html>

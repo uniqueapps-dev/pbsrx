@@ -366,13 +366,15 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
         </div>
         <div id="aiSnapUpload" style="margin-bottom:10px;">
           <button class="btn" style="background:linear-gradient(135deg,var(--amb),var(--pur));border:none;color:#fff;" onclick="startAICamera()">&#128247; Open Camera — Snap Drug Pack</button>
-          <div style="text-align:center;font-size:12px;color:var(--mut);margin:8px 0;">or</div>
-          <label style="display:block;background:var(--surf);border:2px dashed var(--bdr);border-radius:12px;padding:18px;text-align:center;cursor:pointer;">
-            <input type="file" accept="image/*" style="display:none;" onchange="handleAIImage(this)">
+          <div style="text-align:center;font-size:12px;color:var(--mut);margin:8px 0;">or upload multiple photos</div>
+          <label style="display:block;background:var(--surf);border:2px dashed var(--bdr);border-radius:12px;padding:18px;text-align:center;cursor:pointer;margin-bottom:8px;">
+            <input type="file" accept="image/*" multiple style="display:none;" onchange="handleAIImages(this)">
             <div style="font-size:28px;margin-bottom:6px;">&#128444;&#65039;</div>
-            <div style="font-size:13px;font-weight:700;color:var(--txt);">Upload drug pack photo</div>
-            <div style="font-size:11px;color:var(--mut);">JPG, PNG — any angle showing product info</div>
+            <div style="font-size:13px;font-weight:700;color:var(--txt);">Upload drug pack photos</div>
+            <div style="font-size:11px;color:var(--mut);">Select multiple — front, back, side for best results</div>
           </label>
+          <div id="aiPhotoPreview" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;"></div>
+          <button id="aiAnalyseBtn" class="btn bb" onclick="processAIImages()" style="display:none;">&#129504; Analyse All Photos</button>
         </div>
         <div id="aiSnapStatus" style="display:none;" class="al ab">
           <div class="ai" id="aiSnapIcon">&#129504;</div>
@@ -555,6 +557,32 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
           <div class="hm"><div class="hmv" id="chD">0</div><div class="hml">Days Logged</div></div>
         </div>
       </div>
+      <div class="sh">&#128200; Opening Stock Balance</div>
+      <div class="card" id="stockBalanceCard">
+        <div class="fr" style="margin-bottom:10px;">
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:11px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:1px;">Stock Value</div>
+            <div style="font-family:var(--fh);font-size:22px;color:var(--grn);" id="sbValue">&#8358;0</div>
+          </div>
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:11px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:1px;">Total Items</div>
+            <div style="font-family:var(--fh);font-size:22px;color:var(--blu);" id="sbQty">0</div>
+          </div>
+          <div style="flex:1;text-align:center;">
+            <div style="font-size:11px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:1px;">Last Updated</div>
+            <div style="font-size:12px;color:var(--txt);font-weight:700;" id="sbDate">—</div>
+          </div>
+        </div>
+        <canvas id="stockTrendChart" style="width:100%;height:140px;margin-bottom:10px;"></canvas>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <label style="flex:1;background:var(--surf);border:1px dashed var(--bdr);border-radius:10px;padding:10px;text-align:center;cursor:pointer;font-size:12px;font-weight:700;color:var(--txt);">
+            <input type="file" accept=".csv,image/*" multiple style="display:none;" onchange="handleStockBalanceUpload(this)">
+            &#128229; Upload QB CSV / Screenshot
+          </label>
+          <button class="bsm bsb" onclick="calcLiveStockBalance()" style="flex:1;">&#128200; Calculate from PBS Stock</button>
+        </div>
+        <div id="sbStatus" style="font-size:11px;color:var(--mut);margin-top:8px;font-weight:600;"></div>
+      </div>
       <div class="sh">&#128221; Log a Day</div>
       <div class="card">
         <div class="fr">
@@ -582,6 +610,18 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
         </div>
         <div class="fg" style="margin-top:12px;"><label class="fl">Day Notes</label><input class="fi" id="cd_n" placeholder="e.g. Public holiday — closed. Gen issues after 6pm. Prayer day half day."></div>
         <button class="btn bb" onclick="saveDay()">&#128190; Save Day Record</button>
+        <div class="sh" style="margin-top:16px;">&#128228; Import from QuickBooks</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+          <label style="flex:1;background:var(--surf);border:1px dashed var(--bdr);border-radius:10px;padding:12px;text-align:center;cursor:pointer;font-size:12px;font-weight:700;color:var(--grn);">
+            <input type="file" accept=".csv" style="display:none;" onchange="importSalesCSV(this)">
+            &#128200; Import Today Sales CSV
+          </label>
+          <label style="flex:1;background:var(--surf);border:1px dashed var(--bdr);border-radius:10px;padding:12px;text-align:center;cursor:pointer;font-size:12px;font-weight:700;color:var(--blu);">
+            <input type="file" accept=".csv,image/*" multiple style="display:none;" onchange="importSupplyCSV(this)">
+            &#128230; Import Supply / Invoice
+          </label>
+        </div>
+        <div id="csvImportStatus" style="font-size:12px;color:var(--mut);font-weight:600;min-height:20px;"></div>
       </div>
       <div class="sh">&#128200; Sales &amp; Profit Trend</div>
       <div class="card" style="padding:12px;">
@@ -773,6 +813,11 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
       </div>
 
       <!-- BREAK-EVEN SETTINGS -->
+      <div class="sh">&#127482;&#65039; Voice Settings</div>
+      <div class="card">
+        <button id="voiceToggleBtn" class="btn" style="background:var(--grn);border:none;color:#fff;margin-bottom:8px;" onclick="toggleVoice()">&#128266; Voice ON (Male)</button>
+        <div style="font-size:11px;color:var(--mut);">Male voice used when available on your device. Toggle off to silence Coach reading.</div>
+      </div>
       <div class="sh">&#128273; Claude AI Setup</div>
       <div class="card" id="apiKeyCard">
         <div class="al ao" style="margin-bottom:10px;"><div class="ai">&#128161;</div><div class="at">Enter your OpenRouter API key to enable AI Coach, AI Snap, and QB analysis. Get your free key at openrouter.ai. Your key is stored only on this device.</div></div>
@@ -2023,31 +2068,65 @@ function sendWA(type){
 var coachHistory=[];
 function buildContextSummary(){
   var today=S.cashDays.find(function(d){return d.date===td();});
-  var sales=today?today.sales:0,expT=today?today.expTotal:0;
-  var mon=gwk(td());var weekRecs=S.cashDays.filter(function(d){return d.date>=mon;});
+  var sales=today?today.sales:0,expT=today?today.expTotal:0,cash=today?today.cash:0;
+  var now=new Date(),mo=now.getFullYear()+'-'+(now.getMonth()<9?'0':'')+(now.getMonth()+1);
+  var mon=gwk(td());
+  var weekRecs=S.cashDays.filter(function(d){return d.date>=mon;});
+  var monthRecs=S.cashDays.filter(function(d){return d.date.startsWith(mo);});
   var wkSales=weekRecs.reduce(function(s,d){return s+d.sales;},0);
   var wkExp=weekRecs.reduce(function(s,d){return s+d.expTotal;},0);
-  var out=S.products.filter(function(p){return p.isFastMover&&getStatus(p)==='out';}).map(function(p){return p.genericName;}).join(', ');
-  var crit=S.products.filter(function(p){return p.isFastMover&&getStatus(p)==='critical';}).map(function(p){return p.genericName;}).join(', ');
+  var moSales=monthRecs.reduce(function(s,d){return s+d.sales;},0);
+  var moExp=monthRecs.reduce(function(s,d){return s+d.expTotal;},0);
+  var moProfit=moSales-moExp;
+  var out=S.products.filter(function(p){return getStatus(p)==='out';}).map(function(p){return p.genericName+(p.strength?' '+p.strength:'');});
+  var crit=S.products.filter(function(p){return getStatus(p)==='critical';}).map(function(p){return p.genericName+(p.strength?' '+p.strength:'');});
+  var low=S.products.filter(function(p){return getStatus(p)==='low';}).map(function(p){return p.genericName+(p.strength?' '+p.strength:'');});
   var totalOwed=S.suppliers.reduce(function(s,x){return s+(x.balance||0);},0);
+  var overdueOwed=S.suppliers.filter(function(x){return x.dueDate&&x.dueDate<=td();}).reduce(function(s,x){return s+(x.balance||0);},0);
   var beDaily=getBEDaily();
-  var topMV=S.products.filter(function(p){return p.sellPrice>0&&p.costPrice>0;}).map(function(p){var mv=getMVScore(p);return{name:p.genericName,mv:mv};}).sort(function(a,b){return b.mv.score-a.mv.score;}).slice(0,3).map(function(x){return x.name+'(score:'+x.mv.score+')';}).join(', ');
-  var topDemand=S.demandLog&&S.demandLog.length?S.demandLog.sort(function(a,b){return b.count-a.count;}).slice(0,3).map(function(d){return d.name+'('+d.count+'x)';}).join(', '):'none logged';
+  var gap=sales-beDaily;
+  var totalStockVal=S.products.reduce(function(s,p){return s+(getCurStock(p.id)*(p.costPrice||0));},0);
+  var totalStockQty=S.products.reduce(function(s,p){return s+getCurStock(p.id);},0);
+  var topMV=S.products.filter(function(p){return p.sellPrice>0&&p.costPrice>0;}).map(function(p){var mv=getMVScore(p);return{name:p.genericName+(p.strength?' '+p.strength:''),mv:mv,stock:getCurStock(p.id)};}).sort(function(a,b){return b.mv.score-a.mv.score;}).slice(0,5).map(function(x){return x.name+'(score:'+x.mv.score+',stock:'+x.stock+')';}).join(', ');
+  var topDemand=S.demandLog&&S.demandLog.length?S.demandLog.sort(function(a,b){return b.count-a.count;}).slice(0,5).map(function(d){return d.name+'('+d.count+'x missed)';}).join(', '):'none logged';
+  var recentSales=S.sales&&S.sales.length?S.sales.slice(0,10).map(function(s){return s.date+':N'+s.total+(s.items?' ('+s.items.map(function(i){return i.qty+'x'+i.name;}).join(',')+')':'');}).join(' | '):'No POS sales yet';
+  var supplierList=S.suppliers.slice(0,5).map(function(x){return x.name+':N'+( x.balance||0)+(x.dueDate?' due:'+x.dueDate:'');}).join(' | ');
+  var expenseBreakdown=today&&today.expenses&&today.expenses.length?today.expenses.map(function(e){return e.cat+':N'+e.amt;}).join(', '):'none today';
+  var last7=S.cashDays.slice(0,7).map(function(d){return d.date+':sales=N'+d.sales+',exp=N'+d.expTotal;}).join(' | ');
+  var openStock=S.stockBalance||null;
   var lines=[
-    'PHARMACY BUSINESS DATA SUMMARY:',
-    'Business: Community pharmacy in Nigeria',
-    'Date: '+td(),
-    'Today sales: N'+sales.toLocaleString('en-NG')+' | Today expenses: N'+expT.toLocaleString('en-NG'),
-    'This week sales: N'+wkSales.toLocaleString('en-NG')+' | Week expenses: N'+wkExp.toLocaleString('en-NG')+' | Week profit: N'+(wkSales-wkExp).toLocaleString('en-NG'),
-    'Daily break-even target: N'+beDaily.toLocaleString('en-NG'),
+    '=== FULL PHARMACY BUSINESS INTELLIGENCE ===',
+    'Date: '+td()+' | Nigeria community pharmacy',
+    '',
+    '--- CASH & SALES ---',
+    'Today sales: N'+sales.toLocaleString('en-NG')+' | Cash received: N'+cash.toLocaleString('en-NG'),
+    'Today expenses: N'+expT.toLocaleString('en-NG')+' | Breakdown: '+expenseBreakdown,
+    'Today profit: N'+(sales-expT).toLocaleString('en-NG'),
+    'Break-even target: N'+beDaily.toLocaleString('en-NG')+' | Gap: '+(gap>=0?'+':'')+'N'+gap.toLocaleString('en-NG'),
+    'Week sales: N'+wkSales.toLocaleString('en-NG')+' | Week profit: N'+(wkSales-wkExp).toLocaleString('en-NG'),
+    'Month sales: N'+moSales.toLocaleString('en-NG')+' | Month profit: N'+moProfit.toLocaleString('en-NG'),
+    'Last 7 days: '+last7,
+    '',
+    '--- STOCK POSITION ---',
+    'Total stock value: N'+totalStockVal.toLocaleString('en-NG')+' | Total qty: '+totalStockQty+' units',
+    openStock?'Opening stock balance: N'+openStock.value.toLocaleString('en-NG')+' ('+openStock.qty+' items, '+openStock.date+')':'Opening stock: not set',
+    'OUT OF STOCK ('+out.length+'): '+(out.slice(0,10).join(', ')||'none'),
+    'CRITICAL STOCK ('+crit.length+'): '+(crit.slice(0,10).join(', ')||'none'),
+    'LOW STOCK ('+low.length+'): '+(low.slice(0,8).join(', ')||'none'),
+    'Top profit engines: '+topMV,
+    'Unmet customer demand: '+topDemand,
+    'Total products: '+S.products.length+' | Fast movers: '+S.products.filter(function(p){return p.isFastMover;}).length,
+    '',
+    '--- SUPPLIERS ---',
+    'Total owed: N'+totalOwed.toLocaleString('en-NG')+' | Overdue: N'+overdueOwed.toLocaleString('en-NG'),
+    'Supplier details: '+supplierList,
+    '',
+    '--- LOAN ---',
     'OPay loan balance: N'+LOAN.balance.toLocaleString('en-NG')+' | Days remaining: '+Math.max(0,LOAN.days-LOAN.payments.length),
-    'Total supplier debt: N'+totalOwed.toLocaleString('en-NG'),
-    'Out of stock: '+(out||'none'),
-    'Critical stock: '+(crit||'none'),
-    'Top profit engines: '+(topMV||'not enough data'),
-    'Top unmet customer demand: '+topDemand,
-    'Total products monitored: '+S.products.filter(function(p){return p.isFastMover;}).length,
-    'Total suppliers: '+S.suppliers.length
+    '',
+    '--- RECENT POS SALES ---',
+    recentSales,
+    '=== END OF DATA ==='
   ];
   return lines.join('\n');
 }
@@ -2079,14 +2158,14 @@ async function renderCoach(){
   // Update badge
   var out=S.products.filter(function(p){return p.isFastMover&&getStatus(p)==='out';}).length;
   var cb=document.getElementById('coachbg');if(cb){cb.style.display=out>0||gap<0?'flex':'none';}
-  // Now call Claude
+  // Now call Claude — fast model for 5 priority tasks
   var ctx2=buildContextSummary();
-  var systemPrompt='You are PBSCoach, a world-class pharmaceutical business intelligence advisor for a Nigerian community pharmacy. You have 20 years experience. Analyse the data and give exactly 3 numbered actions with real naira figures and exact timing. Be direct and brutally honest. End with one motivational line. Under 250 words.';
+  var systemPrompt='You are PBSCoach — a world-class pharmaceutical business intelligence advisor for a Nigerian community pharmacy. You have deep expertise in Nigerian pharmacy economics, cash flow management, and pharmaceutical retail. You have access to COMPLETE real-time business data. Your job is to give EXACTLY 5 PRIORITY ACTIONS that will make the most impact TODAY. Format your response EXACTLY like this:\n\n⚡ TODAY\'S 5 PRIORITY ACTIONS\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1. 💰 CASH — [specific action with exact ₦ figure]\n2. 💊 STOCK — [specific product to reorder/action]\n3. 🏭 SUPPLIER — [who to pay/call + amount]\n4. 📈 SALES — [specific target or action for today]\n5. 🚀 GROWTH — [one strategic move for this week]\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nThen write your full analysis below (max 200 words). Be brutally honest. Use real naira figures from the data. End with ONE motivational line.';
   try{
     var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
       method:'POST',headers:getApiHeaders(),
-      body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:1000,system:systemPrompt,
-        messages:[{role:'user',content:'Here is my pharmacy business data for today:\n\n'+ctx2+'\n\nGive me my 3 most important actions right now.'}]})
+      body:JSON.stringify({model:'anthropic/claude-haiku-4-5',max_tokens:1200,
+        messages:[{role:'system',content:systemPrompt},{role:'user',content:'Here is my COMPLETE pharmacy business data:\n\n'+ctx2+'\n\nGive me my 5 priority actions and full analysis.'}]})
     });
     var data=await resp.json();
     var txt=data.choices&&data.choices[0]?data.choices[0].message.content:(getApiKey()?'Unable to generate coaching. Check your data and try again.':'No API key set. Go to Coach tab \u2192 Claude AI Setup and paste your OpenRouter key.');
@@ -2094,7 +2173,6 @@ async function renderCoach(){
     renderActions(txt);
     if(ctx)ctx.textContent='Last updated: '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
   }catch(e){
-    // Fallback rule-based coaching
     renderRuleBasedCoach();
   }
 }
@@ -2746,6 +2824,374 @@ function initApiKeyDisplay(){
   if(input&&key)input.placeholder='Key saved — enter new key to replace';
 }
 
+
+// ══ MULTI-PHOTO AI SNAP ═══════════════════════════════════════
+var aiImageFiles=[];
+
+function handleAIImages(input){
+  var files=Array.from(input.files);if(!files.length)return;
+  aiImageFiles=files;
+  var preview=document.getElementById('aiPhotoPreview');
+  var btn=document.getElementById('aiAnalyseBtn');
+  if(preview){
+    preview.innerHTML=files.map(function(f,i){
+      return '<div style="position:relative;width:70px;height:70px;border-radius:8px;overflow:hidden;border:2px solid var(--amb);">'+
+        '<img src="'+URL.createObjectURL(f)+'" style="width:100%;height:100%;object-fit:cover;">'+
+        '<div style="position:absolute;bottom:2px;right:2px;background:rgba(0,0,0,0.7);color:#fff;font-size:9px;padding:1px 4px;border-radius:4px;">'+(i+1)+'</div>'+
+        '</div>';
+    }).join('');
+  }
+  if(btn)btn.style.display=files.length>0?'block':'none';
+  toast(files.length+' photo(s) selected. Tap Analyse to read.');
+}
+
+async function processAIImages(){
+  if(!aiImageFiles.length){toast('Select photos first');return;}
+  var status=document.getElementById('aiSnapStatus');
+  var msg=document.getElementById('aiSnapMsg');
+  var icon=document.getElementById('aiSnapIcon');
+  status.style.display='flex';
+  msg.textContent='Claude is reading '+aiImageFiles.length+' photo(s)...';
+  icon.textContent='\u23F3';
+  document.getElementById('aiSnapResult').style.display='none';
+
+  // Convert all images to base64
+  var imageContents=[];
+  for(var i=0;i<aiImageFiles.length;i++){
+    var b64=await new Promise(function(res){
+      var r=new FileReader();
+      r.onload=function(e){res(e.target.result.split(',')[1]);};
+      r.readAsDataURL(aiImageFiles[i]);
+    });
+    var mt=aiImageFiles[i].type||'image/jpeg';
+    imageContents.push({type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}});
+  }
+  imageContents.push({type:'text',text:'These are '+aiImageFiles.length+' photos of the same Nigerian pharmaceutical drug pack (front, back, side, etc). Extract ALL visible product information and return ONLY a JSON object with these exact keys (use empty string if not visible): genericName, brandName, strength, form (tablet/capsule/syrup/injection/cream/etc), category (Analgesic/Antibiotic/Antimalarial/Antifungal/Cardiovascular/Gastrointestinal/Vitamin/Supplement/Antihistamine/Other), batchNumber, expiryDate (format YYYY-MM), nafdacNumber, manufacturer, packSize. Use all photos together for maximum accuracy. Return ONLY the JSON object, no other text.'});
+
+  try{
+    var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+      method:'POST',headers:getApiHeaders(),
+      body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:1000,
+        messages:[{role:'user',content:imageContents}]})
+    });
+    var data=await resp.json();
+    var txt=data.choices&&data.choices[0]?data.choices[0].message.content:'{}';
+    txt=txt.replace(/```json|```/g,'').trim();
+    aiExtracted=JSON.parse(txt);
+    status.style.display='none';
+    renderAIExtracted();
+    aiImageFiles=[];
+    var preview=document.getElementById('aiPhotoPreview');if(preview)preview.innerHTML='';
+    var btn=document.getElementById('aiAnalyseBtn');if(btn)btn.style.display='none';
+  }catch(e){
+    icon.textContent='\u274C';
+    msg.textContent=getApiKey()?'Could not read pack. Try clearer photos.':'No API key set. Go to Coach tab \u2192 Claude AI Setup.';
+    setTimeout(function(){status.style.display='none';document.getElementById('aiSnapUpload').style.display='block';},3000);
+  }
+}
+
+// ══ OPENING STOCK BALANCE ═══════════════════════════════════════
+function calcLiveStockBalance(){
+  var val=S.products.reduce(function(s,p){return s+(getCurStock(p.id)*(p.costPrice||0));},0);
+  var qty=S.products.reduce(function(s,p){return s+getCurStock(p.id);},0);
+  if(!S.stockBalance)S.stockBalance={history:[]};
+  var rec={date:td(),value:val,qty:qty,source:'PBS Live'};
+  S.stockBalance=rec;
+  if(!S.stockBalanceHistory)S.stockBalanceHistory=[];
+  S.stockBalanceHistory.unshift(rec);
+  if(S.stockBalanceHistory.length>30)S.stockBalanceHistory=S.stockBalanceHistory.slice(0,30);
+  save();
+  renderStockBalance();
+  toast('Stock balance calculated: '+N(val)+' | '+qty+' units');
+}
+
+async function handleStockBalanceUpload(input){
+  var files=Array.from(input.files);if(!files.length)return;
+  var file=files[0];
+  var status=document.getElementById('sbStatus');
+  if(status)status.textContent='Reading file...';
+
+  if(file.name.endsWith('.csv')){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var lines=e.target.result.split('\n').filter(function(l){return l.trim();});
+      var totalVal=0,totalQty=0;
+      for(var i=1;i<lines.length;i++){
+        var cols=lines[i].split(',').map(function(c){return c.trim().replace(/"/g,'');});
+        var qty=Number(cols[4])||0;
+        var cost=Number(cols[6])||0;
+        totalVal+=qty*cost;totalQty+=qty;
+      }
+      var rec={date:td(),value:totalVal,qty:totalQty,source:'QuickBooks CSV'};
+      S.stockBalance=rec;
+      if(!S.stockBalanceHistory)S.stockBalanceHistory=[];
+      S.stockBalanceHistory.unshift(rec);
+      if(S.stockBalanceHistory.length>30)S.stockBalanceHistory=S.stockBalanceHistory.slice(0,30);
+      save();renderStockBalance();
+      if(status)status.textContent='\u2705 Imported from QuickBooks: '+N(totalVal)+' | '+totalQty+' items';
+    };
+    reader.readAsText(file);
+  } else {
+    // Image — use Claude to read it
+    if(status)status.textContent='Claude reading QuickBooks screenshot...';
+    var reader2=new FileReader();
+    reader2.onload=async function(e){
+      var b64=e.target.result.split(',')[1];
+      var mt=file.type||'image/jpeg';
+      try{
+        var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+          method:'POST',headers:getApiHeaders(),
+          body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:500,
+            messages:[{role:'user',content:[
+              {type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}},
+              {type:'text',text:'This is a QuickBooks inventory report. Extract ONLY: total inventory value in Nigerian Naira (number only), and total number of items/quantities. Return ONLY JSON: {"value": number, "qty": number}'}
+            ]}]})
+        });
+        var data=await resp.json();
+        var txt=data.choices&&data.choices[0]?data.choices[0].message.content:'{}';
+        txt=txt.replace(/```json|```/g,'').trim();
+        var parsed=JSON.parse(txt);
+        var rec={date:td(),value:parsed.value||0,qty:parsed.qty||0,source:'QB Screenshot'};
+        S.stockBalance=rec;
+        if(!S.stockBalanceHistory)S.stockBalanceHistory=[];
+        S.stockBalanceHistory.unshift(rec);
+        save();renderStockBalance();
+        if(status)status.textContent='\u2705 Extracted from screenshot: '+N(rec.value)+' | '+rec.qty+' items';
+      }catch(err){
+        if(status)status.textContent='\u274C Could not read screenshot. Try CSV export instead.';
+      }
+    };
+    reader2.readAsDataURL(file);
+  }
+  input.value='';
+}
+
+function renderStockBalance(){
+  var sb=S.stockBalance;
+  var val=document.getElementById('sbValue');
+  var qty=document.getElementById('sbQty');
+  var date=document.getElementById('sbDate');
+  if(val)val.textContent=sb?N(sb.value):'\u20A80';
+  if(qty)qty.textContent=sb?sb.qty.toLocaleString('en-NG'):'0';
+  if(date){if(sb){var dparts=new Date(sb.date+'T00:00:00');var dstr=dparts.getDate()+'/'+(dparts.getMonth()+1);var src=sb.source?' ('+sb.source+')':'';date.textContent=dstr+src;}else{date.textContent='Not set';}}
+  renderStockTrendChart();
+}
+
+function renderStockTrendChart(){
+  var canvas=document.getElementById('stockTrendChart');if(!canvas)return;
+  var hist=S.stockBalanceHistory||[];
+  if(hist.length<2){
+    var ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='rgba(255,255,255,0.1)';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='12px sans-serif';ctx.textAlign='center';
+    ctx.fillText('Log stock balance over time to see trend',canvas.offsetWidth/2,70);
+    return;
+  }
+  var pts=hist.slice(0,14).reverse();
+  var W=canvas.offsetWidth||320,H=130;
+  canvas.width=W*2;canvas.height=H*2;canvas.style.height=H+'px';
+  var ctx=canvas.getContext('2d');ctx.scale(2,2);
+  var maxV=Math.max.apply(null,pts.map(function(p){return p.value;}));
+  var minV=Math.min.apply(null,pts.map(function(p){return p.value;}))*0.9;
+  var pad={t:10,r:10,b:24,l:50};
+  var cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(15,20,30,0.6)';ctx.fillRect(0,0,W,H);
+  // Gradient fill
+  var grad=ctx.createLinearGradient(0,pad.t,0,pad.t+ch);
+  grad.addColorStop(0,'rgba(74,222,128,0.4)');
+  grad.addColorStop(1,'rgba(74,222,128,0.02)');
+  // Draw line + fill
+  ctx.beginPath();
+  pts.forEach(function(pt,i){
+    var x=pad.l+i*(cw/(pts.length-1));
+    var y=pad.t+ch*(1-(pt.value-minV)/(maxV-minV||1));
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle='#4ade80';ctx.lineWidth=2;ctx.stroke();
+  // Fill below
+  ctx.lineTo(pad.l+cw,pad.t+ch);ctx.lineTo(pad.l,pad.t+ch);ctx.closePath();
+  ctx.fillStyle=grad;ctx.fill();
+  // Dots + labels
+  pts.forEach(function(pt,i){
+    var x=pad.l+i*(cw/(pts.length-1));
+    var y=pad.t+ch*(1-(pt.value-minV)/(maxV-minV||1));
+    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle='#4ade80';ctx.fill();
+    if(i%3===0||i===pts.length-1){
+      ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='8px sans-serif';ctx.textAlign='center';
+      var dd=new Date(pt.date+'T00:00:00');
+      ctx.fillText(dd.getDate()+'/'+(dd.getMonth()+1),x,pad.t+ch+14);
+    }
+  });
+  // Y axis
+  ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='9px sans-serif';ctx.textAlign='right';
+  ctx.fillText((maxV/1000).toFixed(0)+'k',pad.l-4,pad.t+8);
+  ctx.fillText((minV/1000).toFixed(0)+'k',pad.l-4,pad.t+ch);
+}
+
+// ══ CSV IMPORT — SALES & SUPPLY ════════════════════════════════
+function importSalesCSV(input){
+  var file=input.files[0];if(!file)return;
+  var status=document.getElementById('csvImportStatus');
+  if(status)status.textContent='Reading sales CSV...';
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var lines=e.target.result.split('\n').filter(function(l){return l.trim();});
+    var hdr=lines[0].split(',').map(function(h){return h.trim().toLowerCase().replace(/"/g,'');});
+    var totalSales=0,totalExp=0;
+    var dateIdx=hdr.findIndex(function(h){return h.includes('date');});
+    var amtIdx=hdr.findIndex(function(h){return h.includes('amount')||h.includes('total')||h.includes('sales');});
+    var expIdx=hdr.findIndex(function(h){return h.includes('expense')||h.includes('cost');});
+    for(var i=1;i<lines.length;i++){
+      var cols=lines[i].split(',').map(function(c){return c.trim().replace(/"/g,'');});
+      if(amtIdx>=0)totalSales+=Number(cols[amtIdx])||0;
+      if(expIdx>=0)totalExp+=Number(cols[expIdx])||0;
+    }
+    var date=td();
+    S.cashDays=S.cashDays.filter(function(d){return d.date!==date;});
+    S.cashDays.push({id:Date.now(),date:date,sales:totalSales,cash:totalSales,expenses:[{cat:'QB Import',amt:totalExp}],expTotal:totalExp,notes:'Imported from QuickBooks CSV',
+      buckets:BKT.map(function(b){return{key:b.k,amount:Math.round(totalSales*(b.p/100))};})});
+    S.cashDays.sort(function(a,b){return b.date.localeCompare(a.date);});
+    save();renderCashHist();
+    if(status)status.textContent='\u2705 Sales imported: '+N(totalSales)+' | Expenses: '+N(totalExp);
+    toast('Sales CSV imported: '+N(totalSales),3000);
+  };
+  reader.readAsText(file);
+  input.value='';
+}
+
+async function importSupplyCSV(input){
+  var files=Array.from(input.files);if(!files.length)return;
+  var status=document.getElementById('csvImportStatus');
+  var file=files[0];
+  if(status)status.textContent='Reading supply file...';
+
+  if(file.name.endsWith('.csv')){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var lines=e.target.result.split('\n').filter(function(l){return l.trim();});
+      var hdr=lines[0].split(',').map(function(h){return h.trim().toLowerCase().replace(/"/g,'');});
+      var ni=hdr.findIndex(function(h){return h.includes('item')||h.includes('name')||h.includes('product');});
+      var qi=hdr.findIndex(function(h){return h.includes('qty')||h.includes('quantity')||h.includes('received');});
+      var ci=hdr.findIndex(function(h){return h.includes('cost')||h.includes('price');});
+      var bi=hdr.findIndex(function(h){return h.includes('batch');});
+      var ei=hdr.findIndex(function(h){return h.includes('expir');});
+      var imported=0;
+      for(var i=1;i<lines.length;i++){
+        var cols=lines[i].split(',').map(function(c){return c.trim().replace(/"/g,'');});
+        if(ni<0||!cols[ni])continue;
+        var name=cols[ni];
+        var prod=S.products.find(function(p){return p.genericName.toLowerCase()===name.toLowerCase();});
+        if(!prod){
+          prod={id:Date.now()+i,genericName:name,brandName:'',strength:'',category:'Other',sellUnit:'unit',costPrice:ci>=0?Number(cols[ci])||0:0,sellPrice:0,minStock:10,reorderQty:0,isFastMover:true,addedDate:td()};
+          S.products.push(prod);
+        }
+        var qty=qi>=0?Number(cols[qi])||0:0;
+        if(qty>0){
+          S.stock.push({id:Date.now()+i+5000,productId:prod.id,qty:qty,unit:prod.sellUnit||'unit',
+            batch:bi>=0?cols[bi]:'SUPPLY-'+td(),expiry:ei>=0?cols[ei]:'',
+            cost:ci>=0?Number(cols[ci])||0:0,date:td(),depleted:false});
+          imported++;
+        }
+      }
+      save();renderPulse();updBadges();
+      if(status)status.textContent='\u2705 Supply imported: '+imported+' items stocked';
+      toast('Supply CSV imported: '+imported+' products updated',3000);
+    };
+    reader.readAsText(file);
+  } else {
+    // Image/invoice — use Claude vision
+    if(status)status.textContent='Claude reading invoice photo...';
+    var reader2=new FileReader();
+    reader2.onload=async function(e){
+      var b64=e.target.result.split(',')[1];
+      var mt=file.type||'image/jpeg';
+      try{
+        var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+          method:'POST',headers:getApiHeaders(),
+          body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:1500,
+            messages:[{role:'user',content:[
+              {type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}},
+              {type:'text',text:'This is a Nigerian pharmacy supply invoice or delivery note. Extract all products and return ONLY a JSON array: [{"name":"product name","qty":number,"cost":number,"batch":"batch no or empty","expiry":"YYYY-MM or empty"}]. Include ALL line items. Return ONLY the JSON array.'}
+            ]}]})
+        });
+        var data=await resp.json();
+        var txt=data.choices&&data.choices[0]?data.choices[0].message.content:'[]';
+        txt=txt.replace(/```json|```/g,'').trim();
+        var items=JSON.parse(txt);
+        var imported2=0;
+        items.forEach(function(item,i){
+          if(!item.name)return;
+          var prod=S.products.find(function(p){return p.genericName.toLowerCase()===item.name.toLowerCase();});
+          if(!prod){
+            prod={id:Date.now()+i+9000,genericName:item.name,brandName:'',strength:'',category:'Other',sellUnit:'unit',costPrice:item.cost||0,sellPrice:0,minStock:10,reorderQty:0,isFastMover:true,addedDate:td()};
+            S.products.push(prod);
+          }
+          if(item.qty>0){
+            S.stock.push({id:Date.now()+i+99000,productId:prod.id,qty:item.qty,unit:'unit',
+              batch:item.batch||'INVOICE-'+td(),expiry:item.expiry||'',cost:item.cost||0,date:td(),depleted:false});
+            imported2++;
+          }
+        });
+        save();renderPulse();updBadges();
+        if(status)status.textContent='\u2705 Invoice read: '+imported2+' items imported';
+        toast('Invoice imported: '+imported2+' products stocked',3000);
+      }catch(err){
+        if(status)status.textContent='\u274C Could not read invoice. Try CSV export instead.';
+      }
+    };
+    reader2.readAsDataURL(file);
+  }
+  input.value='';
+}
+
+// ══ VOICE TOGGLE (MALE) ════════════════════════════════════════
+var voiceEnabled=localStorage.getItem('pbsrx_voice')!=='off';
+var preferMaleVoice=true;
+
+function getVoice(){
+  var voices=window.speechSynthesis.getVoices();
+  var male=voices.find(function(v){return v.lang.startsWith('en')&&(v.name.toLowerCase().includes('male')||v.name.toLowerCase().includes('david')||v.name.toLowerCase().includes('james')||v.name.toLowerCase().includes('daniel')||v.name.toLowerCase().includes('mark')||v.name.toLowerCase().includes('alex'));});
+  return male||voices.find(function(v){return v.lang.startsWith('en');})||voices[0];
+}
+
+function toggleVoice(){
+  voiceEnabled=!voiceEnabled;
+  localStorage.setItem('pbsrx_voice',voiceEnabled?'on':'off');
+  var btn=document.getElementById('voiceToggleBtn');
+  if(btn)btn.textContent=voiceEnabled?'\uD83D\uDD0A Voice ON (Male)':'\uD83D\uDD07 Voice OFF';
+  if(btn)btn.style.background=voiceEnabled?'var(--grn)':'var(--surf)';
+  toast(voiceEnabled?'Voice enabled — male voice active':'Voice disabled');
+}
+
+// Override speak function to respect toggle and use male voice
+var _origSpeak=window.speak;
+window.speak=function(txt){
+  if(!voiceEnabled)return;
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  var utt=new SpeechSynthesisUtterance(txt);
+  utt.voice=getVoice();
+  utt.rate=0.95;utt.pitch=0.85;utt.volume=1;
+  window.speechSynthesis.speak(utt);
+};
+
+// ══ RENDER STOCK BALANCE ON CASH TAB LOAD ═════════════════════
+var _origRenderCashHist2=renderCashHist;
+renderCashHist=function(){
+  _origRenderCashHist2();
+  renderStockBalance();
+};
+
+// ══ INIT VOICE TOGGLE BUTTON STATE ════════════════════════════
+function initVoiceToggle(){
+  var btn=document.getElementById('voiceToggleBtn');
+  if(!btn)return;
+  voiceEnabled=localStorage.getItem('pbsrx_voice')!=='off';
+  btn.textContent=voiceEnabled?'\uD83D\uDD0A Voice ON (Male)':'\uD83D\uDD07 Voice OFF';
+  btn.style.background=voiceEnabled?'var(--grn)':'var(--surf)';
+}
+
 // ── OVERRIDE INIT ──
-var _origLoad=load;load=function(){_origLoad();initCoach();renderSalesChart(30);initApiKeyDisplay();};
+var _origLoad=load;load=function(){_origLoad();initCoach();renderSalesChart(30);initApiKeyDisplay();renderStockBalance();initVoiceToggle();};
 </script></body></html>

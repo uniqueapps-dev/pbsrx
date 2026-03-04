@@ -357,7 +357,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <button class="btn bb" onclick="updStock()">&#128230; Update Stock</button>
 </div>
 <div class="sh">&#128337; Expiry Monitor</div>
-<div id="expiryList">
+<div id="expiryList"></div>
 
       <div class="sh">&#128221; Lost Sales Log — What Customers Asked For</div>
 <div class="card">
@@ -2295,7 +2295,8 @@ out+='</div>';
 var skip=/^[1-5][.)\s]|^[6-9][.)\s]|PRIORITY ACTIONS|^\u2501+$|^---$|^\u2015+$|^\u2550+$/;
 var aLines=lines.filter(function(l){return l.trim().length>0&&!skip.test(l.trim());});
 var analysis=aLines.join("\n").trim();
-if(analysis.length>30){
+analysis=analysis.replace(/^[💰💊🏭📈🚀].*$/gm,'').trim();
+  if(analysis.length>50){
 out+='<div class="card" style="margin-top:8px;padding:14px;">';
 out+='<div style="font-size:10px;font-weight:900;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">\uD83E\uDD16 Full Analysis</div>';
 out+='<div style="font-size:13px;line-height:1.7;color:#e2e8f0;white-space:pre-wrap;">'+analysis+'</div>';
@@ -2482,9 +2483,9 @@ try{
 var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
 method:'POST',headers:getApiHeaders(),
 body:JSON.stringify({
-model:'anthropic/claude-sonnet-4-5',max_tokens:1000,
+model:'openai/gpt-4o',max_tokens:800,
 messages:[{role:'user',content:[
-{type:'image',source:{type:'base64',media_type:mediaType,data:base64}},
+{type:'image_url',image_url:{url:'data:'+mediaType+';base64,'+base64}},
 {type:'text',text:prompt}
 ]}]
 })
@@ -2496,8 +2497,10 @@ aiExtracted=JSON.parse(txt);
 status.style.display='none';
 renderAIExtracted();
 }catch(e){
-icon.textContent='\u274C';msg.textContent=getApiKey()?'Could not read pack. Try a clearer photo or better lighting.':'No API key set. Go to Coach tab \u2192 Claude AI Setup.';
-setTimeout(function(){status.style.display='none';document.getElementById('aiSnapUpload').style.display='block';},3000);
+icon.textContent='\u274C';
+if(!getApiKey()){msg.textContent='No API key. Go to Guide \u2192 Settings \u2192 API Key Setup.';}
+else{msg.textContent='Could not read pack. Try the Upload Photos option instead (more reliable than camera).';}
+setTimeout(function(){status.style.display='none';document.getElementById('aiSnapUpload').style.display='block';},4000);
 }
 }
 function renderAIExtracted(){
@@ -2869,9 +2872,9 @@ var ctx2=buildContextSummary();
 try{
 var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
 method:'POST',headers:getApiHeaders(),
-body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:1000,
+body:JSON.stringify({model:'openai/gpt-4o',max_tokens:1000,
 messages:[{role:'user',content:[
-{type:'image',source:{type:'base64',media_type:mediaType,data:base64}},
+{type:'image_url',image_url:{url:'data:'+mediaType+';base64,'+base64}},
 {type:'text',text:'This is a QuickBooks report for a Nigerian community pharmacy. My current PBS data: '+ctx2+'. Analyse this report and: 1) Identify key financial metrics visible, 2) Compare with my PBS data where relevant, 3) Give 3 specific insights or action points. Be concise and practical.'}
 ]}]})
 });
@@ -3043,9 +3046,9 @@ var mt=file.type||'image/jpeg';
 try{
 var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
 method:'POST',headers:getApiHeaders(),
-body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:500,
+body:JSON.stringify({model:'openai/gpt-4o',max_tokens:500,
 messages:[{role:'user',content:[
-{type:'image',source:{type:'base64',media_type:mt,data:b64}},
+{type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}},
 {type:'text',text:'This is a QuickBooks inventory report. Extract ONLY: total inventory value in Nigerian Naira (number only), and total number of items/quantities. Return ONLY JSON: {"value": number, "qty": number}'}
 ]}]})
 });
@@ -3211,9 +3214,9 @@ var mt=file.type||'image/jpeg';
 try{
 var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
 method:'POST',headers:getApiHeaders(),
-body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:1500,
+body:JSON.stringify({model:'openai/gpt-4o',max_tokens:1500,
 messages:[{role:'user',content:[
-{type:'image',source:{type:'base64',media_type:mt,data:b64}},
+{type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}},
 {type:'text',text:'This is a Nigerian pharmacy supply invoice or delivery note. Extract all products and return ONLY a JSON array: [{"name":"product name","qty":number,"cost":number,"batch":"batch no or empty","expiry":"YYYY-MM or empty"}]. Include ALL line items. Return ONLY the JSON array.'}
 ]}]})
 });

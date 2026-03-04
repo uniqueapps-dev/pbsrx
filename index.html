@@ -297,9 +297,31 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
       </div>
       <div id="dAlerts"></div>
       <div class="sh">&#128202; Today's Snapshot</div><div class="sgrid" id="dStats"></div>
+      <div class="card" id="dashBECard" style="background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(99,102,241,0.1));border:1px solid rgba(59,130,246,0.3);margin-bottom:4px;">
+        <div style="font-size:11px;font-weight:800;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">&#127919; Daily Break-Even Target</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="text-align:center;flex:1;">
+            <div style="font-size:10px;color:var(--mut);font-weight:700;">Target</div>
+            <div style="font-family:var(--fh);font-size:18px;color:var(--blu);" id="dashBETarget">&#8358;0</div>
+          </div>
+          <div style="text-align:center;flex:1;">
+            <div style="font-size:10px;color:var(--mut);font-weight:700;">Today Sales</div>
+            <div style="font-family:var(--fh);font-size:18px;color:var(--txt);" id="dashBESales">&#8358;0</div>
+          </div>
+          <div style="text-align:center;flex:1;">
+            <div style="font-size:10px;color:var(--mut);font-weight:700;">Gap</div>
+            <div style="font-family:var(--fh);font-size:18px;" id="dashBEGap">&#8358;0</div>
+          </div>
+        </div>
+        <div style="font-size:12px;font-weight:700;text-align:center;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.1);" id="dashBEStatus"></div>
+      </div>
       <div class="sh">&#128138; Stock Pulse Alerts</div><div id="dPulse"></div>
       <div class="sh">&#128176; Cash Allocation — Today</div><div id="dBuckets"></div>
       <div class="sh">&#127981; Supplier Obligations</div><div id="dSup"></div>
+      <div class="sh">&#128176; Loans</div>
+      <div id="dLoans" class="card" style="padding:12px;">
+        <div style="font-size:12px;color:var(--mut);text-align:center;" id="dLoansContent">No loans recorded</div>
+      </div>
     </div>
     <!-- STOCK PULSE -->
     <div class="pg" id="pg1">
@@ -493,6 +515,42 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
           <div id="impRes"></div>
         </div>
       </div>
+      <!-- DEMAND LOG -->
+      <div class="sh">&#128221; Lost Sales Log — What Customers Asked For</div>
+      <div class="card">
+        <div class="al ao" style="margin-bottom:10px;"><div class="ai">&#128176;</div><div class="at">Every "I don't have it" is lost money. Log what customers ask for — PBS tracks demand patterns.</div></div>
+        <div style="display:flex;gap:8px;align-items:flex-end;">
+          <div style="flex:1;" class="fg acw">
+            <label class="fl">Product Requested</label>
+            <input class="fi" id="dl_prod" placeholder="e.g. Augmentin 625mg" autocomplete="off">
+          </div>
+          <div style="width:70px;" class="fg">
+            <label class="fl">Count</label>
+            <input class="fi" id="dl_cnt" type="number" inputmode="numeric" placeholder="1" value="1">
+          </div>
+          <button class="bsm bsb" onclick="logDemand()" style="padding:12px 14px;">Log</button>
+        </div>
+        <div id="demandList" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- REORDER TIMING INTELLIGENCE -->
+
+      <div class="sh">&#128339; Smart Reorder Calendar</div>
+      <div id="reorderCalendar"></div>
+
+      <!-- WHATSAPP BRIEFING -->
+
+      <div class="sh">&#128229; QuickBooks Bridge</div>
+      <div class="card">
+        <div class="al ab" style="margin-bottom:10px;"><div class="ai">&#128200;</div><div class="at">Export your PBS inventory to QuickBooks format, or import from QuickBooks. One tap each direction.</div></div>
+        <button class="btn" style="background:var(--grn);border:none;color:#fff;margin-bottom:8px;" onclick="exportQB()">&#128229; Export Inventory to QuickBooks CSV</button>
+        <button class="btn" style="background:var(--blu3);border:1px solid var(--blu);color:var(--blu);margin-bottom:8px;" onclick="document.getElementById('qbImportFile').click()">&#128228; Import from QuickBooks CSV
+          <input type="file" id="qbImportFile" accept=".csv" style="display:none;" onchange="importQB(this)">
+        </button>
+        <div style="font-size:11px;color:var(--mut);font-weight:500;">QB Export includes: Product name, SKU, description, unit cost, sell price, qty on hand, category.</div>
+      </div>
+
+    
     </div>
     <!-- POS -->
     <div class="pg" id="pg3">
@@ -678,7 +736,56 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
         <input type="hidden" id="sv_id">
         <button class="btn bb" onclick="saveSup()">&#127981; Save Supplier</button>
         <button class="btn bo" onclick="clrSup()" style="margin-top:6px;">Clear Form</button>
+      
+      <!-- LOAN TRACKER -->
+      <div class="sh">&#128176; Loan Tracker</div>
+      <div id="loanTrackerSection">
+        <div class="card" style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div style="font-size:13px;font-weight:800;color:var(--txt);">Active Loans</div>
+            <button class="bsm bsb" onclick="showAddLoan()">+ Add Loan</button>
+          </div>
+          <div id="loansList"></div>
+          <div id="loansTotal" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bdr);font-size:13px;font-weight:800;color:var(--red);"></div>
+        </div>
+        <!-- Add Loan Form -->
+        <div id="addLoanForm" class="card" style="display:none;border:1px solid var(--blu);">
+          <div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:12px;">&#128176; Add / Update Loan</div>
+          <input type="hidden" id="loan_edit_id">
+          <div class="fr">
+            <div class="fg"><label class="fl">Lender Name</label><input class="fi" id="loan_lender" placeholder="OPay, Bank, Person..."></div>
+            <div class="fg"><label class="fl">Loan Amount (&#8358;)</label><input class="fi" id="loan_principal" type="number" inputmode="numeric" placeholder="0"></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label class="fl">Start Date</label><input class="fi" id="loan_start" type="date"></div>
+            <div class="fg"><label class="fl">Due Date</label><input class="fi" id="loan_due" type="date"></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label class="fl">Interest Rate (%)</label><input class="fi" id="loan_rate" type="number" inputmode="decimal" placeholder="0"></div>
+            <div class="fg"><label class="fl">Notes</label><input class="fi" id="loan_notes" placeholder="Purpose, terms..."></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn bb" onclick="saveLoan()" style="flex:1;">&#128190; Save Loan</button>
+            <button class="btn" onclick="hideAddLoan()" style="flex:0.4;background:var(--surf);">Cancel</button>
+          </div>
+        </div>
+        <!-- Log Repayment -->
+        <div id="repayForm" class="card" style="display:none;border:1px solid var(--grn);">
+          <div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:10px;">&#9989; Log Repayment</div>
+          <input type="hidden" id="repay_loan_id">
+          <div class="fr">
+            <div class="fg"><label class="fl">Amount (&#8358;)</label><input class="fi" id="repay_amt" type="number" inputmode="numeric" placeholder="0"></div>
+            <div class="fg"><label class="fl">Date</label><input class="fi" id="repay_date" type="date"></div>
+          </div>
+          <div class="fg"><label class="fl">Note</label><input class="fi" id="repay_note" placeholder="Optional note"></div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn bg2" onclick="logRepayment()" style="flex:1;">&#9989; Log Payment</button>
+            <button class="btn" onclick="hideRepayForm()" style="flex:0.4;background:var(--surf);">Cancel</button>
+          </div>
+        </div>
       </div>
+
+</div>
     </div>
     <!-- COACH -->
     <div class="pg" id="pg6">
@@ -696,31 +803,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
         </div>
       </div>
 
-      <!-- LOAN TRACKER -->
-      <div class="sh">&#128176; OPay Loan Tracker</div>
-      <div class="card" id="loanCard">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
-          <div>
-            <div style="font-size:11px;color:var(--mut);font-weight:800;letter-spacing:1px;text-transform:uppercase;">Remaining Balance</div>
-            <div style="font-family:var(--fh);font-size:38px;color:var(--red);" id="loanBal">&#8358;131,592</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:11px;color:var(--mut);font-weight:700;">Daily Target</div>
-            <div style="font-family:var(--fh);font-size:24px;color:var(--ora);" id="loanDaily">&#8358;9,400</div>
-          </div>
-        </div>
-        <div style="background:var(--bdr);border-radius:6px;height:10px;overflow:hidden;margin-bottom:8px;">
-          <div id="loanBar" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--grn),var(--amb));transition:width .6s;" ></div>
-        </div>
-        <div style="font-size:12px;color:var(--mut);font-weight:600;" id="loanMeta">Days remaining: 14 | Paid: ₦0</div>
-        <div class="fr" style="margin-top:12px;">
-          <div class="fg"><label class="fl">Log Repayment (&#8358;)</label><input class="fi" id="loan_amt" type="number" inputmode="numeric" placeholder="0"></div>
-          <div class="fg"><label class="fl">Date</label><input class="fi" id="loan_dt" type="date"></div>
-        </div>
-        <button class="btn bg2" onclick="logLoan()" style="margin-top:4px;">&#9989; Log Repayment</button>
-      </div>
-
-      <!-- 3 DAILY ACTIONS -->
       <div class="sh">&#129504; Your 3 Actions Right Now</div>
       <div id="coachActions">
         <div class="card" style="text-align:center;padding:28px;">
@@ -753,39 +835,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
       <!-- SEASONAL ALERTS -->
       <div class="sh">&#127793; Seasonal Intelligence</div>
       <div id="seasonAlerts"></div>
-
-      <!-- DEMAND LOG -->
-      <div class="sh">&#128221; Lost Sales Log — What Customers Asked For</div>
-      <div class="card">
-        <div class="al ao" style="margin-bottom:10px;"><div class="ai">&#128176;</div><div class="at">Every "I don't have it" is lost money. Log what customers ask for — PBS tracks demand patterns.</div></div>
-        <div style="display:flex;gap:8px;align-items:flex-end;">
-          <div style="flex:1;" class="fg acw">
-            <label class="fl">Product Requested</label>
-            <input class="fi" id="dl_prod" placeholder="e.g. Augmentin 625mg" autocomplete="off">
-          </div>
-          <div style="width:70px;" class="fg">
-            <label class="fl">Count</label>
-            <input class="fi" id="dl_cnt" type="number" inputmode="numeric" placeholder="1" value="1">
-          </div>
-          <button class="bsm bsb" onclick="logDemand()" style="padding:12px 14px;">Log</button>
-        </div>
-        <div id="demandList" style="margin-top:10px;"></div>
-      </div>
-
-      <!-- REORDER TIMING INTELLIGENCE -->
-      <div class="sh">&#128339; Smart Reorder Calendar</div>
-      <div id="reorderCalendar"></div>
-
-      <!-- WHATSAPP BRIEFING -->
-      <div class="sh">&#128229; QuickBooks Bridge</div>
-      <div class="card">
-        <div class="al ab" style="margin-bottom:10px;"><div class="ai">&#128200;</div><div class="at">Export your PBS inventory to QuickBooks format, or import from QuickBooks. One tap each direction.</div></div>
-        <button class="btn" style="background:var(--grn);border:none;color:#fff;margin-bottom:8px;" onclick="exportQB()">&#128229; Export Inventory to QuickBooks CSV</button>
-        <button class="btn" style="background:var(--blu3);border:1px solid var(--blu);color:var(--blu);margin-bottom:8px;" onclick="document.getElementById('qbImportFile').click()">&#128228; Import from QuickBooks CSV
-          <input type="file" id="qbImportFile" accept=".csv" style="display:none;" onchange="importQB(this)">
-        </button>
-        <div style="font-size:11px;color:var(--mut);font-weight:500;">QB Export includes: Product name, SKU, description, unit cost, sell price, qty on hand, category.</div>
-      </div>
 
       <div class="sh">&#128444;&#65039; Upload QuickBooks Screenshot for Coach Analysis</div>
       <div class="card">
@@ -1038,11 +1087,11 @@ function goTo(idx,el){
   if(idx!==2&&camStream)stopScan();
   document.querySelectorAll('.pg').forEach(function(p){p.classList.toggle('on',p.id==='pg'+idx);});
   document.querySelectorAll('.nb').forEach(function(b){b.classList.toggle('on',b.id==='nb'+idx);});
-  if(idx===0)renderDash();
+  if(idx===0){renderDash();renderDashBE();renderDashLoans();}
   if(idx===1){renderPulse();renderExpiry();}
   if(idx===3)renderPOS();
   if(idx===4)renderCashHist();
-  if(idx===5)renderSup();
+  if(idx===5){renderSup();renderLoans();}
   if(idx===6)renderCoach();
 }
 function gTab(idx,el){
@@ -1832,8 +1881,8 @@ function logLoan(){
 
 // ── GUIDE TAB FN ─────────────────────────────────────────────────────────────
 function gTab2(idx,el){
-  document.querySelectorAll('#pg6 .gp').forEach(function(p,i){p.classList.toggle('on',i===idx);});
-  document.querySelectorAll('#pg6 .gtab').forEach(function(t,i){t.classList.toggle('on',i===idx);});
+  document.querySelectorAll('#pg7 .gp').forEach(function(p,i){p.classList.toggle('on',i===idx);});
+  document.querySelectorAll('#pg7 .gtab').forEach(function(t,i){t.classList.toggle('on',i===idx);});
 }
 
 // ── DEMAND LOG ───────────────────────────────────────────────────────────────
@@ -2864,7 +2913,7 @@ async function processAIImages(){
       r.readAsDataURL(aiImageFiles[i]);
     });
     var mt=aiImageFiles[i].type||'image/jpeg';
-    imageContents.push({type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}});
+    imageContents.push({type:'image',source:{type:'base64',media_type:mt,data:b64}});
   }
   imageContents.push({type:'text',text:'These are '+aiImageFiles.length+' photos of the same Nigerian pharmaceutical drug pack (front, back, side, etc). Extract ALL visible product information and return ONLY a JSON object with these exact keys (use empty string if not visible): genericName, brandName, strength, form (tablet/capsule/syrup/injection/cream/etc), category (Analgesic/Antibiotic/Antimalarial/Antifungal/Cardiovascular/Gastrointestinal/Vitamin/Supplement/Antihistamine/Other), batchNumber, expiryDate (format YYYY-MM), nafdacNumber, manufacturer, packSize. Use all photos together for maximum accuracy. Return ONLY the JSON object, no other text.'});
 
@@ -2943,7 +2992,7 @@ async function handleStockBalanceUpload(input){
           method:'POST',headers:getApiHeaders(),
           body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:500,
             messages:[{role:'user',content:[
-              {type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}},
+              {type:'image',source:{type:'base64',media_type:mt,data:b64}},
               {type:'text',text:'This is a QuickBooks inventory report. Extract ONLY: total inventory value in Nigerian Naira (number only), and total number of items/quantities. Return ONLY JSON: {"value": number, "qty": number}'}
             ]}]})
         });
@@ -3111,7 +3160,7 @@ async function importSupplyCSV(input){
           method:'POST',headers:getApiHeaders(),
           body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:1500,
             messages:[{role:'user',content:[
-              {type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}},
+              {type:'image',source:{type:'base64',media_type:mt,data:b64}},
               {type:'text',text:'This is a Nigerian pharmacy supply invoice or delivery note. Extract all products and return ONLY a JSON array: [{"name":"product name","qty":number,"cost":number,"batch":"batch no or empty","expiry":"YYYY-MM or empty"}]. Include ALL line items. Return ONLY the JSON array.'}
             ]}]})
         });
@@ -3192,6 +3241,178 @@ function initVoiceToggle(){
   btn.style.background=voiceEnabled?'var(--grn)':'var(--surf)';
 }
 
+
+// ══ MULTI-LOAN TRACKER ════════════════════════════════════════════
+function showAddLoan(id){
+  document.getElementById('addLoanForm').style.display='block';
+  document.getElementById('repayForm').style.display='none';
+  if(id){
+    var loan=S.loans&&S.loans.find(function(l){return l.id===id;});
+    if(loan){
+      document.getElementById('loan_edit_id').value=id;
+      document.getElementById('loan_lender').value=loan.lender||'';
+      document.getElementById('loan_principal').value=loan.principal||'';
+      document.getElementById('loan_start').value=loan.startDate||'';
+      document.getElementById('loan_due').value=loan.dueDate||'';
+      document.getElementById('loan_rate').value=loan.rate||'';
+      document.getElementById('loan_notes').value=loan.notes||'';
+    }
+  } else {
+    document.getElementById('loan_edit_id').value='';
+    document.getElementById('loan_lender').value='';
+    document.getElementById('loan_principal').value='';
+    document.getElementById('loan_start').value=td();
+    document.getElementById('loan_due').value='';
+    document.getElementById('loan_rate').value='';
+    document.getElementById('loan_notes').value='';
+  }
+}
+function hideAddLoan(){document.getElementById('addLoanForm').style.display='none';}
+
+function saveLoan(){
+  var eid=document.getElementById('loan_edit_id').value;
+  var lender=document.getElementById('loan_lender').value.trim();
+  var principal=Number(document.getElementById('loan_principal').value)||0;
+  if(!lender||!principal){toast('Enter lender name and amount');return;}
+  if(!S.loans)S.loans=[];
+  if(eid){
+    var idx=S.loans.findIndex(function(l){return l.id==eid;});
+    if(idx>=0){
+      S.loans[idx].lender=lender;
+      S.loans[idx].principal=principal;
+      S.loans[idx].startDate=document.getElementById('loan_start').value;
+      S.loans[idx].dueDate=document.getElementById('loan_due').value;
+      S.loans[idx].rate=Number(document.getElementById('loan_rate').value)||0;
+      S.loans[idx].notes=document.getElementById('loan_notes').value;
+    }
+  } else {
+    S.loans.push({
+      id:Date.now(),
+      lender:lender,
+      principal:principal,
+      startDate:document.getElementById('loan_start').value||td(),
+      dueDate:document.getElementById('loan_due').value,
+      rate:Number(document.getElementById('loan_rate').value)||0,
+      notes:document.getElementById('loan_notes').value,
+      repayments:[]
+    });
+  }
+  save();hideAddLoan();renderLoans();renderDashLoans();
+  toast('Loan saved: '+lender+' \u20A6'+principal.toLocaleString('en-NG'),3000);
+}
+
+function deleteLoan(id){
+  if(!confirm('Delete this loan?'))return;
+  S.loans=S.loans.filter(function(l){return l.id!==id;});
+  save();renderLoans();renderDashLoans();
+}
+
+function showRepayForm(loanId){
+  document.getElementById('addLoanForm').style.display='none';
+  var rf=document.getElementById('repayForm');
+  rf.style.display='block';
+  document.getElementById('repay_loan_id').value=loanId;
+  document.getElementById('repay_amt').value='';
+  document.getElementById('repay_date').value=td();
+  document.getElementById('repay_note').value='';
+}
+function hideRepayForm(){document.getElementById('repayForm').style.display='none';}
+
+function logRepayment(){
+  var loanId=Number(document.getElementById('repay_loan_id').value);
+  var amt=Number(document.getElementById('repay_amt').value)||0;
+  var date=document.getElementById('repay_date').value||td();
+  var note=document.getElementById('repay_note').value;
+  if(!amt){toast('Enter repayment amount');return;}
+  var loan=S.loans&&S.loans.find(function(l){return l.id===loanId;});
+  if(!loan){toast('Loan not found');return;}
+  if(!loan.repayments)loan.repayments=[];
+  loan.repayments.push({id:Date.now(),amt:amt,date:date,note:note});
+  save();hideRepayForm();renderLoans();renderDashLoans();
+  toast('Repayment logged: \u20A6'+amt.toLocaleString('en-NG'),3000);
+}
+
+function getLoanBalance(loan){
+  var paid=(loan.repayments||[]).reduce(function(s,r){return s+r.amt;},0);
+  return Math.max(0,loan.principal-paid);
+}
+
+function renderLoans(){
+  var el=document.getElementById('loansList');
+  var total=document.getElementById('loansTotal');
+  if(!el)return;
+  var loans=S.loans||[];
+  if(!loans.length){
+    el.innerHTML='<div style="text-align:center;color:var(--mut);font-size:13px;padding:12px;">No loans added yet. Tap + Add Loan.</div>';
+    if(total)total.textContent='';
+    return;
+  }
+  var totalBal=0;
+  el.innerHTML=loans.map(function(loan){
+    var bal=getLoanBalance(loan);
+    var paid=(loan.repayments||[]).reduce(function(s,r){return s+r.amt;},0);
+    var pct=loan.principal>0?Math.min(100,Math.round(paid/loan.principal*100)):0;
+    totalBal+=bal;
+    var isOverdue=loan.dueDate&&loan.dueDate<td();
+    return '<div style="background:var(--surf);border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid '+(isOverdue?'var(--red)':'var(--bdr)')+';">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">' +
+      '<div><div style="font-size:13px;font-weight:800;color:var(--txt);">'+loan.lender+'</div>' +
+      '<div style="font-size:11px;color:var(--mut);">'+loan.startDate+(loan.dueDate?' \u2192 Due: '+loan.dueDate:'')+(isOverdue?' \u26A0\uFE0F OVERDUE':'')+'</div></div>' +
+      '<div style="text-align:right;"><div style="font-size:15px;font-weight:900;color:'+(bal>0?'var(--red)':'var(--grn)')+';">\u20A6'+bal.toLocaleString('en-NG')+'</div>' +
+      '<div style="font-size:10px;color:var(--mut);">of \u20A6'+loan.principal.toLocaleString('en-NG')+'</div></div></div>' +
+      '<div style="background:var(--bdr);border-radius:4px;height:6px;overflow:hidden;margin-bottom:8px;">' +
+      '<div style="height:100%;border-radius:4px;background:linear-gradient(90deg,var(--grn),var(--blu));width:'+pct+'%;transition:width .5s;"></div></div>' +
+      '<div style="font-size:11px;color:var(--mut);margin-bottom:8px;">Paid: \u20A6'+paid.toLocaleString('en-NG')+' ('+pct+'%) | Balance: \u20A6'+bal.toLocaleString('en-NG')+'</div>' +
+      (loan.notes?'<div style="font-size:11px;color:var(--mut);font-style:italic;margin-bottom:8px;">'+loan.notes+'</div>':'')+
+      '<div style="display:flex;gap:6px;">' +
+      (bal>0?'<button class="bsm bg2" onclick="showRepayForm('+loan.id+')" style="flex:1;">&#9989; Pay</button>':'')+
+      '<button class="bsm bsb" onclick="showAddLoan('+loan.id+')" style="flex:1;">&#9999;&#65039; Edit</button>' +
+      '<button class="bsm" onclick="deleteLoan('+loan.id+')" style="flex:0.5;background:var(--red2);color:var(--red);">&#128465;</button>' +
+      '</div></div>';
+  }).join('');
+  if(total)total.textContent=totalBal>0?'Total Outstanding: \u20A6'+totalBal.toLocaleString('en-NG'):'\u2705 All loans cleared!';
+}
+
+function renderDashLoans(){
+  var el=document.getElementById('dLoansContent');
+  if(!el)return;
+  var loans=S.loans||[];
+  // Also check legacy OPay loan
+  var legacyBal=LOAN&&LOAN.balance?LOAN.balance-( LOAN.payments||[]).reduce(function(s,p){return s+p.amt;},0):0;
+  if(!loans.length&&legacyBal<=0){el.innerHTML='<div style="color:var(--mut);font-size:12px;text-align:center;">No active loans</div>';return;}
+  var totalBal=loans.reduce(function(s,l){return s+getLoanBalance(l);},0)+Math.max(0,legacyBal);
+  var nextDue=loans.filter(function(l){return getLoanBalance(l)>0&&l.dueDate;}).sort(function(a,b){return a.dueDate.localeCompare(b.dueDate);})[0];
+  var html2='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">';
+  html2+='<div style="font-size:11px;color:var(--mut);font-weight:700;">Total Outstanding</div>';
+  html2+='<div style="font-size:16px;font-weight:900;color:var(--red);">\u20A6'+totalBal.toLocaleString('en-NG')+'</div></div>';
+  if(nextDue)html2+='<div style="font-size:11px;color:var(--ora);font-weight:700;">Next due: '+nextDue.lender+' on '+nextDue.dueDate+'</div>';
+  if(loans.length){
+    html2+='<div style="margin-top:8px;">';
+    loans.slice(0,3).forEach(function(l){
+      var bal=getLoanBalance(l);
+      if(bal>0)html2+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--bdr);"><span style="color:var(--txt);">'+l.lender+'</span><span style="color:var(--red);font-weight:700;">\u20A6'+bal.toLocaleString('en-NG')+'</span></div>';
+    });
+    html2+='</div>';
+  }
+  el.innerHTML=html2;
+}
+
+// ══ DASHBOARD BREAK-EVEN UPDATE ════════════════════════════════
+function renderDashBE(){
+  var today=S.cashDays.find(function(d){return d.date===td();});
+  var sales=today?today.sales:0;
+  var be=getBEDaily();
+  var gap=sales-be;
+  var t=document.getElementById('dashBETarget');
+  var sv=document.getElementById('dashBESales');
+  var gv=document.getElementById('dashBEGap');
+  var st=document.getElementById('dashBEStatus');
+  if(t)t.textContent='\u20A6'+be.toLocaleString('en-NG');
+  if(sv)sv.textContent='\u20A6'+sales.toLocaleString('en-NG');
+  if(gv){gv.textContent=(gap>=0?'+':'')+' \u20A6'+Math.abs(gap).toLocaleString('en-NG');gv.style.color=gap>=0?'var(--grn)':'var(--red)';}
+  if(st){st.textContent=gap>=0?'\u2705 On track — \u20A6'+gap.toLocaleString('en-NG')+' above break-even':'\u274C \u20A6'+Math.abs(gap).toLocaleString('en-NG')+' below break-even';st.style.color=gap>=0?'var(--grn)':'var(--red)';}
+}
+
 // ── OVERRIDE INIT ──
-var _origLoad=load;load=function(){_origLoad();initCoach();renderSalesChart(30);initApiKeyDisplay();renderStockBalance();initVoiceToggle();};
+var _origLoad=load;load=function(){_origLoad();initCoach();renderSalesChart(30);initApiKeyDisplay();renderStockBalance();initVoiceToggle();renderDashBE();renderDashLoans();renderLoans();};
 </script></body></html>

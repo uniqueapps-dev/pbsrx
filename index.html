@@ -357,7 +357,38 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <button class="btn bb" onclick="updStock()">&#128230; Update Stock</button>
 </div>
 <div class="sh">&#128337; Expiry Monitor</div>
-<div id="expiryList"></div>
+<div id="expiryList">
+
+      <div class="sh">&#128221; Lost Sales Log — What Customers Asked For</div>
+<div class="card">
+<div class="al ao" style="margin-bottom:10px;"><div class="ai">&#128176;</div><div class="at">Every "I don't have it" is lost money. Log what customers ask for — PBS tracks demand patterns.</div></div>
+<div style="display:flex;gap:8px;align-items:flex-end;">
+<div style="flex:1;" class="fg acw">
+<label class="fl">Product Requested</label>
+<input class="fi" id="dl_prod" placeholder="e.g. Augmentin 625mg" autocomplete="off">
+</div>
+<div style="width:70px;" class="fg">
+<label class="fl">Count</label>
+<input class="fi" id="dl_cnt" type="number" inputmode="numeric" placeholder="1" value="1">
+</div>
+<button class="bsm bsb" onclick="logDemand()" style="padding:12px 14px;">Log</button>
+</div>
+<div id="demandList" style="margin-top:10px;"></div>
+</div>
+
+      <div class="sh">&#128339; Smart Reorder Calendar</div>
+<div id="reorderCalendar"></div>
+
+      <div class="sh">&#128229; QuickBooks Bridge</div>
+<div class="card">
+<div class="al ab" style="margin-bottom:10px;"><div class="ai">&#128200;</div><div class="at">Export your PBS inventory to QuickBooks format, or import from QuickBooks. One tap each direction.</div></div>
+<button class="btn" style="background:var(--grn);border:none;color:#fff;margin-bottom:8px;" onclick="exportQB()">&#128229; Export Inventory to QuickBooks CSV</button>
+<button class="btn" style="background:var(--blu3);border:1px solid var(--blu);color:var(--blu);margin-bottom:8px;" onclick="document.getElementById('qbImportFile').click()">&#128228; Import from QuickBooks CSV
+<input type="file" id="qbImportFile" accept=".csv" style="display:none;" onchange="importQB(this)">
+</button>
+<div style="font-size:11px;color:var(--mut);font-weight:500;">QB Export includes: Product name, SKU, description, unit cost, sell price, qty on hand, category.</div>
+</div>
+</div>
 </div>
 
 <div class="pg" id="pg2">
@@ -514,36 +545,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <input type="file" id="csvF" accept=".csv,.xlsx,.xls" style="display:none" onchange="impCSV(this)">
 <div id="impRes"></div>
 </div>
-</div>
-
-<div class="sh">&#128221; Lost Sales Log — What Customers Asked For</div>
-<div class="card">
-<div class="al ao" style="margin-bottom:10px;"><div class="ai">&#128176;</div><div class="at">Every "I don't have it" is lost money. Log what customers ask for — PBS tracks demand patterns.</div></div>
-<div style="display:flex;gap:8px;align-items:flex-end;">
-<div style="flex:1;" class="fg acw">
-<label class="fl">Product Requested</label>
-<input class="fi" id="dl_prod" placeholder="e.g. Augmentin 625mg" autocomplete="off">
-</div>
-<div style="width:70px;" class="fg">
-<label class="fl">Count</label>
-<input class="fi" id="dl_cnt" type="number" inputmode="numeric" placeholder="1" value="1">
-</div>
-<button class="bsm bsb" onclick="logDemand()" style="padding:12px 14px;">Log</button>
-</div>
-<div id="demandList" style="margin-top:10px;"></div>
-</div>
-
-<div class="sh">&#128339; Smart Reorder Calendar</div>
-<div id="reorderCalendar"></div>
-
-<div class="sh">&#128229; QuickBooks Bridge</div>
-<div class="card">
-<div class="al ab" style="margin-bottom:10px;"><div class="ai">&#128200;</div><div class="at">Export your PBS inventory to QuickBooks format, or import from QuickBooks. One tap each direction.</div></div>
-<button class="btn" style="background:var(--grn);border:none;color:#fff;margin-bottom:8px;" onclick="exportQB()">&#128229; Export Inventory to QuickBooks CSV</button>
-<button class="btn" style="background:var(--blu3);border:1px solid var(--blu);color:var(--blu);margin-bottom:8px;" onclick="document.getElementById('qbImportFile').click()">&#128228; Import from QuickBooks CSV
-<input type="file" id="qbImportFile" accept=".csv" style="display:none;" onchange="importQB(this)">
-</button>
-<div style="font-size:11px;color:var(--mut);font-weight:500;">QB Export includes: Product name, SKU, description, unit cost, sell price, qty on hand, category.</div>
 </div>
 
 </div>
@@ -758,6 +759,10 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div class="fg"><label class="fl">Interest Rate (%)</label><input class="fi" id="loan_rate" type="number" inputmode="decimal" placeholder="0"></div>
 <div class="fg"><label class="fl">Notes</label><input class="fi" id="loan_notes" placeholder="Purpose, terms..."></div>
 </div>
+<div class="fr">
+<div class="fg"><label class="fl">Repayment Type</label><select class="fi" id="loan_repay_type"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly" selected>Monthly</option><option value="lump">Lump Sum</option></select></div>
+<div class="fg"><label class="fl">Instalment (&#8358;)</label><input class="fi" id="loan_instalment" type="number" inputmode="numeric" placeholder="Auto if empty"></div>
+</div>
 <div style="display:flex;gap:8px;margin-top:8px;">
 <button class="btn bb" onclick="saveLoan()" style="flex:1;">&#128190; Save Loan</button>
 <button class="btn" onclick="hideAddLoan()" style="flex:0.4;background:var(--surf);">Cancel</button>
@@ -935,10 +940,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div class="gst"><div class="gsi gsig">&#128179;</div><div><div class="gsh">Pay Button</div><div class="gsd">Opens payment modal. Enter amount and reference. Select your banking app to pay directly. Balance updates instantly.</div></div></div>
 <div class="gst"><div class="gsi gsio">&#128203;</div><div><div class="gsh">Share Statement</div><div class="gsd">Generates full statement with all payment history. Share on WhatsApp as proof of payment.</div></div></div>
 </div>
-<div class="gp" id="gp6_inner">
-<div class="al ab"><div class="ai">&#128161;</div><div class="at">All settings are shown below — scroll down if you don't see them.</div></div>
-</div>
-
 <div class="gp" id="gp6_settings">
 <div class="gtip">&#9881;&#65039; Manage voice, API key and app settings here.</div>
 <div class="sh">&#127482;&#65039; Voice Settings</div>
@@ -1334,7 +1335,13 @@ var expiry=document.getElementById('su_e').value,cost=Number(document.getElement
 var sell=Number(document.getElementById('su_s').value)||0,supplier=document.getElementById('su_sup').value.trim();
 if(!name||!qty){toast('Enter product name and quantity');return;}
 var p=S.products.find(function(x){return x.genericName.toLowerCase()===name.toLowerCase()||(x.brandName&&x.brandName.toLowerCase()===name.toLowerCase());});
-if(!p){toast('Product not in database. Add via Snap first.');return;}
+if(!p){
+  // Product not found — create it automatically
+  p={id:Date.now(),genericName:name,brandName:'',strength:'',category:'Other',
+    sellUnit:unit||'unit',costPrice:cost||0,sellPrice:sell||0,
+    minStock:10,reorderQty:0,isFastMover:true,addedDate:td()};
+  S.products.push(p);
+}
 if(sell>0)p.sellPrice=sell;if(cost>0)p.costPrice=cost;
 S.stock.push({id:Date.now(),productId:p.id,qty:qty,unit:unit,batch:batch,expiry:expiry,cost:cost,supplier:supplier,date:td(),depleted:false});
 save();['su_n','su_q','su_b','su_e','su_c','su_s','su_sup'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
@@ -1845,7 +1852,7 @@ load();initSwipe();installPWA();
 
 // ── BREAK-EVEN ────────────────────────────────────────────────────────────────
 var BE_SETTINGS={rent:40000,sal:150000,gen:60000,naf:17000,nep:6000,sec:2000,oth:0};
-var LOAN={original:131592,balance:131592,days:14,startDate:'2026-02-28',payments:[]};
+var LOAN={original:0,balance:0,days:0,startDate:'',payments:[]};
 
 function getBEMonthly(){
 var be=BE_SETTINGS;
@@ -2285,7 +2292,7 @@ out+='</div>';
 out+='<div style="height:2px;background:linear-gradient(90deg,#f59e0b,#8b5cf6);border-radius:2px;margin-top:2px;"></div>';
 out+='</div>';
 // Full analysis block
-var skip=/^[1-5][.)\s]|PRIORITY ACTIONS|^\u2501+$|^---$|^\u2015+$/;
+var skip=/^[1-5][.)\s]|^[6-9][.)\s]|PRIORITY ACTIONS|^\u2501+$|^---$|^\u2015+$|^\u2550+$/;
 var aLines=lines.filter(function(l){return l.trim().length>0&&!skip.test(l.trim());});
 var analysis=aLines.join("\n").trim();
 if(analysis.length>30){

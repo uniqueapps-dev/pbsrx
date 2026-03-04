@@ -862,11 +862,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
       </div>
 
       <!-- BREAK-EVEN SETTINGS -->
-      <div class="sh">&#127482;&#65039; Voice Settings</div>
-      <div class="card">
-        <button id="voiceToggleBtn" class="btn" style="background:var(--grn);border:none;color:#fff;margin-bottom:8px;" onclick="toggleVoice()">&#128266; Voice ON (Male)</button>
-        <div style="font-size:11px;color:var(--mut);">Male voice used when available on your device. Toggle off to silence Coach reading.</div>
-      </div>
       <div class="sh">&#128273; Claude AI Setup</div>
       <div class="card" id="apiKeyCard">
         <div class="al ao" style="margin-bottom:10px;"><div class="ai">&#128161;</div><div class="at">Enter your OpenRouter API key to enable AI Coach, AI Snap, and QB analysis. Get your free key at openrouter.ai. Your key is stored only on this device.</div></div>
@@ -965,6 +960,49 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
       </div>
       <div class="gp" id="gp6_inner">
         <div class="al ab"><div class="ai">&#128161;</div><div class="at">All settings are shown below — scroll down if you don't see them.</div></div>
+      </div>
+      <!-- SETTINGS TAB -->
+      <div class="gp" id="gp6_settings">
+        <div class="gtip">&#9881;&#65039; Manage voice, API key and app settings here.</div>
+        <div class="sh">&#127482;&#65039; Voice Settings</div>
+        <div class="card">
+          <div style="display:flex;gap:8px;margin-bottom:10px;">
+            <button id="voiceToggleBtn" class="btn" style="flex:1;background:var(--grn);border:none;color:#fff;font-size:12px;" onclick="toggleVoice()">&#128266; Voice ON</button>
+            <button id="voiceMaleBtn" class="bsm bsb" style="flex:1;" onclick="setVoiceGender('male')">&#128104; Male</button>
+            <button id="voiceFemaleBtn" class="bsm" style="flex:1;background:var(--surf);" onclick="setVoiceGender('female')">&#128105; Female</button>
+          </div>
+          <div style="font-size:11px;color:var(--mut);" id="voiceStatusTxt">Select voice preference above.</div>
+        </div>
+        <div class="sh">&#128273; API Key Setup</div>
+        <div class="card" id="apiKeyCard">
+          <div class="al ao" style="margin-bottom:10px;"><div class="ai">&#128161;</div><div class="at">Enter your OpenRouter API key to enable AI Coach, AI Snap and QB analysis. Stored only on this device.</div></div>
+          <div class="fg"><label class="fl">OpenRouter API Key</label><input class="fi" id="apiKeyInput" type="password" placeholder="sk-or-..." autocomplete="off"></div>
+          <button class="btn bb" onclick="saveApiKey()" style="margin-top:6px;">&#128190; Save Key</button>
+          <div id="apiKeyStatus" style="font-size:12px;color:var(--mut);margin-top:8px;font-weight:600;"></div>
+          <div style="font-size:11px;color:var(--mut);margin-top:6px;">Get key: <span style="color:var(--blu);">openrouter.ai</span> &#8594; Sign in &#8594; Keys</div>
+        </div>
+        <div class="sh">&#9881;&#65039; Break-Even Settings</div>
+      <div class="card">
+        <div class="fr">
+          <div class="fg"><label class="fl">Rent (&#8358;/mo)</label><input class="fi" id="be_rent" type="number" value="40000"></div>
+          <div class="fg"><label class="fl">Salaries (&#8358;/mo)</label><input class="fi" id="be_sal" type="number" value="150000"></div>
+        </div>
+        <div class="fr">
+          <div class="fg"><label class="fl">Generator (&#8358;/mo)</label><input class="fi" id="be_gen" type="number" value="60000"></div>
+          <div class="fg"><label class="fl">NAFDAC (&#8358;/mo)</label><input class="fi" id="be_naf" type="number" value="17000"></div>
+        </div>
+        <div class="fr">
+          <div class="fg"><label class="fl">NEPA (&#8358;/mo)</label><input class="fi" id="be_nep" type="number" value="6000"></div>
+          <div class="fg"><label class="fl">Security/Clean (&#8358;/mo)</label><input class="fi" id="be_sec" type="number" value="2000"></div>
+        </div>
+        <div class="fg"><label class="fl">Other Fixed Costs (&#8358;/mo)</label><input class="fi" id="be_oth" type="number" value="0"></div>
+        <button class="btn bb" onclick="saveBeSettings()">&#128190; Save Break-Even Settings</button>
+        <div style="margin-top:10px;padding:10px 12px;background:var(--surf);border-radius:10px;border:1px solid var(--bdr);">
+          <div style="font-size:11px;color:var(--mut);font-weight:800;letter-spacing:1px;text-transform:uppercase;">Calculated Break-Even</div>
+          <div style="font-family:var(--fh);font-size:28px;color:var(--blu);" id="beCalc">&#8358;18,566 / day</div>
+          <div style="font-size:12px;color:var(--mut);" id="beCalcMo">&#8358;556,984 / month</div>
+        </div>
+      </div>
       </div>
 
       <!-- ALWAYS VISIBLE SETTINGS — never hidden inside a sub-tab -->
@@ -1881,8 +1919,10 @@ function logLoan(){
 
 // ── GUIDE TAB FN ─────────────────────────────────────────────────────────────
 function gTab2(idx,el){
-  document.querySelectorAll('#pg7 .gp').forEach(function(p,i){p.classList.toggle('on',i===idx);});
+  var gps=document.querySelectorAll('#pg7 .gp');
+  gps.forEach(function(p,i){p.classList.toggle('on',i===idx);});
   document.querySelectorAll('#pg7 .gtab').forEach(function(t,i){t.classList.toggle('on',i===idx);});
+  if(idx===6){initVoiceToggle();initApiKeyDisplay();}
 }
 
 // ── DEMAND LOG ───────────────────────────────────────────────────────────────
@@ -2227,28 +2267,60 @@ async function renderCoach(){
 }
 function renderActions(txt){
   var el=document.getElementById('coachActions');if(!el)return;
-  var lines=txt.split('\n').filter(function(l){return l.trim();});
-  var actions=[];var cur='';
-  lines.forEach(function(l){
-    if(/^[123]\.|^Action [123]/i.test(l.trim())){if(cur)actions.push(cur.trim());cur=l;}
-    else cur+='\n'+l;
-  });
-  if(cur)actions.push(cur.trim());
-  // If we couldn't parse, just show raw
-  if(actions.length<2){
-    el.innerHTML='<div class="card" style="white-space:pre-wrap;font-size:14px;line-height:1.7;color:var(--txt);">'+txt+'</div>';return;
+  var emojis=["\uD83D\uDCB0","\uD83D\uDC8A","\uD83C\uDFED","\uD83D\uDCC8","\uD83D\uDE80"];
+  var labels=["CASH","STOCK","SUPPLIER","SALES","GROWTH"];
+  var colors=["#ef4444","#f97316","#3b82f6","#22c55e","#a855f7"];
+  var bgs=["rgba(239,68,68,0.13)","rgba(249,115,22,0.13)","rgba(59,130,246,0.13)","rgba(34,197,94,0.13)","rgba(168,85,247,0.13)"];
+  var bds=["rgba(239,68,68,0.4)","rgba(249,115,22,0.4)","rgba(59,130,246,0.4)","rgba(34,197,94,0.4)","rgba(168,85,247,0.4)"];
+  // Parse numbered lines 1-5
+  var lines=txt.split("\n");
+  var actions=[];var cur=null;
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i].trim();
+    if(/^[1-5][.)\s]/.test(l)){
+      if(cur!==null)actions.push(cur);
+      cur=l.replace(/^[1-5][.)\s]+/,"").trim();
+    } else if(cur!==null&&l.length>0){
+      cur+=" "+l;
+    }
   }
-  var icons=['&#49;&#65039;&#8419;','&#50;&#65039;&#8419;','&#51;&#65039;&#8419;'];
-  var colors=['var(--red)','var(--ora)','var(--blu)'];
-  var bg=['var(--red2)','var(--ora2)','var(--blu3)'];
-  el.innerHTML=actions.slice(0,3).map(function(a,i){
-    return '<div style="background:'+bg[i]+';border-radius:14px;padding:16px;margin-bottom:10px;border:1px solid '+colors[i]+';">'+
-      '<div style="font-size:20px;margin-bottom:6px;">'+icons[i]+'</div>'+
-      '<div style="font-size:14px;font-weight:600;color:var(--txt);line-height:1.65;white-space:pre-wrap;">'+a+'</div>'+
-      '</div>';
-  }).join('')+
-  (actions.length>3?'<div style="font-size:13px;font-style:italic;color:var(--mut);text-align:center;padding:8px;">'+actions[actions.length-1]+'</div>':'');
+  if(cur!==null)actions.push(cur);
+  // Header
+  var out='<div style="background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(99,102,241,0.12));';
+  out+='border:1px solid rgba(245,158,11,0.35);border-radius:16px;padding:16px;margin-bottom:12px;">';
+  out+='<div style="font-size:12px;font-weight:900;color:#f59e0b;letter-spacing:1.5px;margin-bottom:10px;">\u26A1 TODAY\'S 5 PRIORITY ACTIONS</div>';
+  out+='<div style="height:2px;background:linear-gradient(90deg,#f59e0b,#8b5cf6);border-radius:2px;margin-bottom:12px;"></div>';
+  // 5 action cards
+  for(var i=0;i<5;i++){
+    var text=actions[i]||"";
+    text=text.replace(/^(CASH|STOCK|SUPPLIER|SALES|GROWTH)[\s\-\u2014]+/i,"").trim();
+    out+='<div style="background:'+bgs[i]+';border:1px solid '+bds[i]+';border-radius:12px;padding:12px 14px;margin-bottom:8px;">';
+    out+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">';
+    out+='<span style="font-size:17px;">'+emojis[i]+'</span>';
+    out+='<span style="font-size:10px;font-weight:900;color:'+colors[i]+';letter-spacing:2px;">'+labels[i]+'</span>';
+    out+='</div>';
+    if(text.length>5){
+      out+='<div style="font-size:13px;font-weight:600;color:#f1f5f9;line-height:1.6;">'+text+'</div>';
+    } else {
+      out+='<div style="font-size:12px;color:rgba(255,255,255,0.3);font-style:italic;">Add more data for insight</div>';
+    }
+    out+='</div>';
+  }
+  out+='<div style="height:2px;background:linear-gradient(90deg,#f59e0b,#8b5cf6);border-radius:2px;margin-top:2px;"></div>';
+  out+='</div>';
+  // Full analysis block
+  var skip=/^[1-5][.)\s]|PRIORITY ACTIONS|^\u2501+$|^---$|^\u2015+$/;
+  var aLines=lines.filter(function(l){return l.trim().length>0&&!skip.test(l.trim());});
+  var analysis=aLines.join("\n").trim();
+  if(analysis.length>30){
+    out+='<div class="card" style="margin-top:8px;padding:14px;">';
+    out+='<div style="font-size:10px;font-weight:900;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">\uD83E\uDD16 Full Analysis</div>';
+    out+='<div style="font-size:13px;line-height:1.7;color:#e2e8f0;white-space:pre-wrap;">'+analysis+'</div>';
+    out+='</div>';
+  }
+  el.innerHTML=out;
 }
+
 function renderRuleBasedCoach(){
   var el=document.getElementById('coachActions');if(!el)return;
   var today=S.cashDays.find(function(d){return d.date===td();});
@@ -2913,14 +2985,14 @@ async function processAIImages(){
       r.readAsDataURL(aiImageFiles[i]);
     });
     var mt=aiImageFiles[i].type||'image/jpeg';
-    imageContents.push({type:'image',source:{type:'base64',media_type:mt,data:b64}});
+    imageContents.push({type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}});
   }
   imageContents.push({type:'text',text:'These are '+aiImageFiles.length+' photos of the same Nigerian pharmaceutical drug pack (front, back, side, etc). Extract ALL visible product information and return ONLY a JSON object with these exact keys (use empty string if not visible): genericName, brandName, strength, form (tablet/capsule/syrup/injection/cream/etc), category (Analgesic/Antibiotic/Antimalarial/Antifungal/Cardiovascular/Gastrointestinal/Vitamin/Supplement/Antihistamine/Other), batchNumber, expiryDate (format YYYY-MM), nafdacNumber, manufacturer, packSize. Use all photos together for maximum accuracy. Return ONLY the JSON object, no other text.'});
 
   try{
     var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
       method:'POST',headers:getApiHeaders(),
-      body:JSON.stringify({model:'anthropic/claude-sonnet-4-5',max_tokens:1000,
+      body:JSON.stringify({model:'openai/gpt-4o',max_tokens:800,
         messages:[{role:'user',content:imageContents}]})
     });
     var data=await resp.json();
@@ -3200,10 +3272,31 @@ var preferMaleVoice=true;
 
 function getVoice(){
   var voices=window.speechSynthesis.getVoices();
-  var male=voices.find(function(v){return v.lang.startsWith('en')&&(v.name.toLowerCase().includes('male')||v.name.toLowerCase().includes('david')||v.name.toLowerCase().includes('james')||v.name.toLowerCase().includes('daniel')||v.name.toLowerCase().includes('mark')||v.name.toLowerCase().includes('alex'));});
-  return male||voices.find(function(v){return v.lang.startsWith('en');})||voices[0];
+  var gender=localStorage.getItem('pbsrx_voice_gender')||'male';
+  var enVoices=voices.filter(function(v){return v.lang.startsWith('en');});
+  var maleNames=['david','james','daniel','mark','alex','google uk english male','microsoft david','fred','bruce','tom'];
+  var femaleNames=['female','samantha','karen','victoria','moira','tessa','fiona','google uk english female','microsoft zira'];
+  if(gender==='male'){
+    var m=enVoices.find(function(v){return maleNames.some(function(n){return v.name.toLowerCase().includes(n);});});
+    if(m)return m;
+    // Fall back to non-female named voice
+    return enVoices.find(function(v){return !femaleNames.some(function(n){return v.name.toLowerCase().includes(n);});})||enVoices[0]||voices[0];
+  } else {
+    var f=enVoices.find(function(v){return femaleNames.some(function(n){return v.name.toLowerCase().includes(n);});});
+    return f||enVoices[1]||enVoices[0]||voices[0];
+  }
 }
 
+function setVoiceGender(gender){
+  localStorage.setItem('pbsrx_voice_gender', gender);
+  var mb=document.getElementById('voiceMaleBtn');
+  var fb=document.getElementById('voiceFemaleBtn');
+  var st=document.getElementById('voiceStatusTxt');
+  if(mb)mb.style.background=gender==='male'?'var(--blu)':'var(--surf)';
+  if(fb)fb.style.background=gender==='female'?'var(--pur)':'var(--surf)';
+  if(st)st.textContent=gender==='male'?'Male voice selected':'Female voice selected';
+  toast((gender==='male'?'Male':'Female')+' voice selected');
+}
 function toggleVoice(){
   voiceEnabled=!voiceEnabled;
   localStorage.setItem('pbsrx_voice',voiceEnabled?'on':'off');
@@ -3377,20 +3470,19 @@ function renderDashLoans(){
   var el=document.getElementById('dLoansContent');
   if(!el)return;
   var loans=S.loans||[];
-  // Also check legacy OPay loan
-  var legacyBal=LOAN&&LOAN.balance?LOAN.balance-( LOAN.payments||[]).reduce(function(s,p){return s+p.amt;},0):0;
+  var legacyBal=LOAN&&LOAN.balance?LOAN.balance-(LOAN.payments||[]).reduce(function(s,p){return s+p.amt;},0):0;
   if(!loans.length&&legacyBal<=0){el.innerHTML='<div style="color:var(--mut);font-size:12px;text-align:center;">No active loans</div>';return;}
   var totalBal=loans.reduce(function(s,l){return s+getLoanBalance(l);},0)+Math.max(0,legacyBal);
   var nextDue=loans.filter(function(l){return getLoanBalance(l)>0&&l.dueDate;}).sort(function(a,b){return a.dueDate.localeCompare(b.dueDate);})[0];
   var html2='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">';
   html2+='<div style="font-size:11px;color:var(--mut);font-weight:700;">Total Outstanding</div>';
-  html2+='<div style="font-size:16px;font-weight:900;color:var(--red);">\u20A6'+totalBal.toLocaleString('en-NG')+'</div></div>';
+  html2+='<div style="font-size:16px;font-weight:900;color:var(--red);">₦'+totalBal.toLocaleString('en-NG')+'</div></div>';
   if(nextDue)html2+='<div style="font-size:11px;color:var(--ora);font-weight:700;">Next due: '+nextDue.lender+' on '+nextDue.dueDate+'</div>';
   if(loans.length){
     html2+='<div style="margin-top:8px;">';
     loans.slice(0,3).forEach(function(l){
       var bal=getLoanBalance(l);
-      if(bal>0)html2+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--bdr);"><span style="color:var(--txt);">'+l.lender+'</span><span style="color:var(--red);font-weight:700;">\u20A6'+bal.toLocaleString('en-NG')+'</span></div>';
+      if(bal>0)html2+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--bdr);"><span style="color:var(--txt);">'+l.lender+'</span><span style="color:var(--red);font-weight:700;">₦'+bal.toLocaleString('en-NG')+'</span></div>';
     });
     html2+='</div>';
   }

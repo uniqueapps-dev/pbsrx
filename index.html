@@ -56,7 +56,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .hso{background:none;border:none;color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fb);}
 .pages{flex:1;overflow:hidden;position:relative;}
 .pg{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 84px;display:none;}.pg.on{display:block;}
-.nav{height:62px;background:var(--card);border-top:1px solid var(--bdr);display:flex;align-items:stretch;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.06);}
+.nav{height:62px;background:var(--card);border-top:1px solid var(--bdr);display:flex;align-items:stretch;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.06);order:99;position:relative;z-index:100;}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;font-family:var(--fb);position:relative;color:var(--txt);}
 .nb.on{background:linear-gradient(180deg,rgba(26,95,168,0.07),transparent);}
 .nbi{font-size:19px;transition:transform .2s;}.nb.on .nbi{transform:scale(1.18);}
@@ -325,7 +325,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 </div>
 
 <div class="pg" id="pg1">
-<div class="pgt">Stock Pulse</div><div class="pgs">All monitored products — live status</div>
+<div style="display:flex;justify-content:space-between;align-items:center;"><div><div class="pgt">Stock Pulse</div><div class="pgs">All monitored products — live status</div></div><button onclick="showReceiveStock()" style="background:linear-gradient(135deg,var(--grn),var(--blu));border:none;color:#fff;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;">&#128230; Receive Stock</button></div>
 <div id="sAlerts"></div>
 <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;">
 <button class="bsm bsb" onclick="fPulse('all')">All</button>
@@ -416,6 +416,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 </div>
 </div>
 <canvas id="aiCanvas" style="display:none;"></canvas>
+          <div id="camShotCount" style="text-align:center;font-size:12px;color:var(--amb);font-weight:700;padding:4px 0;">Tap Snap for each angle (front, back, side). Auto-processes at 3 shots.</div>
 </div>
 <div id="aiSnapUpload" style="margin-bottom:10px;">
 <button class="btn" style="background:linear-gradient(135deg,var(--amb),var(--pur));border:none;color:#fff;" onclick="startAICamera()">&#128247; Open Camera — Snap Drug Pack</button>
@@ -1837,14 +1838,24 @@ return c.toDataURL('image/png');
 }
 
 // ── SWIPE ────────────────────────────────────────────────────────────────────
-var swX=0,swY=0,swM=false;
+var swX=0,swY=0,swM=false,swT=0;
 function initSwipe(){
-var pages=document.querySelector('.pages');if(!pages)return;
-pages.addEventListener('touchstart',function(e){swX=e.touches[0].clientX;swY=e.touches[0].clientY;swM=false;},{passive:true});
-pages.addEventListener('touchmove',function(e){var dx=Math.abs(e.touches[0].clientX-swX),dy=Math.abs(e.touches[0].clientY-swY);if(dx>dy&&dx>10)swM=true;},{passive:true});
-pages.addEventListener('touchend',function(e){
-if(!swM)return;var dx=e.changedTouches[0].clientX-swX,dy=Math.abs(e.changedTouches[0].clientY-swY);
-if(Math.abs(dx)>50&&dy<80){var next=dx<0?Math.min(curPg+1,7):Math.max(curPg-1,0);if(next!==curPg)goTo(next,document.getElementById('nb'+next));}
+document.addEventListener('touchstart',function(e){
+if(e.target.closest('.modal,.card input,.card select,.card textarea,video,canvas'))return;
+swX=e.touches[0].clientX;swY=e.touches[0].clientY;swM=false;swT=Date.now();
+},{passive:true});
+document.addEventListener('touchmove',function(e){
+var dx=Math.abs(e.touches[0].clientX-swX),dy=Math.abs(e.touches[0].clientY-swY);
+if(dx>dy&&dx>15)swM=true;
+},{passive:true});
+document.addEventListener('touchend',function(e){
+if(!swM)return;
+if(Date.now()-swT>500)return;
+var dx=e.changedTouches[0].clientX-swX,dy=Math.abs(e.changedTouches[0].clientY-swY);
+if(Math.abs(dx)>50&&dy<100){
+var next=dx<0?Math.min(curPg+1,7):Math.max(curPg-1,0);
+if(next!==curPg)goTo(next,document.getElementById('nb'+next));
+}
 },{passive:true});
 }
 // ── INIT ─────────────────────────────────────────────────────────────────────
@@ -1934,8 +1945,8 @@ return '<div style="display:flex;justify-content:space-between;align-items:cente
 }).join('');
 }
 function moveDemandToSnap(name){
-goTo(2,document.getElementById('nb2'));setSnap('new',document.getElementById('so2'));
-setTimeout(function(){var el=document.getElementById('np_g');if(el){el.value=name;el.focus();}toast('Pre-filled from demand log. Complete product details.',3500);},250);
+// Open Receive Stock modal with product pre-filled
+showReceiveStock(name);
 }
 
 // ── MARGIN × VELOCITY ENGINE ─────────────────────────────────────────────────
@@ -2295,8 +2306,12 @@ out+='</div>';
 var skip=/^[1-5][.)\s]|^[6-9][.)\s]|PRIORITY ACTIONS|^\u2501+$|^---$|^\u2015+$|^\u2550+$/;
 var aLines=lines.filter(function(l){return l.trim().length>0&&!skip.test(l.trim());});
 var analysis=aLines.join("\n").trim();
-analysis=analysis.replace(/^[💰💊🏭📈🚀].*$/gm,'').trim();
-  if(analysis.length>50){
+// Strip any lines starting with number+dot (action duplicates) or emojis
+analysis=analysis.split('\n').filter(function(l){
+var t=l.trim();
+return t.length>0&&!/^[1-9][.)\s]/.test(t)&&!/^[\u{1F000}-\u{1FFFF}]/u.test(t)&&!t.includes('PRIORITY ACTIONS')&&!/^\u2501+$/.test(t)&&t!=='---';
+}).join('\n').trim();
+if(analysis.length>50){
 out+='<div class="card" style="margin-top:8px;padding:14px;">';
 out+='<div style="font-size:10px;font-weight:900;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">\uD83E\uDD16 Full Analysis</div>';
 out+='<div style="font-size:13px;line-height:1.7;color:#e2e8f0;white-space:pre-wrap;">'+analysis+'</div>';
@@ -2446,13 +2461,52 @@ if(aiStream){aiStream.getTracks().forEach(function(t){t.stop();});aiStream=null;
 document.getElementById('aiSnapCamera').style.display='none';
 document.getElementById('aiSnapUpload').style.display='block';
 }
+var camShots=[];
 function captureAISnap(){
 var vid=document.getElementById('aiVid');var canvas=document.getElementById('aiCanvas');
 canvas.width=vid.videoWidth;canvas.height=vid.videoHeight;
 canvas.getContext('2d').drawImage(vid,0,0);
 var dataUrl=canvas.toDataURL('image/jpeg',0.85);
+camShots.push(dataUrl);
+var btn=document.querySelector('#aiSnapCamera button');
+var countEl=document.getElementById('camShotCount');
+if(countEl)countEl.textContent='Shot '+camShots.length+' captured. '+(camShots.length<3?'Take more or tap Process.':'Ready!');
+if(camShots.length>=3){
+stopAICamera();processCamShots();
+} else {
+toast('Shot '+camShots.length+' captured! Take more angles or tap Process.',2000);
+}
+}
+function processCamShots(){
+if(!camShots.length)return;
 stopAICamera();
-processAIImage(dataUrl);
+var status=document.getElementById('aiSnapStatus');
+var msg=document.getElementById('aiSnapMsg');
+var icon=document.getElementById('aiSnapIcon');
+status.style.display='flex';msg.textContent='GPT-4o reading '+camShots.length+' photo(s)...';icon.textContent='⏳';
+document.getElementById('aiSnapUpload').style.display='none';
+document.getElementById('aiSnapResult').style.display='none';
+var contents=camShots.map(function(d){
+var b64=d.split(',')[1];
+var mt=d.indexOf('image/png')>0?'image/png':'image/jpeg';
+return {type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}};
+});
+contents.push({type:'text',text:'IMPORTANT: Only read text you can literally see in these images. These '+camShots.length+' photos show different angles of the same Nigerian pharmaceutical drug pack. Return ONLY a JSON object: {"genericName":"","brandName":"","strength":"","form":"","category":"","batchNumber":"","expiryDate":"","nafdacNumber":"","manufacturer":"","packSize":""}. No markdown, no explanation, raw JSON only.'});
+camShots=[];
+fetch('https://openrouter.ai/api/v1/chat/completions',{
+method:'POST',headers:getApiHeaders(),
+body:JSON.stringify({model:'openai/gpt-4o',max_tokens:800,messages:[{role:'user',content:contents}]})
+}).then(function(r){return r.json();}).then(function(data){
+var txt=data.choices&&data.choices[0]?data.choices[0].message.content:'{}';
+txt=txt.replace(/\`\`\`json|\`\`\`/g,'').trim();
+aiExtracted=JSON.parse(txt);
+status.style.display='none';
+renderAIExtracted();
+}).catch(function(e){
+icon.textContent='❌';
+msg.textContent='Could not read pack. Try Upload Photos option.';
+setTimeout(function(){status.style.display='none';document.getElementById('aiSnapUpload').style.display='block';},4000);
+});
 }
 function handleAIImage(input){
 var file=input.files[0];if(!file)return;
@@ -3488,6 +3542,134 @@ if(gv){gv.textContent=(gap>=0?'+':'')+' \u20A6'+Math.abs(gap).toLocaleString('en
 if(st){st.textContent=gap>=0?'\u2705 On track — \u20A6'+gap.toLocaleString('en-NG')+' above break-even':'\u274C \u20A6'+Math.abs(gap).toLocaleString('en-NG')+' below break-even';st.style.color=gap>=0?'var(--grn)':'var(--red)';}
 }
 
+
+// ══ RECEIVE STOCK MODAL ════════════════════════════════════════
+var rsItemCount=0;
+function rsItemHTML(idx,prefillName){
+prefillName=prefillName||'';
+return '<div id="rs_item_'+idx+'" style="background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:12px;margin-bottom:10px;position:relative;">'+
+'<div style="font-size:11px;font-weight:800;color:var(--blu);letter-spacing:1px;margin-bottom:8px;">ITEM '+(idx+1)+'</div>'+
+'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">'+
+'<div><label style="font-size:11px;color:var(--mut);font-weight:700;">Product Name *</label>'+
+'<input class="fi" id="rs_name_'+idx+'" value="'+prefillName+'" placeholder="Generic or brand name" style="margin-top:3px;"></div>'+
+'<div><label style="font-size:11px;color:var(--mut);font-weight:700;">Strength/Form</label>'+
+'<input class="fi" id="rs_strength_'+idx+'" placeholder="e.g. 500mg tablet" style="margin-top:3px;"></div>'+
+'<div><label style="font-size:11px;color:var(--mut);font-weight:700;">Qty Received *</label>'+
+'<input class="fi" id="rs_qty_'+idx+'" type="number" inputmode="numeric" placeholder="0" style="margin-top:3px;"></div>'+
+'<div><label style="font-size:11px;color:var(--mut);font-weight:700;">Cost Price (&#8358;)</label>'+
+'<input class="fi" id="rs_cost_'+idx+'" type="number" inputmode="numeric" placeholder="0" style="margin-top:3px;" oninput="rsSuggestSell('+idx+')"></div>'+
+'<div><label style="font-size:11px;color:var(--mut);font-weight:700;">Selling Price (&#8358;)</label>'+
+'<input class="fi" id="rs_sell_'+idx+'" type="number" inputmode="numeric" placeholder="0 (auto +30%)" style="margin-top:3px;"></div>'+
+'<div><label style="font-size:11px;color:var(--mut);font-weight:700;">Expiry Date</label>'+
+'<input class="fi" id="rs_expiry_'+idx+'" type="month" style="margin-top:3px;"></div>'+
+'<div><label style="font-size:11px;color:var(--mut);font-weight:700;">Batch No.</label>'+
+'<input class="fi" id="rs_batch_'+idx+'" placeholder="Optional" style="margin-top:3px;"></div>'+
+'<div><label style="font-size:11px;color:var(--mut);font-weight:700;">Category</label>'+
+'<select class="fi" id="rs_cat_'+idx+'" style="margin-top:3px;">'+
+'<option>Analgesic</option><option>Antibiotic</option><option>Antimalarial</option>'+
+'<option>Antifungal</option><option>Cardiovascular</option><option>Gastrointestinal</option>'+
+'<option>Vitamin</option><option>Supplement</option><option>Antihistamine</option><option selected>Other</option>'+
+'</select></div>'+
+'</div>'+
+(idx>0?'<button onclick="removeRSItem('+idx+')" style="position:absolute;top:8px;right:8px;background:var(--red2);color:var(--red);border:none;border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer;">&#128465;</button>':'')+
+'</div>';
+}
+function rsSuggestSell(idx){
+var cost=Number(document.getElementById('rs_cost_'+idx).value)||0;
+var sellEl=document.getElementById('rs_sell_'+idx);
+if(cost>0&&(!sellEl.value||Number(sellEl.value)===0)){
+sellEl.value=Math.ceil(cost*1.3);
+}
+}
+function addRSItem(){
+var list=document.getElementById('rs_items_list');
+var div=document.createElement('div');
+div.innerHTML=rsItemHTML(rsItemCount,'');
+list.appendChild(div.firstChild);
+rsItemCount++;
+}
+function removeRSItem(idx){
+var el=document.getElementById('rs_item_'+idx);
+if(el)el.remove();
+}
+function showReceiveStock(prefillName){
+rsItemCount=0;
+var list=document.getElementById('rs_items_list');
+list.innerHTML=rsItemHTML(0,prefillName||'');
+rsItemCount=1;
+var dateEl=document.getElementById('rs_date');
+if(dateEl)dateEl.value=td();
+document.getElementById('receiveStockModal').style.display='block';
+document.body.style.overflow='hidden';
+}
+function closeReceiveStock(){
+document.getElementById('receiveStockModal').style.display='none';
+document.body.style.overflow='';
+}
+function saveReceiveStock(){
+var supplier=document.getElementById('rs_supplier').value.trim();
+var date=document.getElementById('rs_date').value||td();
+var invoice=document.getElementById('rs_invoice').value.trim();
+var status=document.getElementById('rs_status');
+var saved=0;
+for(var i=0;i<rsItemCount;i++){
+var nameEl=document.getElementById('rs_name_'+i);
+if(!nameEl)continue;
+var name=nameEl.value.trim();
+if(!name)continue;
+var qty=Number(document.getElementById('rs_qty_'+i).value)||0;
+if(qty<=0)continue;
+var cost=Number(document.getElementById('rs_cost_'+i).value)||0;
+var sell=Number(document.getElementById('rs_sell_'+i).value)||0;
+var expiry=document.getElementById('rs_expiry_'+i).value||'';
+var batch=document.getElementById('rs_batch_'+i).value||('RECV-'+date);
+var strength=document.getElementById('rs_strength_'+i).value||'';
+var cat=document.getElementById('rs_cat_'+i).value||'Other';
+if(sell===0&&cost>0)sell=Math.ceil(cost*1.3);
+// Find or create product
+var prod=S.products.find(function(p){return p.genericName.toLowerCase()===name.toLowerCase();});
+if(!prod){
+prod={id:Date.now()+i,genericName:name,brandName:'',strength:strength,category:cat,
+sellUnit:'unit',costPrice:cost,sellPrice:sell,minStock:10,reorderQty:0,isFastMover:true,addedDate:date};
+S.products.push(prod);
+} else {
+// Update prices if changed
+if(cost>0)prod.costPrice=cost;
+if(sell>0)prod.sellPrice=sell;
+if(strength&&!prod.strength)prod.strength=strength;
+}
+S.stock.push({id:Date.now()+i+5000,productId:prod.id,qty:qty,unit:prod.sellUnit||'unit',
+batch:batch,expiry:expiry,cost:cost,date:date,depleted:false,supplier:supplier,invoice:invoice});
+saved++;
+}
+if(saved===0){if(status)status.textContent='\u26A0\uFE0F Add at least one product with name and quantity.';return;}
+save();renderPulse();updBadges();
+if(status)status.textContent='\u2705 '+saved+' product(s) stocked successfully!';
+toast('Stock received: '+saved+' products saved',3000);
+setTimeout(closeReceiveStock,1500);
+}
+
 // ── OVERRIDE INIT ──
 var _origLoad=load;load=function(){_origLoad();initCoach();renderSalesChart(30);initApiKeyDisplay();renderStockBalance();initVoiceToggle();renderDashBE();renderDashLoans();renderLoans();};
-</script></body></html>
+</script>
+<div id="receiveStockModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;overflow-y:auto;padding:20px 12px;">
+<div style="background:var(--card);border-radius:20px;max-width:500px;margin:0 auto;padding:20px;">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+<div style="font-size:16px;font-weight:900;color:var(--txt);">&#128230; Receive Stock</div>
+<button onclick="closeReceiveStock()" style="background:var(--surf);border:none;color:var(--mut);border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;">&#10005;</button>
+</div>
+<div style="background:var(--surf);border-radius:12px;padding:12px;margin-bottom:14px;">
+<div style="font-size:11px;font-weight:800;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Supplier Details (once)</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;">
+<div style="flex:1;min-width:130px;"><label style="font-size:11px;color:var(--mut);font-weight:700;">Supplier</label><input class="fi" id="rs_supplier" placeholder="Supplier name" style="margin-top:3px;"></div>
+<div style="flex:1;min-width:130px;"><label style="font-size:11px;color:var(--mut);font-weight:700;">Invoice Date</label><input class="fi" id="rs_date" type="date" style="margin-top:3px;"></div>
+<div style="flex:1;min-width:130px;"><label style="font-size:11px;color:var(--mut);font-weight:700;">Invoice No.</label><input class="fi" id="rs_invoice" placeholder="Optional" style="margin-top:3px;"></div>
+</div>
+</div>
+<div id="rs_items_list"></div>
+<button onclick="addRSItem()" style="width:100%;background:var(--surf);border:1px dashed var(--bdr);border-radius:10px;padding:10px;font-size:13px;font-weight:700;color:var(--blu);cursor:pointer;margin-bottom:12px;">+ Add Another Product</button>
+<button onclick="saveReceiveStock()" style="width:100%;background:linear-gradient(135deg,var(--grn),var(--blu));border:none;color:#fff;border-radius:12px;padding:14px;font-size:15px;font-weight:900;cursor:pointer;">&#128190; Save All Stock</button>
+<div id="rs_status" style="font-size:12px;color:var(--mut);text-align:center;margin-top:8px;font-weight:600;"></div>
+</div>
+</div>
+</body></html>

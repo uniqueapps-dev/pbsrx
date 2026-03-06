@@ -5,7 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="v5.060326.0717">
+<meta name="version" content="v5b.060326.1508">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>PBSRx — Pharmacy Business System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -283,7 +283,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
 <div id="app">
 <div class="hdr">
-<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v5.060326.0717</div>
+<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v5b.060326.1508</div>
 <div style="display:flex;align-items:center;gap:10px;">
 <div class="hrole" id="hrole">ADMIN</div>
 <button class="hso" onclick="signOut()">Sign out</button>
@@ -420,7 +420,8 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 </div>
 </div>
 <canvas id="aiCanvas" style="display:none;"></canvas>
-          <div id="camShotCount" style="text-align:center;font-size:12px;color:var(--amb);font-weight:700;padding:4px 0;">Tap Snap for each angle (front, back, side). Auto-processes at 3 shots.</div>
+          <div id="camShotCount" style="text-align:center;font-size:12px;color:var(--amb);font-weight:700;padding:4px 0;">Tap Snap for each angle. Auto-processes at 3 shots.</div>
+          <div id="focusIndicator" style="text-align:center;font-size:11px;color:var(--grn);font-weight:700;padding:2px 0;display:none;">&#9899; Focused — good to snap!</div>
 </div>
 <div id="aiSnapUpload" style="margin-bottom:10px;">
 <button class="btn" style="background:linear-gradient(135deg,var(--amb),var(--pur));border:none;color:#fff;" onclick="startAICamera()">&#128247; Open Camera — Snap Drug Pack</button>
@@ -1980,44 +1981,47 @@ renderDemandList();toast('Lost sale logged: '+prod+' x'+cnt);
 function renderDemandList(){
 var el=document.getElementById('demandList');if(!el)return;
 if(!S.demandLog||!S.demandLog.length){
-el.innerHTML='<div style="font-size:12px;color:var(--mut);text-align:center;padding:10px;">No lost sales logged yet. Every missed sale is data.</div>';return;
+el.innerHTML='<div style="font-size:12px;color:var(--mut);text-align:center;padding:10px;">No lost sales logged yet.</div>';return;
 }
 var sorted=S.demandLog.slice().sort(function(a,b){return b.count-a.count;});
 var total=S.demandLog.reduce(function(s,d){return s+d.count;},0);
-el.innerHTML='<div style="font-size:11px;color:var(--mut);font-weight:700;padding:4px 0;margin-bottom:6px;">'+sorted.length+' products missed · '+total+' total requests</div>'+
+el.innerHTML='<div style="font-size:11px;color:var(--mut);font-weight:700;padding:4px 0;margin-bottom:6px;">'+sorted.length+' products missed &middot; '+total+' total requests</div>'+
 sorted.map(function(d,i){
-var pct=Math.round(d.count/total*100);
+var pct=Math.round(d.count/Math.max(total,1)*100);
 var heat=pct>30?'var(--red)':pct>15?'var(--ora)':'var(--blu)';
 return '<div class="demand-row" onclick="toggleDemandRow('+i+')" style="cursor:pointer;">'+
 '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surf);border-radius:10px;margin-bottom:3px;border:1px solid var(--bdr);">'+
 '<div style="width:8px;height:8px;border-radius:50%;background:'+heat+';flex-shrink:0;"></div>'+
 '<div style="flex:1;font-size:13px;font-weight:700;color:var(--txt);">'+d.name+'</div>'+
-'<div style="font-size:12px;font-weight:900;color:'+heat+';">'+d.count+'x</div>'+
-'<div style="font-size:10px;color:var(--mut);">&#9660;</div>'+
-'</div>'+
-'<div id="drx_'+i+'" style="display:none;background:var(--card);border:1px solid '+heat+'33;border-radius:10px;margin-top:-1px;margin-bottom:4px;padding:12px;animation:fadeIn .2s;">'+
-'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'+
-'<div style="font-size:15px;font-weight:900;color:var(--txt);">'+d.name+'</div>'+
-'<span style="background:'+heat+'22;color:'+heat+';font-size:12px;font-weight:900;padding:4px 10px;border-radius:20px;">'+d.count+'x missed</span>'+
-'</div>'+
-// Demand bar
+'<div style="display:flex;align-items:center;gap:4px;">'+
+'<button onclick="event.stopPropagation();adjDemand('+i+',-1)" style="background:var(--surf);border:1px solid var(--bdr);border-radius:6px;width:24px;height:24px;font-weight:900;cursor:pointer;font-size:14px;">-</button>'+
+'<span style="font-size:13px;font-weight:900;color:'+heat+';min-width:28px;text-align:center;">'+d.count+'x</span>'+
+'<button onclick="event.stopPropagation();adjDemand('+i+',1)" style="background:var(--surf);border:1px solid var(--bdr);border-radius:6px;width:24px;height:24px;font-weight:900;cursor:pointer;font-size:14px;">+</button>'+
+'</div></div>'+
+'<div id="drx_'+i+'" style="display:none;background:var(--card);border:1px solid '+heat+'33;border-radius:10px;margin-top:-1px;margin-bottom:4px;padding:12px;">'+
+'<div style="font-size:15px;font-weight:900;color:var(--txt);margin-bottom:8px;">'+d.name+'</div>'+
 '<div style="background:var(--bdr);border-radius:4px;height:6px;margin-bottom:10px;overflow:hidden;">'+
 '<div style="height:100%;border-radius:4px;background:'+heat+';width:'+pct+'%;"></div></div>'+
 '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">'+
-'<div style="background:var(--surf);border-radius:8px;padding:8px;text-align:center;">'+
-'<div style="font-size:18px;font-weight:900;color:'+heat+';">'+d.count+'</div>'+
-'<div style="font-size:10px;color:var(--mut);">Times Requested</div></div>'+
-'<div style="background:var(--surf);border-radius:8px;padding:8px;text-align:center;">'+
-'<div style="font-size:13px;font-weight:800;color:var(--txt);">'+(d.lastDate||'—')+'</div>'+
-'<div style="font-size:10px;color:var(--mut);">Last Requested</div></div>'+
+'<div style="background:var(--surf);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:18px;font-weight:900;color:'+heat+';">'+d.count+'</div><div style="font-size:10px;color:var(--mut);">Times Missed</div></div>'+
+'<div style="background:var(--surf);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:13px;font-weight:800;color:var(--txt);">'+(d.lastDate||'—')+'</div><div style="font-size:10px;color:var(--mut);">Last Requested</div></div>'+
 '</div>'+
-'<div style="font-size:11px;color:var(--mut);margin-bottom:10px;">First logged: '+(d.firstDate||'—')+' · '+(pct)+'% of all missed demand</div>'+
 '<div style="display:flex;gap:6px;">'+
-'<button class="btn bb" onclick="event.stopPropagation();moveDemandToSnap('+JSON.stringify(d.name)+')" style="flex:1;font-size:12px;padding:8px;">&#128230; Add to Stock</button>'+
-'<button class="bsm bsr" onclick="event.stopPropagation();deleteDemandItem('+i+')" style="flex:0.4;">&#128465;</button>'+
+'<button class="btn bb" onclick="event.stopPropagation();moveDemandToSnap('+JSON.stringify(d.name)+')">&#128230; Add to Stock</button>'+
+'<button class="bsm bsr" onclick="event.stopPropagation();deleteDemandItem('+i+')">&#128465;</button>'+
 '</div></div></div>';
 }).join('');
 }
+function adjDemand(i,delta){
+var sorted=S.demandLog.slice().sort(function(a,b){return b.count-a.count;});
+var item=sorted[i];if(!item)return;
+var real=S.demandLog.find(function(d){return d.name===item.name;});
+if(!real)return;
+real.count=Math.max(0,real.count+delta);
+real.lastDate=td();
+save();renderDemandList();
+}
+
 function toggleDemandRow(i){
 var exp=document.getElementById('drx_'+i);
 if(!exp)return;
@@ -2537,9 +2541,18 @@ function startAICamera(){
 var camDiv=document.getElementById('aiSnapCamera');
 var upDiv=document.getElementById('aiSnapUpload');
 if(!navigator.mediaDevices){toast('Camera not available. Try uploading an image instead.');return;}
-navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false})
+var camConstraints={video:{facingMode:'environment',focusMode:'continuous',
+advanced:[{focusMode:'continuous-if-face-absent'},{torch:false}]},audio:false};
+navigator.mediaDevices.getUserMedia(camConstraints).catch(function(){
+return navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+})
 .then(function(stream){
 aiStream=stream;
+// Apply autofocus track constraints
+var track=stream.getVideoTracks()[0];
+if(track&&track.applyConstraints){
+track.applyConstraints({advanced:[{focusMode:'continuous'}]}).catch(function(){});
+}
 var vid=document.getElementById('aiVid');vid.srcObject=stream;
 camDiv.style.display='block';upDiv.style.display='none';
 }).catch(function(){toast('Camera permission needed. Allow camera in Chrome settings then try again.');});
@@ -3420,51 +3433,31 @@ var fb=document.getElementById('voiceFemaleBtn');
 var st=document.getElementById('voiceStatusTxt');
 if(mb){mb.style.background=gender==='male'?'var(--blu)':'var(--surf)';mb.style.color=gender==='male'?'#fff':'var(--txt)';}
 if(fb){fb.style.background=gender==='female'?'#8b5cf6':'var(--surf)';fb.style.color=gender==='female'?'#fff':'var(--txt)';}
-if(st)st.textContent=(gender==='male'?'Male':'Female')+' voice selected';
-toast((gender==='male'?'Male':'Female')+' voice selected');
+if(st)st.textContent=(gender==='male'?'\u{1F468} Male voice':'\u{1F469} Female voice')+' selected. Restart app to apply.';
 }
 
 function toggleVoice(){
 voiceEnabled=!voiceEnabled;
 localStorage.setItem('pbsrx_voice',voiceEnabled?'on':'off');
 var btn=document.getElementById('voiceToggleBtn');
-if(btn)btn.textContent=voiceEnabled?'\uD83D\uDD0A Voice ON (Male)':'\uD83D\uDD07 Voice OFF';
-if(btn)btn.style.background=voiceEnabled?'var(--grn)':'var(--surf)';
-toast(voiceEnabled?'Voice enabled — male voice active':'Voice disabled');
+if(btn){btn.textContent=voiceEnabled?'\uD83D\uDD0A Voice ON':'\uD83D\uDD07 Voice OFF';
+btn.style.background=voiceEnabled?'var(--grn)':'var(--surf)';
+btn.style.color=voiceEnabled?'#fff':'var(--txt)';}
+var st=document.getElementById('voiceStatusTxt');
+if(st)st.textContent=voiceEnabled?'Voice is ON':'Voice is OFF';
 }
 
-// Override speak function to respect toggle and use male voice
-var _origSpeak=window.speak;
-window.speak=function(txt){
-if(!voiceEnabled)return;
-if(!window.speechSynthesis)return;
-window.speechSynthesis.cancel();
-var utt=new SpeechSynthesisUtterance(txt);
-utt.voice=getVoice();
-utt.rate=0.95;utt.pitch=0.85;utt.volume=1;
-window.speechSynthesis.speak(utt);
-};
-
-// ══ RENDER STOCK BALANCE ON CASH TAB LOAD ═════════════════════
-var _origRenderCashHist2=renderCashHist;
-renderCashHist=function(){
-_origRenderCashHist2();
-renderStockBalance();
-};
-
-// ══ INIT VOICE TOGGLE BUTTON STATE ════════════════════════════
 function setNavPos(pos){
 localStorage.setItem('pbsrx_nav_pos',pos);
-applyNavPos(pos);
 var topBtn=document.getElementById('navTopBtn');
 var botBtn=document.getElementById('navBotBtn');
 var txt=document.getElementById('navPosTxt');
-if(topBtn)topBtn.style.background=pos==='top'?'var(--blu)':'var(--surf)';
-if(topBtn)topBtn.style.color=pos==='top'?'#fff':'var(--txt)';
-if(botBtn)botBtn.style.background=pos==='bottom'?'var(--blu)':'var(--surf)';
-if(botBtn)botBtn.style.color=pos==='bottom'?'#fff':'var(--txt)';
+if(topBtn){topBtn.style.background=pos==='top'?'var(--blu)':'var(--surf)';topBtn.style.color=pos==='top'?'#fff':'var(--txt)';}
+if(botBtn){botBtn.style.background=pos==='bottom'?'var(--blu)':'var(--surf)';botBtn.style.color=pos==='bottom'?'#fff':'var(--txt)';}
 if(txt)txt.textContent='Navigation is at the '+(pos==='top'?'top':'bottom')+'.';
+applyNavPos(pos);
 }
+
 function applyNavPos(pos){
 var nav=document.querySelector('nav.nav');
 var app=document.getElementById('app');
@@ -3486,8 +3479,13 @@ nav.style.boxShadow='0 -2px 10px rgba(0,0,0,0.06)';
 function initNavPos(){
 var pos=localStorage.getItem('pbsrx_nav_pos')||'bottom';
 applyNavPos(pos);
-setNavPos(pos);
+// Update button states without calling setNavPos to avoid double apply
+var topBtn=document.getElementById('navTopBtn');
+var botBtn=document.getElementById('navBotBtn');
+if(topBtn){topBtn.style.background=pos==='top'?'var(--blu)':'var(--surf)';topBtn.style.color=pos==='top'?'#fff':'var(--txt)';}
+if(botBtn){botBtn.style.background=pos==='bottom'?'var(--blu)':'var(--surf)';botBtn.style.color=pos==='bottom'?'#fff':'var(--txt)';}
 }
+
 function initVoiceToggle(){
 var btn=document.getElementById('voiceToggleBtn');
 voiceEnabled=localStorage.getItem('pbsrx_voice')!=='off';
@@ -3809,8 +3807,15 @@ if(cost>0)prod.costPrice=cost;
 if(sell>0)prod.sellPrice=sell;
 if(strength&&!prod.strength)prod.strength=strength;
 }
+// Check if same product+batch already exists — merge qty instead of duplicate
+var existEntry=S.stock.find(function(s){return s.productId===prod.id&&s.batch===batch&&!s.depleted;});
+if(existEntry){
+existEntry.qty+=qty;
+existEntry.cost=cost||existEntry.cost;
+} else {
 S.stock.push({id:Date.now()+i+5000,productId:prod.id,qty:qty,unit:prod.sellUnit||'unit',
 batch:batch,expiry:expiry,cost:cost,date:date,depleted:false,supplier:supplier,invoice:invoice});
+}
 saved++;
 }
 if(saved===0){if(status)status.textContent='\u26A0\uFE0F Add at least one product with name and quantity.';return;}

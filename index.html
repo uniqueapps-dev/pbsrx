@@ -1051,7 +1051,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div id="toast"></div>
 <script>
 // ── STATE ────────────────────────────────────────────────────────────────────
-var S={products:[],stock:[],cashDays:[],suppliers:[],supplierPayments:[],expCats:[],customPins:null,chkState:{},demandLog:[],loans:[],stockBalance:null,stockBalanceHistory:[]};
+var S={products:[],stock:[],cashDays:[],suppliers:[],supplierPayments:[],expCats:[],customPins:null,chkState:{},demandLog:[],loans:[],stockBalance:null,stockBalanceHistory:[],beSettings:null};
 var PINS={admin:'1234',staff:'5678'};
 var role='admin',curPg=0,pinEnt='',pinRole='admin',acM=[],snapM='bc',cv='all',curExp=[],drFrom='',drTo='';
 var KEY='pbsrx_v2';
@@ -1925,7 +1925,7 @@ nep:Number(document.getElementById('be_nep').value)||0,
 sec:Number(document.getElementById('be_sec').value)||0,
 oth:Number(document.getElementById('be_oth').value)||0
 };
-S.beSettings=BE_SETTINGS;save();updBECalc();renderCoach();toast('Break-even settings saved.');
+S.beSettings=Object.assign({},BE_SETTINGS);save();updBECalc();renderCoach();toast('Break-even settings saved.');
 }
 function updBECalc(){
 var daily=getBEDaily(),monthly=getBEMonthly();
@@ -3410,15 +3410,16 @@ return f||enVoices[1]||enVoices[0]||voices[0];
 }
 
 function setVoiceGender(gender){
-localStorage.setItem('pbsrx_voice_gender', gender);
+localStorage.setItem('pbsrx_voice_gender',gender);
 var mb=document.getElementById('voiceMaleBtn');
 var fb=document.getElementById('voiceFemaleBtn');
 var st=document.getElementById('voiceStatusTxt');
-if(mb)mb.style.background=gender==='male'?'var(--blu)':'var(--surf)';
-if(fb)fb.style.background=gender==='female'?'var(--pur)':'var(--surf)';
-if(st)st.textContent=gender==='male'?'Male voice selected':'Female voice selected';
+if(mb){mb.style.background=gender==='male'?'var(--blu)':'var(--surf)';mb.style.color=gender==='male'?'#fff':'var(--txt)';}
+if(fb){fb.style.background=gender==='female'?'#8b5cf6':'var(--surf)';fb.style.color=gender==='female'?'#fff':'var(--txt)';}
+if(st)st.textContent=(gender==='male'?'Male':'Female')+' voice selected';
 toast((gender==='male'?'Male':'Female')+' voice selected');
 }
+
 function toggleVoice(){
 voiceEnabled=!voiceEnabled;
 localStorage.setItem('pbsrx_voice',voiceEnabled?'on':'off');
@@ -3463,9 +3464,11 @@ if(txt)txt.textContent='Navigation is at the '+(pos==='top'?'top':'bottom')+'.';
 function applyNavPos(pos){
 var nav=document.querySelector('nav.nav');
 var app=document.getElementById('app');
-if(!nav||!app)return;
+if(!nav)return;
+var hdr=document.querySelector('.hdr');if(hdr)hdr.style.order='0';
+var pgs=document.querySelector('.pages');if(pgs)pgs.style.order='2';
 if(pos==='top'){
-nav.style.order='-1';
+nav.style.order='1';
 nav.style.borderTop='none';
 nav.style.borderBottom='1px solid var(--bdr)';
 nav.style.boxShadow='0 2px 10px rgba(0,0,0,0.06)';
@@ -3483,13 +3486,16 @@ setNavPos(pos);
 }
 function initVoiceToggle(){
 var btn=document.getElementById('voiceToggleBtn');
-if(!btn)return;
 voiceEnabled=localStorage.getItem('pbsrx_voice')!=='off';
-btn.textContent=voiceEnabled?'\uD83D\uDD0A Voice ON (Male)':'\uD83D\uDD07 Voice OFF';
+if(btn){
+btn.textContent=voiceEnabled?'\uD83D\uDD0A Voice ON':'\uD83D\uDD07 Voice OFF';
 btn.style.background=voiceEnabled?'var(--grn)':'var(--surf)';
+btn.style.color=voiceEnabled?'#fff':'var(--txt)';
+}
+var gender=localStorage.getItem('pbsrx_voice_gender')||'male';
+setVoiceGender(gender);
 }
 
-// ══ MULTI-LOAN TRACKER ════════════════════════════════════════════
 function showAddLoan(id){
 document.getElementById('addLoanForm').style.display='block';
 document.getElementById('repayForm').style.display='none';
@@ -3534,33 +3540,34 @@ if(tEl)tEl.textContent='₦'+total.toLocaleString('en-NG');
 function saveLoan(){
 var eid=document.getElementById('loan_edit_id').value;
 var lender=document.getElementById('loan_lender').value.trim();
-var principal=Number(document.getElementById('loan_principal').value)||0;
-if(!lender||!principal){toast('Enter lender name and amount');return;}
+var loanAmt=Number(document.getElementById('loan_principal').value)||0;
+if(!lender||!loanAmt){toast('Enter lender name and loan amount');return;}
+var giEl=document.getElementById('loan_interest');
+var dcEl=document.getElementById('loan_discount');
+var rtEl=document.getElementById('loan_repay_type');
+var inEl=document.getElementById('loan_instalment');
+var grossInt=Number(giEl?giEl.value:0)||0;
+var discount=Number(dcEl?dcEl.value:0)||0;
+var effInt=grossInt-discount;
+var totalRepay=loanAmt+effInt;
+var repayType=rtEl?rtEl.value:'monthly';
+var instalment=Number(inEl?inEl.value:0)||0;
 if(!S.loans)S.loans=[];
+var obj={
+  lender:lender,loanAmount:loanAmt,grossInterest:grossInt,
+  discount:discount,effectiveInterest:effInt,principal:totalRepay,
+  startDate:(document.getElementById('loan_start')||{value:''}).value||td(),
+  dueDate:(document.getElementById('loan_due')||{value:''}).value,
+  repayType:repayType,instalment:instalment,
+  notes:(document.getElementById('loan_notes')||{value:''}).value,
+  repayments:[]
+};
 if(eid){
-var idx=S.loans.findIndex(function(l){return l.id==eid;});
-if(idx>=0){
-S.loans[idx].lender=lender;
-S.loans[idx].principal=principal;
-S.loans[idx].startDate=document.getElementById('loan_start').value;
-S.loans[idx].dueDate=document.getElementById('loan_due').value;
-S.loans[idx].rate=Number(document.getElementById('loan_rate').value)||0;
-S.loans[idx].notes=document.getElementById('loan_notes').value;
-}
-} else {
-S.loans.push({
-id:Date.now(),
-lender:lender,
-principal:principal,
-startDate:document.getElementById('loan_start').value||td(),
-dueDate:document.getElementById('loan_due').value,
-rate:Number(document.getElementById('loan_rate').value)||0,
-notes:document.getElementById('loan_notes').value,
-repayments:[]
-});
-}
+  var i2=S.loans.findIndex(function(l){return l.id==eid;});
+  if(i2>=0){obj.id=S.loans[i2].id;obj.repayments=S.loans[i2].repayments||[];S.loans[i2]=obj;}
+} else {obj.id=Date.now();S.loans.push(obj);}
 save();hideAddLoan();renderLoans();renderDashLoans();
-toast('Loan saved: '+lender+' \u20A6'+principal.toLocaleString('en-NG'),3000);
+toast('Loan saved: '+lender+' \u2014 Repay \u20A6'+totalRepay.toLocaleString('en-NG'),3000);
 }
 
 function deleteLoan(id){

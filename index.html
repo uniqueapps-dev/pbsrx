@@ -168,17 +168,9 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .acin{font-size:14px;font-weight:700;color:var(--txt);}.acis{font-size:11px;color:var(--mut);}
 
 /* RECEIPT */
-.receipt-modal{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;}
+.receipt-modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:none;align-items:flex-end;justify-content:center;}
 .receipt-modal.on{display:flex;}
-.receipt-body{background:#fff;border-radius:16px;max-width:380px;width:100%;max-height:90vh;overflow-y:auto;padding:0;font-family:'Courier New',monospace;}
-.receipt-header{background:#040d1a;color:#fff;padding:20px;text-align:center;border-radius:16px 16px 0 0;}
-.receipt-name{font-family:var(--fh);font-size:28px;letter-spacing:3px;color:#fff;}
-.receipt-name span{color:var(--amb);}
-.receipt-items{padding:16px;}
-.receipt-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px dashed #eee;}
-.receipt-total{background:#f8f8f8;padding:12px 16px;font-size:15px;font-weight:900;display:flex;justify-content:space-between;}
-.receipt-footer{padding:12px 16px;text-align:center;font-size:11px;color:#666;border-top:1px dashed #ddd;}
-.receipt-btns{padding:12px 16px;display:flex;gap:8px;}
+.receipt-body{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:0;font-family:'Courier New',monospace;}
 
 /* CUSTOMER LOG */
 .cust-card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:9px;border:1px solid var(--bdr);box-shadow:var(--sh);cursor:pointer;}
@@ -310,7 +302,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
 <div id="app">
 <div class="hdr">
-<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v6.3.060326</div>
+<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v6.4.060326</div>
 <div style="display:flex;align-items:center;gap:10px;">
 <div class="hrole" id="hrole">ADMIN</div>
 <button class="hso" onclick="signOut()">Sign out</button>
@@ -715,12 +707,12 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div id="sbStatus" style="font-size:11px;color:var(--mut);margin-top:8px;font-weight:600;"></div>
 </div>
 <div class="sh">&#128221; Log a Day</div>
-<div class="card">
+<div style="background:linear-gradient(135deg,#0f172a,#1e3a5f);border-radius:16px;padding:16px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.08);">
 <div class="fr">
-<div class="fg"><label class="fl">Date</label><input class="fi" id="cd_d" type="date"></div>
-<div class="fg"><label class="fl">Total Sales (&#8358;)</label><input class="fi" id="cd_s" type="number" inputmode="numeric" placeholder="0" oninput="calcB()"></div>
+<div class="fg"><label class="fl" style="color:rgba(255,255,255,0.6);">Date</label><input class="fi" id="cd_d" type="date" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff;"></div>
+<div class="fg"><label class="fl" style="color:rgba(255,255,255,0.6);">Total Sales (&#8358;)</label><input class="fi" id="cd_s" type="number" inputmode="numeric" placeholder="0" oninput="calcB()" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff;"></div>
 </div>
-<div class="fg"><label class="fl">Cash Received (&#8358;)</label><input class="fi" id="cd_c" type="number" inputmode="numeric" placeholder="0" oninput="calcB()"></div>
+<div class="fg"><label class="fl" style="color:rgba(255,255,255,0.6);">Cash Received (&#8358;)</label><input class="fi" id="cd_c" type="number" inputmode="numeric" placeholder="0" oninput="calcB()" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff;"></div>
 <div class="sh" style="margin-top:12px;">&#128184; Expenses</div>
 <div style="display:flex;gap:7px;align-items:flex-end;margin-bottom:8px;">
 <div style="flex:1;"><label class="fl">Category</label><input class="fi" id="ex_c" list="exCL" placeholder="Type category..."><datalist id="exCL"></datalist></div>
@@ -2589,7 +2581,11 @@ return t.length>0&&!/^[1-9][.)\s]/.test(t)&&!/^[\u{1F000}-\u{1FFFF}]/u.test(t)&&
 if(analysis.length>50){
 out+='<div style="margin-top:8px;padding:14px;background:var(--surf);border:1.5px solid var(--bdr);border-radius:14px;">';
 out+='<div style="font-size:10px;font-weight:900;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">🤖 Full Analysis</div>';
-out+='<div style="font-size:13px;line-height:1.75;color:var(--txt);white-space:pre-wrap;">'+analysis+'</div>';
+var htmlAnalysis=analysis
+.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
+.replace(/\*([^*]+)\*/g,'<i>$1</i>')
+.split('\n').map(function(l){return '<p style="margin:4px 0;">'+l+'</p>';}).join('');
+out+='<div style="font-size:13px;line-height:1.75;color:var(--txt);">'+htmlAnalysis+'</div>';
 out+='</div>';
 }
 el.innerHTML=out;
@@ -4146,42 +4142,115 @@ setTimeout(closeReceiveStock,1500);
 
 // ══ RECEIPT ══════════════════════════════════════════════════════
 var lastSaleRecord=null;
+var printerOn=localStorage.getItem('pbsrx_printer')!=='off';
+function togglePrinter(){
+printerOn=!printerOn;
+localStorage.setItem('pbsrx_printer',printerOn?'on':'off');
+var btn=document.getElementById('printToggleBtn');
+var thumb=document.getElementById('printToggleThumb');
+var lbl=document.getElementById('printToggleLbl');
+if(btn)btn.style.background=printerOn?'#16a34a':'#9ca3af';
+if(thumb)thumb.style.left=printerOn?'20px':'2px';
+if(lbl){lbl.textContent=printerOn?'Print ON':'Print OFF';lbl.style.color=printerOn?'#16a34a':'#9ca3af';}
+}
 function showReceipt(sale){
 lastSaleRecord=sale;
-var pharmName=localStorage.getItem('pbsrx_pharm_name')||'PBSRx Pharmacy';
+var pharmName=(localStorage.getItem('pbsrx_pharm_name')||'PBSRx Pharmacy').toUpperCase();
 var pn=document.getElementById('receiptPharmName');if(pn)pn.textContent=pharmName;
-var rd=document.getElementById('receiptDate');
-if(rd)rd.textContent=sale.date+' · '+sale.time;
+var rd=document.getElementById('receiptDate');if(rd)rd.textContent=sale.date+' at '+sale.time;
+var ref=document.getElementById('receiptRefNum');if(ref)ref.textContent='Ref: RX-'+String(sale.id).slice(-6);
+// Pre-fill customer phone
+var custPhone='';
+if(sale.customer&&S.customers){var c=S.customers.find(function(x){return x.name&&x.name.toLowerCase()===sale.customer.toLowerCase();});if(c&&c.phone)custPhone=c.phone;}
+var cp=document.getElementById('receiptCustPhone');if(cp)cp.value=custPhone;
 var items=document.getElementById('receiptItems');
 if(items){
-items.innerHTML='<div style="font-size:11px;color:#999;padding:4px 0 8px;border-bottom:1px dashed #ddd;display:flex;justify-content:space-between;font-family:monospace;"><span>ITEM</span><span>QTY · PRICE</span><span>TOTAL</span></div>'+
+var rowStyle='display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px dotted #e5e7eb;font-size:13px;color:#111;';
+items.innerHTML=
+'<div style="display:flex;justify-content:space-between;padding:0 0 8px;border-bottom:2px solid #111;font-size:10px;font-weight:900;letter-spacing:1.5px;color:#374151;font-family:sans-serif;">'+
+'<span style="flex:2;">ITEM</span><span style="text-align:center;min-width:80px;">QTY × PRICE</span><span style="text-align:right;min-width:60px;">TOTAL</span></div>'+
 sale.items.map(function(i){
-return '<div class="receipt-row"><span style="flex:2;">'+i.name+'</span><span>'+i.qty+' × '+N(i.price)+'</span><span>'+N(i.total)+'</span></div>';
+return '<div style="'+rowStyle+'">'+
+'<span style="flex:2;font-weight:700;padding-right:8px;">'+i.name+'</span>'+
+'<span style="text-align:center;min-width:80px;color:#374151;">'+i.qty+' × '+N(i.price)+'</span>'+
+'<span style="text-align:right;min-width:60px;font-weight:800;">'+N(i.total)+'</span></div>';
 }).join('');
-if(sale.discount>0)items.innerHTML+='<div class="receipt-row" style="color:#dc2626;"><span style="flex:2;">Discount</span><span></span><span>-'+N(sale.discount)+'</span></div>';
-if(sale.customer)items.innerHTML+='<div style="font-size:11px;color:#666;padding:6px 0 0;border-top:1px dashed #eee;margin-top:4px;">Customer: '+sale.customer+'</div>';
-if(sale.note)items.innerHTML+='<div style="font-size:11px;color:#666;padding:2px 0;">Note: '+sale.note+'</div>';
+if(sale.discount>0)items.innerHTML+='<div style="'+rowStyle+';color:#dc2626;font-weight:700;"><span style="flex:2;">DISCOUNT</span><span style="min-width:80px;"></span><span style="text-align:right;min-width:60px;">-'+N(sale.discount)+'</span></div>';
+if(sale.customer)items.innerHTML+='<div style="font-size:11px;color:#6b7280;padding:8px 0 0;border-top:1px dashed #e5e7eb;margin-top:6px;font-family:sans-serif;">Customer: <b style="color:#111;">'+sale.customer+'</b></div>';
+if(sale.note)items.innerHTML+='<div style="font-size:11px;color:#6b7280;padding:2px 0;font-family:sans-serif;">Note: '+sale.note+'</div>';
 }
 var rt=document.getElementById('receiptTotal');
 if(rt){
+var due=sale.due||sale.total||0;
+var cash=sale.cash||0;var xfer=sale.transfer||0;
+var paid=cash+xfer;var change=Math.max(0,paid-due);
 var payStr='';
-if(sale.cash>0&&sale.transfer>0)payStr='Cash: '+N(sale.cash)+' + Transfer: '+N(sale.transfer);
-else if(sale.transfer>0)payStr='Transfer: '+N(sale.transfer);
-else payStr='Cash: '+N(sale.cash||sale.due||sale.total);
-rt.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#f8f8f8;font-size:15px;font-weight:900;"><span>TOTAL</span><span>'+N(sale.due||sale.total)+'</span></div>'+
-'<div style="background:#f0f4f8;padding:8px 16px;font-size:12px;display:flex;justify-content:space-between;"><span>'+payStr+'</span><span style="color:#16a34a;font-weight:800;">PAID</span></div>';
+if(cash>0&&xfer>0)payStr='Cash: '+N(cash)+' + Transfer: '+N(xfer);
+else if(xfer>0)payStr='Transfer: '+N(xfer);
+else payStr='Cash: '+N(cash||due);
+rt.innerHTML=
+'<div style="display:flex;justify-content:space-between;align-items:center;border-top:2px solid #111;padding:10px 0 6px;font-size:17px;font-weight:900;color:#111;">'+
+'<span>TOTAL</span><span>'+N(due)+'</span></div>'+
+'<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;color:#6b7280;font-family:sans-serif;">'+
+'<span>Payment</span><span style="font-weight:700;color:#111;">'+payStr+'</span></div>'+
+(change>0?'<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;font-family:sans-serif;"><span style="color:#6b7280;">Change</span><span style="font-weight:800;color:#16a34a;">'+N(change)+'</span></div>':'')+
+'<div style="background:#16a34a;color:#fff;text-align:center;padding:10px;border-radius:10px;font-size:14px;font-weight:900;margin-top:10px;letter-spacing:2px;font-family:sans-serif;">✓ PAID</div>';
 }
+// Apply printer toggle UI state
+var pb=document.getElementById('printToggleBtn');
+var pt=document.getElementById('printToggleThumb');
+var pl=document.getElementById('printToggleLbl');
+if(pb)pb.style.background=printerOn?'#16a34a':'#9ca3af';
+if(pt)pt.style.left=printerOn?'20px':'2px';
+if(pl){pl.textContent=printerOn?'Print ON':'Print OFF';pl.style.color=printerOn?'#16a34a':'#9ca3af';}
 document.getElementById('receiptModal').classList.add('on');
 }
 function closeReceipt(){document.getElementById('receiptModal').classList.remove('on');}
 function printReceipt(){
-var body=document.getElementById('receiptBody');
-var w=window.open('','_blank','width=400,height=600');
-w.document.write('<html><head><title>Receipt</title><style>body{font-family:Courier New,monospace;padding:16px;max-width:380px;margin:0 auto;}*{box-sizing:border-box;}.receipt-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #eee;font-size:13px;}.receipt-total{background:#f8f8f8;padding:12px;font-weight:900;display:flex;justify-content:space-between;}@media print{button{display:none;}}</style></head><body>');
-w.document.write(body.innerHTML);
-w.document.write('<br><button onclick="window.print()">Print</button></body></html>');
-w.document.close();
-w.focus();
+if(!printerOn){toast('Printer is OFF — tap the toggle to enable');return;}
+var r=lastSaleRecord;if(!r)return;
+var pharmName=(localStorage.getItem('pbsrx_pharm_name')||'PBSRx Pharmacy').toUpperCase();
+var w=window.open('','_blank','width=300,height=700');
+var rows=r.items.map(function(i){
+var name=i.name.length>18?i.name.substring(0,17)+'.':i.name;
+return '<tr><td style="padding:3px 0;word-break:break-word;max-width:90px;">'+name+'</td>'+
+'<td style="text-align:center;padding:3px 4px;white-space:nowrap;">'+i.qty+'x'+N(i.price).replace('₦','')+'</td>'+
+'<td style="text-align:right;padding:3px 0;font-weight:700;white-space:nowrap;">'+N(i.total)+'</td></tr>';
+}).join('');
+if(r.discount>0)rows+='<tr><td colspan="2" style="color:#c00;padding:3px 0;">Discount</td><td style="text-align:right;color:#c00;">-'+N(r.discount)+'</td></tr>';
+var cash=r.cash||0;var xfer=r.transfer||0;var paid=cash+xfer;var due=r.due||r.total||0;var change=Math.max(0,paid-due);
+var payStr=cash>0&&xfer>0?'Cash: '+N(cash)+' + Xfer: '+N(xfer):xfer>0?'Transfer: '+N(xfer):'Cash: '+N(cash||due);
+w.document.write(
+'<html><head><title>Receipt</title>'+
+'<style>'+
+'@page{size:58mm auto;margin:3mm 2mm;}'+
+'body{font-family:Courier New,monospace;font-size:11px;width:54mm;margin:0;color:#000;line-height:1.3;}'+
+'h2{font-size:14px;text-align:center;letter-spacing:3px;margin:0 0 2px;}'+
+'p{margin:1px 0;text-align:center;font-size:10px;color:#444;}'+
+'table{width:100%;border-collapse:collapse;}'+
+'td{vertical-align:top;font-size:11px;}'+
+'.dash{border-top:1px dashed #000;margin:6px 0;}'+
+'.total{font-size:13px;font-weight:900;display:flex;justify-content:space-between;}'+
+'.paid{text-align:center;border:2px solid #000;padding:4px;font-weight:900;letter-spacing:2px;margin:6px 0;}'+
+'.footer{text-align:center;font-size:9px;color:#666;margin-top:6px;}'+
+'@media print{.noprint{display:none;}}'+
+'</style></head><body>'+
+'<h2>'+pharmName+'</h2>'+
+'<p>'+r.date+' '+r.time+'</p>'+
+'<p style="font-size:9px;color:#888;">Ref: RX-'+String(r.id).slice(-6)+'</p>'+
+'<div class="dash"></div>'+
+'<table><thead><tr><th style="text-align:left;">Item</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Total</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+'<div class="dash"></div>'+
+'<div class="total"><span>TOTAL</span><span>'+N(due)+'</span></div>'+
+'<div style="font-size:10px;margin:3px 0;">'+payStr+'</div>'+
+(change>0?'<div style="font-size:10px;">Change: <b>'+N(change)+'</b></div>':'')+
+'<div class="paid">* PAID *</div>'+
+(r.customer?'<div style="font-size:10px;">Customer: '+r.customer+'</div>':'')+
+'<div class="footer">Thank you for your patronage!<br>PBSRx Pharmacy System</div>'+
+'<div class="noprint" style="text-align:center;margin-top:16px;"><button onclick="window.print()" style="padding:12px 24px;font-size:14px;cursor:pointer;">Print</button></div>'+
+'</body></html>'
+);
+w.document.close();w.focus();
 setTimeout(function(){w.print();},500);
 }
 function shareReceiptWA(){
@@ -4196,7 +4265,9 @@ lines.push('================================');
 lines.push('TOTAL: '+N(r.due||r.total));
 if(r.customer)lines.push('Customer: '+r.customer);
 lines.push('Thank you for your patronage!');
-var url='https://wa.me/'+(waNum||'')+' ?text='+encodeURIComponent(lines.join('\n'));
+var custPhone2=(document.getElementById('receiptCustPhone')||{value:''}).value.trim().replace(/\D/g,'');
+var sendTo=custPhone2?'234'+custPhone2.replace(/^0/,''):(waNum||'');
+var url='https://wa.me/'+sendTo+'?text='+encodeURIComponent(lines.join('\n'));
 window.open(url,'_blank');
 }
 
@@ -4480,18 +4551,49 @@ if(!S.customers)S.customers=[];
 <!-- RECEIPT MODAL -->
 <div class="receipt-modal" id="receiptModal">
 <div class="receipt-body" id="receiptBody">
-<div class="receipt-header">
-<div class="receipt-name">PBS<span>Rx</span></div>
-<div id="receiptPharmName" style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px;"></div>
-<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;" id="receiptDate"></div>
+
+<!-- Top bar with printer toggle and close -->
+<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px 10px;border-bottom:1px solid #e5e7eb;background:#fff;border-radius:20px 20px 0 0;position:sticky;top:0;z-index:2;">
+<div style="font-size:14px;font-weight:900;color:#111;">🧾 Receipt</div>
+<div style="display:flex;align-items:center;gap:10px;">
+<label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+<div id="printToggleBtn" onclick="togglePrinter()" style="width:42px;height:24px;border-radius:12px;background:#16a34a;position:relative;cursor:pointer;transition:background .2s;">
+<div id="printToggleThumb" style="width:20px;height:20px;border-radius:10px;background:#fff;position:absolute;top:2px;left:20px;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>
 </div>
-<div class="receipt-items" id="receiptItems"></div>
-<div class="receipt-total" id="receiptTotal"></div>
-<div class="receipt-footer" id="receiptFooter">Thank you for your patronage!<br>PBSRx Pharmacy Management System</div>
-<div class="receipt-btns">
-<button onclick="printReceipt()" style="flex:1;background:#040d1a;color:#fff;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:sans-serif;">&#128424; Print</button>
-<button onclick="shareReceiptWA()" style="flex:1;background:#25D366;color:#fff;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:sans-serif;">&#128241; WhatsApp</button>
-<button onclick="closeReceipt()" style="flex:0.5;background:#eee;color:#333;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:sans-serif;">&#10005;</button>
+<span id="printToggleLbl" style="font-size:11px;font-weight:700;color:#16a34a;">Print ON</span>
+</label>
+<button onclick="closeReceipt()" style="background:#f3f4f6;border:none;color:#6b7280;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;line-height:1;font-family:sans-serif;">&#215;</button>
+</div>
+</div>
+
+<!-- Customer phone for WA -->
+<div style="padding:10px 16px;background:#f0fdf4;border-bottom:1px solid #bbf7d0;display:flex;align-items:center;gap:8px;">
+<span style="font-size:16px;">📱</span>
+<input id="receiptCustPhone" style="flex:1;border:1px solid #86efac;border-radius:8px;padding:8px 10px;font-size:13px;font-weight:600;background:#fff;color:#111;font-family:sans-serif;outline:none;" placeholder="Customer WhatsApp number (e.g. 08012345678)" type="tel">
+</div>
+
+<!-- Receipt content - thermal style -->
+<div style="padding:20px 16px;background:#fff;">
+<!-- Header -->
+<div style="text-align:center;padding-bottom:14px;margin-bottom:12px;border-bottom:2px dashed #d1d5db;">
+<div style="font-size:20px;font-weight:900;letter-spacing:4px;color:#111;" id="receiptPharmName">PBSRX PHARMACY</div>
+<div style="font-size:11px;color:#6b7280;margin-top:4px;font-family:sans-serif;" id="receiptDate"></div>
+<div style="font-size:10px;color:#9ca3af;margin-top:2px;font-family:sans-serif;" id="receiptRefNum"></div>
+</div>
+<!-- Items -->
+<div id="receiptItems" style="margin-bottom:12px;"></div>
+<!-- Total -->
+<div id="receiptTotal"></div>
+<!-- Footer -->
+<div style="text-align:center;padding-top:12px;margin-top:10px;border-top:2px dashed #d1d5db;font-size:11px;color:#9ca3af;font-family:sans-serif;line-height:1.6;" id="receiptFooter">
+Thank you for your patronage! 🙏<br>Powered by PBSRx
+</div>
+</div>
+
+<!-- Action buttons -->
+<div style="padding:12px 16px 20px;display:flex;gap:8px;background:#fff;">
+<button onclick="printReceipt()" id="receiptPrintBtn" style="flex:1;background:#111827;color:#fff;border:none;border-radius:12px;padding:15px;font-size:14px;font-weight:800;cursor:pointer;font-family:sans-serif;">🖨️ Print</button>
+<button onclick="shareReceiptWA()" style="flex:1;background:#16a34a;color:#fff;border:none;border-radius:12px;padding:15px;font-size:14px;font-weight:800;cursor:pointer;font-family:sans-serif;">📱 WhatsApp</button>
 </div>
 </div>
 </div>

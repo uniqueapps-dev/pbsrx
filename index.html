@@ -53,15 +53,16 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .perr{color:#f87171;font-size:13px;font-weight:600;margin-top:14px;min-height:20px;}
 
 /* APP */
-#app{position:fixed;inset:0;display:none;flex-direction:column;}#app.on{display:flex;}
+#app{position:fixed;inset:0;display:none;flex-direction:column;}#app.on{display:flex;flex-direction:column;}
 .hdr{background:var(--hdr-bg);height:52px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.05);}
 .hlogo{font-family:var(--fh);font-size:28px;color:#fff;letter-spacing:3px;}.hlogo span{color:var(--amb);}
 .hrole{font-size:9px;color:rgba(255,255,255,0.35);font-weight:800;letter-spacing:2.5px;text-transform:uppercase;background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:99px;}
 .hso{background:none;border:none;color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fb);}
 .pages{flex:1;overflow:hidden;position:relative;}
 .pg{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 84px;display:none;}.pg.on{display:block;}
-.nav{height:62px;background:var(--card);border-top:1px solid var(--bdr);display:flex;align-items:stretch;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.06);order:99;position:relative;z-index:100;}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;font-family:var(--fb);position:relative;color:var(--txt);}
+.nav{height:62px;background:var(--card);border-top:1px solid var(--bdr);display:flex;align-items:stretch;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.06);order:99;position:relative;z-index:100;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;}
+.nav::-webkit-scrollbar{display:none;}
+.nb{flex:0 0 auto;min-width:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;cursor:pointer;font-family:var(--fb);position:relative;color:var(--txt);padding:0 4px;}
 .nb.on{background:linear-gradient(180deg,rgba(26,95,168,0.07),transparent);}
 .nbi{font-size:19px;transition:transform .2s;}.nb.on .nbi{transform:scale(1.18);}
 .nbl{font-size:9px;font-weight:800;color:var(--mut);letter-spacing:.4px;text-transform:uppercase;}.nb.on .nbl{color:var(--blu);}
@@ -281,14 +282,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 #toast{position:fixed;bottom:74px;left:50%;transform:translateX(-50%) translateY(14px);background:#1a2332;color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:700;z-index:900;opacity:0;transition:all .27s;pointer-events:none;white-space:nowrap;max-width:88vw;text-align:center;}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
 @media(min-width:768px){
-.nav{width:220px;}
-#app{flex-direction:row;}.hdr{display:none;}.pages{flex:1;}.pg{padding:22px 26px 32px;}
-.nav{width:210px;height:auto;flex-direction:column;border-top:none;border-right:1px solid var(--bdr);padding:0;justify-content:flex-start;box-shadow:2px 0 8px rgba(0,0,0,0.04);}
-.nav::before{content:'PBSRx';font-family:var(--fh);font-size:30px;color:var(--blu);letter-spacing:3px;padding:18px 20px;border-bottom:1px solid var(--bdr);display:block;}
-.nb{flex-direction:row;justify-content:flex-start;padding:13px 18px;gap:12px;height:auto;flex:none;border-radius:0;}
-.nb.on{background:linear-gradient(90deg,rgba(26,95,168,0.09),transparent);border-left:3px solid var(--blu);}
-.nbi{font-size:17px;}.nbl{font-size:13px;letter-spacing:.2px;text-transform:none;font-weight:700;}
-.nbg{top:13px;right:16px;}.sgrid{grid-template-columns:repeat(4,1fr);}
+.sgrid{grid-template-columns:repeat(4,1fr);}
 .sgr{grid-template-columns:repeat(4,1fr);}.bgrid{grid-template-columns:repeat(5,1fr);}
 .ov{align-items:center;justify-content:center;}.mb{border-radius:18px;max-width:520px;margin:0;}
 }
@@ -316,7 +310,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
 <div id="app">
 <div class="hdr">
-<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v6.060326</div>
+<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v6.3.060326</div>
 <div style="display:flex;align-items:center;gap:10px;">
 <div class="hrole" id="hrole">ADMIN</div>
 <button class="hso" onclick="signOut()">Sign out</button>
@@ -414,8 +408,15 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div id="demandList" style="margin-top:10px;"></div>
 </div>
 
-      <div class="sh">&#128339; Smart Reorder Calendar</div>
+      <div class="sh">&#128230; Reorder Manager <button onclick="sendReorderWA()" style="background:var(--grn);border:none;color:#fff;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;cursor:pointer;float:right;">&#128241; Send to Supplier</button></div>
+<div class="al ab" style="margin-bottom:8px;"><div class="ai">&#128161;</div><div class="at"><b>Reorder Manager</b> = items you need to order from supplier. Tick them, set qty, send to supplier via WhatsApp.<br><b>Receive Stock</b> (green button above) = use this when stock physically arrives.</div></div>
 <div id="reorderCalendar"></div>
+<div id="reorderSummaryBar" style="display:none;background:var(--blu3);border:1px solid var(--blu);border-radius:12px;padding:12px 14px;margin-top:6px;">
+<div style="display:flex;justify-content:space-between;align-items:center;">
+<div><div style="font-size:11px;font-weight:800;color:var(--blu);letter-spacing:1px;text-transform:uppercase;">Selected for Reorder</div><div id="reorderSelCount" style="font-size:13px;color:var(--txt);font-weight:700;margin-top:2px;"></div></div>
+<div style="text-align:right;"><div style="font-size:11px;color:var(--mut);font-weight:700;">Est. Total Cost</div><div id="reorderSelTotal" style="font-family:var(--fh);font-size:22px;color:var(--blu);font-weight:900;"></div></div>
+</div>
+</div>
 
       <div class="sh">&#128229; QuickBooks Bridge</div>
 <div class="card">
@@ -590,69 +591,83 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 </div>
 
 <div class="pg" id="pg3">
-<div class="pgt">Point of Sale</div><div class="pgs">Record sales &amp; auto-deduct stock</div>
-<div class="hero" style="margin-bottom:12px;">
-<div class="hl">Current Basket</div>
-<div class="hv"><span>&#8358;</span><span id="basketTotal">0</span></div>
-<div class="hsub" id="basketCount">0 items in basket</div>
-<div class="hrow">
-<div class="hm"><div class="hmv" id="basketItems">0</div><div class="hml">Line items</div></div>
-<div class="hm"><div class="hmv" id="basketDate" style="font-size:13px;"></div><div class="hml">Date</div></div>
-<div class="hm"><div class="hmv" id="basketUnits">0</div><div class="hml">Units sold</div></div>
-</div>
-</div>
-<div class="sh">&#128722; Add Item to Sale</div>
-<div class="card">
-<div class="fg acw" style="margin-bottom:8px;">
-<label class="fl">Product Name</label>
-<input class="fi" id="pos_name" list="posProds" placeholder="Type product name..." autocomplete="off" oninput="posSearch()">
+<div class="pgt">Point of Sale</div><div class="pgs" id="posDate">Record sales &amp; auto-deduct stock</div>
+
+<!-- STEP 1 -->
+<div style="background:linear-gradient(135deg,rgba(26,95,168,0.12),rgba(99,102,241,0.08));border:1.5px solid var(--blu);border-radius:16px;padding:14px;margin-bottom:10px;">
+<div style="font-size:10px;font-weight:900;color:var(--blu);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">&#9312; FIND PRODUCT</div>
+<input class="fi" id="pos_name" list="posProds" placeholder="&#128269; Type drug name e.g. Paracetamol, Amoxil..." autocomplete="off" oninput="posSearch()" style="font-size:15px;margin:0;">
 <datalist id="posProds"></datalist>
 </div>
-<div class="fr" id="posUnitRow" style="display:none;">
-<div class="fg"><label class="fl">Sell Unit</label>
-<select class="fi" id="pos_unit" onchange="posUnitChange()">
-<option value="base">Base unit</option>
-<option value="u2">Unit 2</option>
-<option value="u3">Unit 3</option>
-</select>
+
+<!-- STEP 2 -->
+<div id="posStep2" style="display:none;background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(16,185,129,0.06));border:1.5px solid var(--grn);border-radius:16px;padding:14px;margin-bottom:10px;">
+<div style="font-size:10px;font-weight:900;color:var(--grn);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">&#9313; SELECT PACK &amp; QTY</div>
+<div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:10px;" id="posSelProdName"></div>
+<div id="posUnitButtons" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;"></div>
+<div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:8px;">
+<div style="flex:1;"><label class="fl">Quantity</label><input class="fi" id="pos_qty" type="number" inputmode="numeric" value="1" min="1" oninput="posCalcLine()" style="font-size:20px;font-weight:900;text-align:center;"></div>
+<div style="flex:1;"><label class="fl">Unit Price (&#8358;)</label><input class="fi" id="pos_price" type="number" inputmode="numeric" oninput="posCalcLine()" style="font-size:16px;font-weight:800;"></div>
 </div>
-<div class="fg"><label class="fl">Qty</label><input class="fi" id="pos_qty" type="number" inputmode="numeric" value="1" min="1" oninput="posCalcLine()"></div>
-<div class="fg"><label class="fl">Price (&#8358;)</label><input class="fi" id="pos_price" type="number" inputmode="numeric" oninput="posCalcLine()"></div>
-</div>
-<div id="posLineTotal" style="font-size:14px;font-weight:700;color:var(--grn);margin-bottom:8px;display:none;"></div>
+<div id="posLineTotal" style="font-size:18px;font-weight:900;color:var(--grn);text-align:center;display:none;padding:10px;background:rgba(34,197,94,0.1);border-radius:10px;margin-bottom:8px;"></div>
 <div id="posStockWarn" style="display:none;" class="al ao"><div class="ai">&#9888;</div><div class="at" id="posStockWarnMsg"></div></div>
-<button class="btn bb" id="posAddBtn" onclick="posAddItem()" style="display:none;">&#10133; Add to Basket</button>
+<button class="btn" style="background:var(--grn);border:none;color:#fff;font-size:15px;font-weight:800;" id="posAddBtn" onclick="posAddItem()">&#10133; Add to Basket</button>
 </div>
-<div class="sh">&#128717; Basket</div>
-<div id="posBasket"><div class="empty"><div class="ei">&#128717;</div><div class="et">Basket empty. Add items above.</div></div></div>
-<div class="card" id="posConfirmCard" style="margin-top:8px;display:none;">
-<div class="sh" style="margin-top:0;">&#128247; Customer</div>
-<div class="fg acw">
-<input class="fi" id="pos_customer" placeholder="Customer name (optional — links to log)" list="custSuggestions" oninput="posCustSearch()">
+
+<!-- BASKET -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><div class="sh" style="margin:0;">&#128717; Basket</div><span id="basketCountLabel" style="font-size:12px;color:var(--mut);font-weight:600;"></span></div>
+<div id="posBasket"><div class="empty"><div class="ei">&#128717;</div><div class="et">Basket empty.<br>Search a product above to start.</div></div></div>
+
+<!-- STEP 3: PAYMENT -->
+<div id="posStep3" style="display:none;margin-top:10px;">
+<div style="background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(251,146,60,0.06));border:1.5px solid var(--amb);border-radius:16px;padding:14px;">
+<div style="font-size:10px;font-weight:900;color:var(--amb);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">&#9314; PAYMENT</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--surf);border-radius:10px;margin-bottom:10px;border:1px solid var(--bdr);">
+<span style="font-size:13px;color:var(--mut);font-weight:700;">Subtotal</span>
+<span style="font-family:var(--fh);font-size:22px;color:var(--txt);" id="posSubtotal">&#8358;0</span>
+</div>
+
+<div class="fg acw" style="margin-bottom:8px;">
+<label class="fl">&#128100; Customer name (optional)</label>
+<input class="fi" id="pos_customer" placeholder="Type or leave blank" list="custSuggestions">
 <datalist id="custSuggestions"></datalist>
 </div>
-<div class="sh" style="margin-top:4px;">&#128722; Discount</div>
+
+<button id="discToggle" onclick="toggleDiscSection()" style="background:var(--surf);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;color:var(--mut);cursor:pointer;width:100%;text-align:left;margin-bottom:6px;">&#127991;&#65039; Add Discount (optional) &#9660;</button>
+<div id="discSection" style="display:none;margin-bottom:8px;">
 <div class="fr">
 <div class="fg"><label class="fl">Discount %</label><input class="fi" id="pos_disc_pct" type="number" inputmode="numeric" placeholder="0" min="0" max="100" oninput="posApplyDiscount('pct')"></div>
-<div class="fg"><label class="fl">Discount &#8358; (flat)</label><input class="fi" id="pos_disc_flat" type="number" inputmode="numeric" placeholder="0" oninput="posApplyDiscount('flat')"></div>
+<div class="fg"><label class="fl">— or flat &#8358;</label><input class="fi" id="pos_disc_flat" type="number" inputmode="numeric" placeholder="0" oninput="posApplyDiscount('flat')"></div>
 </div>
-<div id="posDiscRow" style="display:none;font-size:13px;font-weight:700;color:var(--red);margin-bottom:8px;padding:8px;background:var(--red2);border-radius:8px;"></div>
-<div class="sh" style="margin-top:4px;">&#128176; Payment</div>
-<div class="fr">
-<div class="fg"><label class="fl">Cash (&#8358;)</label><input class="fi" id="pos_cash" type="number" inputmode="numeric" placeholder="0" oninput="posCalcChange()"></div>
-<div class="fg"><label class="fl">Transfer (&#8358;)</label><input class="fi" id="pos_transfer" type="number" inputmode="numeric" placeholder="0" oninput="posCalcChange()"></div>
+<div id="posDiscRow" style="display:none;font-size:13px;font-weight:700;color:var(--red);padding:6px 10px;background:var(--red2);border-radius:8px;"></div>
 </div>
-<div class="fr">
-<div class="fg"><label class="fl">Change Due</label><div class="fi" id="pos_change" style="background:var(--surf);color:var(--grn);font-weight:800;">&#8358;0</div></div>
-<div class="fg"><label class="fl">Total Due</label><div class="fi" id="pos_total_due" style="background:var(--surf);font-weight:900;color:var(--blu);">&#8358;0</div></div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--blu3);border-radius:10px;margin-bottom:12px;border:1px solid var(--blu);">
+<span style="font-size:14px;color:var(--blu);font-weight:900;">AMOUNT DUE</span>
+<span style="font-family:var(--fh);font-size:28px;color:var(--blu);font-weight:900;" id="pos_total_due">&#8358;0</span>
 </div>
-<div class="fg"><label class="fl">Sale Note (optional)</label><input class="fi" id="pos_note" placeholder="e.g. Prescription no., diagnosis"></div>
-<div style="display:flex;gap:6px;margin-top:6px;">
-<button class="btn" style="background:var(--grn);border:none;color:#fff;flex:2;" onclick="posConfirmSale()">&#9989; Confirm Sale</button>
-<button class="btn" style="background:var(--ora2);border:1px solid var(--ora);color:var(--ora);flex:1;" onclick="holdBasket()">&#9208;&#65039; Hold</button>
+
+<div class="fr" style="margin-bottom:8px;">
+<div class="fg"><label class="fl">&#128181; Cash received (&#8358;)</label><input class="fi" id="pos_cash" type="number" inputmode="numeric" placeholder="0" oninput="posCalcChange()" style="font-size:16px;font-weight:800;"></div>
+<div class="fg"><label class="fl">&#128242; Transfer (&#8358;)</label><input class="fi" id="pos_transfer" type="number" inputmode="numeric" placeholder="0" oninput="posCalcChange()"></div>
 </div>
-<button class="btn" style="background:var(--surf);border:1px solid var(--bdr);color:var(--red);margin-top:6px;" onclick="posClearBasket()">&#128465; Clear Basket</button>
+
+<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:10px;margin-bottom:10px;border:1px solid var(--grn);background:var(--grn2);">
+<span style="font-size:13px;color:var(--grn);font-weight:800;">CHANGE</span>
+<span style="font-family:var(--fh);font-size:22px;font-weight:900;color:var(--grn);" id="pos_change">&#8358;0</span>
 </div>
+
+<div class="fg" style="margin-bottom:12px;"><label class="fl">&#128221; Note (optional)</label><input class="fi" id="pos_note" placeholder="Prescription no., patient..."></div>
+
+<button class="btn" style="background:linear-gradient(135deg,#16a34a,#15803d);border:none;color:#fff;font-size:17px;font-weight:900;padding:18px;letter-spacing:1px;" onclick="posConfirmSale()">&#9989; CONFIRM SALE</button>
+<div style="display:flex;gap:8px;margin-top:8px;">
+<button class="btn" style="background:var(--ora2);border:1px solid var(--ora);color:var(--ora);flex:1;" onclick="holdBasket()">&#9208;&#65039; Hold Basket</button>
+<button class="btn" style="background:var(--red2);border:1px solid var(--red);color:var(--red);flex:1;" onclick="posClearBasket()">&#128465; Clear All</button>
+</div>
+</div>
+</div>
+
 <div id="heldBasketsSection" style="display:none;">
 <div class="sh">&#9208;&#65039; Held Baskets</div>
 <div id="heldBasketsList"></div>
@@ -813,6 +828,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div id="addLoanForm" class="card" style="display:none;border:1px solid var(--blu);">
 <div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:12px;">&#128176; Add / Update Loan</div>
 <input type="hidden" id="loan_edit_id">
+<input type="hidden" id="loan_rate">
 <div class="fr">
 <div class="fg"><label class="fl">Lender Name</label><input class="fi" id="loan_lender" placeholder="OPay, Bank, Person..."></div>
 <div class="fg"><label class="fl">Loan Amount (&#8358;)</label><input class="fi" id="loan_principal" type="number" inputmode="numeric" placeholder="0"></div>
@@ -1099,6 +1115,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div style="position:relative;margin-bottom:8px;"><span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:14px;">&#128269;</span><input id="custSearch" class="fi" placeholder="Search by name or phone..." style="padding-left:32px;margin:0;" oninput="renderCustomers()"></div>
 <div id="custList"></div>
 </div>
+<nav class="nav" id="mainNav">
 <button class="nb on" onclick="goTo(0,this)" id="nb0"><span class="nbi">&#128202;</span><span class="nbl">Dashboard</span></button>
 <button class="nb" onclick="goTo(1,this)" id="nb1"><span class="nbi">&#128138;</span><span class="nbl">Stock</span><span class="nbg" id="sbg" style="display:none;"></span></button>
 <button class="nb" onclick="goTo(2,this)" id="nb2"><span class="nbi">&#128247;</span><span class="nbl">Snap</span></button>
@@ -1142,7 +1159,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div id="toast"></div>
 <script>
 // ── STATE ────────────────────────────────────────────────────────────────────
-var S={products:[],stock:[],cashDays:[],suppliers:[],supplierPayments:[],expCats:[],customPins:null,chkState:{},demandLog:[],loans:[],stockBalance:null,stockBalanceHistory:[],beSettings:null,sales:[],customers:[]};
+var S={products:[],stock:[],cashDays:[],suppliers:[],supplierPayments:[],expCats:[],customPins:null,chkState:{},demandLog:[],loans:[],stockBalance:null,stockBalanceHistory:[],beSettings:null,sales:[],customers:[],reorderOrdered:{}};
 var PINS={admin:'1234',staff:'5678'};
 var role='admin',curPg=0,pinEnt='',pinRole='admin',acM=[],snapM='bc',cv='all',curExp=[],drFrom='',drTo='';
 var KEY='pbsrx_v2';
@@ -1388,7 +1405,7 @@ return '<div class="pulse-row" id="pr_'+p.id+'" onclick="togglePulseRow('+p.id+'
 '<div style="font-size:11px;color:var(--mut);margin-bottom:10px;">Min: '+(p.minStock||'-')+' | Reorder: '+(p.reorderQty||'-')+(p.unit2?' | '+p.unit2+': '+N(p.unit2price||0):'')+(exS?' | '+exS.label:'')+'</div>'+
 // Actions
 '<div style="display:flex;gap:6px;">'+
-'<button class="bsm bg2" onclick="event.stopPropagation();showReceiveStock(this.dataset.name)" data-name="'+p.genericName+'" style="flex:1;">&#128230; Restock</button>'+
+'<button class="bsm bg2" onclick="event.stopPropagation();showReceiveStock(this.dataset.name)" data-name="'+p.genericName+'" style="flex:1;">&#128230; Receive</button>'+
 '<button class="bsm bsb" onclick="event.stopPropagation();editProd('+p.id+')" style="flex:1;">&#9998; Edit</button>'+
 '<button class="bsm" onclick="event.stopPropagation();openReorder('+p.id+')" style="flex:1;background:var(--ora2);color:var(--ora);">&#128338; Order</button>'+
 '<button class="bsm bsr" onclick="event.stopPropagation();delProd('+p.id+')" style="flex:0.5;">&#128465;</button>'+
@@ -1992,7 +2009,7 @@ if(!swM)return;
 if(Date.now()-swT>500)return;
 var dx=e.changedTouches[0].clientX-swX,dy=Math.abs(e.changedTouches[0].clientY-swY);
 if(Math.abs(dx)>50&&dy<100){
-var next=dx<0?Math.min(curPg+1,7):Math.max(curPg-1,0);
+var next=dx<0?Math.min(curPg+1,8):Math.max(curPg-1,0);
 if(next!==curPg)goTo(next,document.getElementById('nb'+next));
 }
 },{passive:true});
@@ -2128,8 +2145,8 @@ save();renderDemandList();toast('Removed: '+item.name);
 }
 
 function moveDemandToSnap(name){
-// Open Receive Stock modal with product pre-filled
-showReceiveStock(name);
+goTo(1,document.getElementById('nb1'));
+setTimeout(function(){showReceiveStock(name);},150);
 }
 
 // ── MARGIN × VELOCITY ENGINE ─────────────────────────────────────────────────
@@ -2212,11 +2229,12 @@ return '<div style="background:var(--card);border-radius:14px;padding:14px;margi
 }
 
 // ── REORDER TIMING ────────────────────────────────────────────────────────────
+var reorderSelected={};
 function renderReorderCalendar(){
 var el=document.getElementById('reorderCalendar');if(!el)return;
-var items=S.products.filter(function(p){return p.isFastMover&&p.minStock>0;}).map(function(p){
+if(!S.reorderOrdered)S.reorderOrdered={};
+var items=S.products.filter(function(p){return p.isFastMover;}).map(function(p){
 var cur=getCurStock(p.id);
-// Calculate velocity from stock consumed
 var received=S.stock.filter(function(b){return b.productId===p.id;}).reduce(function(s,b){return s+(Number(b.qty)||0);},0);
 var consumed=Math.max(0,received-cur);
 var batches=S.stock.filter(function(b){return b.productId===p.id&&b.date;});
@@ -2224,23 +2242,97 @@ var days=30;
 if(batches.length){var first=batches.sort(function(a,b){return a.date.localeCompare(b.date);})[0].date;days=Math.max(1,Math.floor((new Date()-new Date(first+'T00:00:00'))/(1000*60*60*24)));}
 var dailyUse=days>0?consumed/days:0;
 var daysLeft=dailyUse>0?Math.floor(cur/dailyUse):999;
-// Get supplier credit days
-var creditDays=30; // default
-var orderBy=Math.max(0,daysLeft-creditDays-2); // order this many days from now
-return{p:p,cur:cur,daysLeft:daysLeft,dailyUse:dailyUse,orderBy:orderBy,creditDays:creditDays};
-}).filter(function(i){return i.daysLeft<60&&i.dailyUse>0;}).sort(function(a,b){return a.daysLeft-b.daysLeft;});
-if(!items.length){el.innerHTML='<div class="al ab"><div class="ai">&#128161;</div><div class="at">Add stock entries for your products to unlock reorder timing intelligence.</div></div>';return;}
-el.innerHTML=items.slice(0,8).map(function(item){
-var urgency=item.orderBy<=0?'ar':item.orderBy<=3?'ao':'ab';
-var orderMsg=item.orderBy<=0?'ORDER NOW — overdue!':'Order in '+item.orderBy+' day(s)';
-return '<div class="al '+urgency+'" style="margin-bottom:8px;">'+
-'<div class="ai">'+(item.orderBy<=0?'&#128308;':item.orderBy<=3?'&#9888;':'&#128197;')+'</div>'+
-'<div class="at"><b>'+item.p.genericName+(item.p.strength?' '+item.p.strength:'')+'</b><br>'+
-'Stock lasts: '+item.daysLeft+' more days | Daily use: '+item.dailyUse.toFixed(1)+' units | '+
-'<b>'+orderMsg+'</b>'+
-(item.p.reorderQty&&item.p.costPrice?' | Est. cost: ₦'+(item.p.reorderQty*item.p.costPrice).toLocaleString('en-NG'):'')+
+var orderBy=Math.max(0,daysLeft-30-2);
+var isOut=getStatus(p)==='out'||getStatus(p)==='critical';
+var reorderQty=p.reorderQty||p.minStock||10;
+var estCost=reorderQty*(p.costPrice||0);
+var isOrdered=S.reorderOrdered[p.id]&&S.reorderOrdered[p.id]>td();
+return{p:p,cur:cur,daysLeft:daysLeft,dailyUse:dailyUse,orderBy:orderBy,isOut:isOut,reorderQty:reorderQty,estCost:estCost,isOrdered:isOrdered};
+}).filter(function(i){return i.isOut||(i.daysLeft<60&&i.dailyUse>0);}).sort(function(a,b){return a.daysLeft-b.daysLeft;});
+if(!items.length){el.innerHTML='<div class="al ab"><div class="ai">&#128161;</div><div class="at">No reorder alerts. All products sufficiently stocked or no usage data yet.</div></div>';
+var sb=document.getElementById('reorderSummaryBar');if(sb)sb.style.display='none';return;}
+el.innerHTML=items.map(function(item){
+var urgency=item.orderBy<=0?'var(--red)':item.orderBy<=3?'var(--ora)':'var(--blu)';
+var bg=item.orderBy<=0?'var(--red2)':item.orderBy<=3?'var(--ora2)':'var(--blu3)';
+var orderMsg=item.isOrdered?'&#9989; ORDERED':'&#128722; SELECT TO ORDER';
+var checked=reorderSelected[item.p.id]?'checked':'';
+var pid=item.p.id;
+return '<div style="background:'+bg+';border:1.5px solid '+urgency+';border-radius:12px;padding:12px;margin-bottom:8px;'+(item.isOrdered?'opacity:0.6;':'')+'">'+
+'<div style="display:flex;align-items:center;gap:10px;">'+
+'<input type="checkbox" id="ro_'+pid+'" '+(item.isOrdered?'disabled ':'')+checked+' onchange="reorderToggle('+pid+','+item.reorderQty+','+item.p.costPrice+')" style="width:20px;height:20px;cursor:pointer;flex-shrink:0;">'+
+'<div style="flex:1;min-width:0;">'+
+'<div style="font-size:14px;font-weight:800;color:var(--txt);">'+item.p.genericName+(item.p.strength?' '+item.p.strength:'')+'</div>'+
+'<div style="font-size:11px;color:var(--mut);margin-top:2px;">'+
+'Stock: '+item.cur+(item.dailyUse>0?' | Daily use: '+item.dailyUse.toFixed(1)+' units':'')+(item.daysLeft<999?' | Lasts: '+item.daysLeft+'d':'')+
+'</div></div>'+
+'<div style="text-align:right;flex-shrink:0;">'+
+(item.isOrdered?'<div style="font-size:11px;font-weight:800;color:var(--grn);">&#9989; Ordered</div><button onclick="unmarkOrdered('+pid+')" style="font-size:10px;color:var(--mut);background:none;border:none;cursor:pointer;text-decoration:underline;">Undo</button>':
+'<button onclick="markOrdered('+pid+')" style="background:var(--grn);border:none;color:#fff;border-radius:8px;padding:5px 8px;font-size:11px;font-weight:700;cursor:pointer;">Mark Ordered</button>')+
+'</div></div>'+
+'<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.1);">'+
+'<div><label style="font-size:11px;color:var(--mut);font-weight:700;">Reorder Qty</label>'+
+'<input type="number" id="roqty_'+pid+'" value="'+item.reorderQty+'" onchange="reorderQtyChange('+pid+',this.value,'+item.p.costPrice+')" style="width:70px;padding:4px 6px;border-radius:6px;border:1px solid var(--bdr);background:var(--surf);color:var(--txt);font-size:13px;font-weight:800;text-align:center;margin-left:6px;"></div>'+
+'<div style="text-align:right;"><div style="font-size:11px;color:var(--mut);font-weight:700;">Est. Cost</div>'+
+'<div style="font-size:14px;font-weight:900;color:'+urgency+';" id="rocost_'+pid+'">'+(item.estCost>0?N(item.estCost):'No cost set')+'</div></div>'+
 '</div></div>';
 }).join('');
+updReorderSummary();
+}
+function reorderToggle(pid,qty,cost){
+var cb=document.getElementById('ro_'+pid);
+if(cb&&cb.checked){reorderSelected[pid]={qty:qty,cost:cost||0};}
+else delete reorderSelected[pid];
+updReorderSummary();
+}
+function reorderQtyChange(pid,val,cost){
+val=Number(val)||0;
+if(reorderSelected[pid])reorderSelected[pid].qty=val;
+var costEl=document.getElementById('rocost_'+pid);
+if(costEl&&cost>0)costEl.textContent=N(val*cost);
+updReorderSummary();
+}
+function updReorderSummary(){
+var keys=Object.keys(reorderSelected);
+var sb=document.getElementById('reorderSummaryBar');
+var sc=document.getElementById('reorderSelCount');
+var st=document.getElementById('reorderSelTotal');
+if(!sb)return;
+if(!keys.length){sb.style.display='none';return;}
+sb.style.display='block';
+var totalCost=keys.reduce(function(s,k){var r=reorderSelected[k];return s+(r.qty*(r.cost||0));},0);
+if(sc)sc.textContent=keys.length+' product(s) selected';
+if(st)st.textContent=totalCost>0?N(totalCost):'Cost not set — add cost prices in Stock';
+}
+function markOrdered(pid){
+if(!S.reorderOrdered)S.reorderOrdered={};
+// Mark as ordered for 14 days
+var exp=new Date();exp.setDate(exp.getDate()+14);
+S.reorderOrdered[pid]=exp.toISOString().slice(0,10);
+save();delete reorderSelected[pid];renderReorderCalendar();toast('Marked as ordered');
+}
+function unmarkOrdered(pid){
+if(S.reorderOrdered)delete S.reorderOrdered[pid];
+save();renderReorderCalendar();
+}
+function sendReorderWA(){
+var keys=Object.keys(reorderSelected);
+if(!keys.length){toast('Tick the products you want to order first');return;}
+var pharmName=localStorage.getItem('pbsrx_pharm_name')||'Our Pharmacy';
+var waNum=localStorage.getItem('pbsrx_wa_num')||'';
+var lines=['REORDER REQUEST — '+pharmName,'Date: '+td(),'================================'];
+var total=0;
+keys.forEach(function(pid){
+var p=S.products.find(function(x){return x.id==pid;});
+if(!p)return;
+var r=reorderSelected[pid];
+var qty=r.qty;var cost=r.cost||0;
+var est=qty*cost;total+=est;
+lines.push(p.genericName+(p.strength?' '+p.strength:'')+' — Qty: '+qty+(cost>0?' | Est: '+N(est):''));
+});
+lines.push('================================');
+if(total>0)lines.push('Total Est. Cost: '+N(total));
+lines.push('\nKindly confirm availability and delivery date. Thank you.');
+window.open('https://wa.me/'+(waNum||'')+'?text='+encodeURIComponent(lines.join('\n')),'_blank');
 }
 
 // ── WHATSAPP BRIEFING ────────────────────────────────────────────────────────
@@ -2495,9 +2587,9 @@ var t=l.trim();
 return t.length>0&&!/^[1-9][.)\s]/.test(t)&&!/^[\u{1F000}-\u{1FFFF}]/u.test(t)&&!t.includes('PRIORITY ACTIONS')&&!/^\u2501+$/.test(t)&&t!=='---';
 }).join('\n').trim();
 if(analysis.length>50){
-out+='<div class="card" style="margin-top:8px;padding:14px;background:var(--surf);border:1px solid var(--bdr);">';
-out+='<div style="font-size:10px;font-weight:900;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">\uD83E\uDD16 Full Analysis</div>';
-out+='<div style="font-size:13px;line-height:1.7;color:var(--txt);white-space:pre-wrap;">'+analysis+'</div>';
+out+='<div style="margin-top:8px;padding:14px;background:var(--surf);border:1.5px solid var(--bdr);border-radius:14px;">';
+out+='<div style="font-size:10px;font-weight:900;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">🤖 Full Analysis</div>';
+out+='<div style="font-size:13px;line-height:1.75;color:var(--txt);white-space:pre-wrap;">'+analysis+'</div>';
 out+='</div>';
 }
 el.innerHTML=out;
@@ -2632,21 +2724,19 @@ function startAICamera(){
 var camDiv=document.getElementById('aiSnapCamera');
 var upDiv=document.getElementById('aiSnapUpload');
 if(!navigator.mediaDevices){toast('Camera not available. Try uploading an image instead.');return;}
-var camConstraints={video:{facingMode:'environment',focusMode:'continuous',
-advanced:[{focusMode:'continuous-if-face-absent'},{torch:false}]},audio:false};
-navigator.mediaDevices.getUserMedia(camConstraints).catch(function(){
-return navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
-})
+navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false})
 .then(function(stream){
 aiStream=stream;
-// Apply autofocus track constraints
-var track=stream.getVideoTracks()[0];
-if(track&&track.applyConstraints){
-track.applyConstraints({advanced:[{focusMode:'continuous'}]}).catch(function(){});
-}
+applyAutofocus(stream);
 var vid=document.getElementById('aiVid');vid.srcObject=stream;
 camDiv.style.display='block';upDiv.style.display='none';
-}).catch(function(){toast('Camera permission needed. Allow camera in Chrome settings then try again.');});
+}).catch(function(){
+navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false}).then(function(stream){
+aiStream=stream;applyAutofocus(stream);
+var vid=document.getElementById('aiVid');vid.srcObject=stream;
+camDiv.style.display='block';upDiv.style.display='none';
+}).catch(function(){toast('Camera permission needed. Allow camera in Chrome/browser settings.');});
+});
 }
 function stopAICamera(){
 if(aiStream){aiStream.getTracks().forEach(function(t){t.stop();});aiStream=null;}
@@ -2821,7 +2911,7 @@ updPosSuggestions();
 }
 function updPosSuggestions(){
 var dl=document.getElementById('posProds');if(!dl)return;
-dl.innerHTML=S.products.filter(function(p){return p.isFastMover;}).map(function(p){
+dl.innerHTML=S.products.map(function(p){
 return '<option value="'+p.genericName+(p.strength?' '+p.strength:'')+(p.brandName?' ('+p.brandName+')':'')+'"></option>';
 }).join('');
 }
@@ -2834,25 +2924,67 @@ if(p){posSelectedProd=p;posShowUnitRow();}
 }
 function posShowUnitRow(){
 var p=posSelectedProd;if(!p)return;
-document.getElementById('posUnitRow').style.display='flex';
-document.getElementById('posAddBtn').style.display='block';
-var sel=document.getElementById('pos_unit');
-sel.innerHTML='<option value="base">'+(p.sellUnit||'Base unit')+' - '+N(p.sellPrice||0)+'</option>'+
-(p.unit2?'<option value="u2">'+p.unit2+' - '+N(p.unit2price||0)+'</option>':'')+
-(p.unit3?'<option value="u3">'+p.unit3+' - '+N(p.unit3price||0)+'</option>':'');
-posUnitChange();
+// Show step 2
+document.getElementById('posStep2').style.display='block';
+var nameEl=document.getElementById('posSelProdName');
+if(nameEl)nameEl.innerHTML=p.genericName+(p.strength?' <span style="color:var(--mut);font-weight:600;">'+p.strength+'</span>':'')+(p.brandName?' <span style="font-size:12px;color:var(--mut);">('+p.brandName+')</span>':'');
+// Build unit buttons
+var btns=document.getElementById('posUnitButtons');
+var units=[];
+units.push({key:'base',label:p.sellUnit||'Unit',price:p.sellPrice||0,desc:'Single unit'});
+if(p.unit2&&p.unit2qty)units.push({key:'u2',label:p.unit2,price:p.unit2price||0,desc:p.unit2qty+' '+( p.sellUnit||'units')});
+if(p.unit3&&p.unit3qty)units.push({key:'u3',label:p.unit3,price:p.unit3price||0,desc:p.unit3qty+' '+(p.sellUnit||'units')});
+posCurrentUnit='base';
+btns.innerHTML=units.map(function(u){
+return '<button onclick="posSelectUnit(\''+u.key+'\')" id="punit_'+u.key+'" style="flex:1;min-width:90px;background:'+(u.key==='base'?'var(--blu)':'var(--surf)')+';color:'+(u.key==='base'?'#fff':'var(--txt)')+';border:'+(u.key==='base'?'none':'1px solid var(--bdr)')+';border-radius:10px;padding:10px 8px;cursor:pointer;transition:all .2s;">'+
+'<div style="font-size:14px;font-weight:900;">'+u.label+'</div>'+
+'<div style="font-size:11px;opacity:0.75;">'+N(u.price)+'</div>'+
+'<div style="font-size:10px;opacity:0.6;">'+u.desc+'</div>'+
+'</button>';
+}).join('');
+document.getElementById('pos_price').value=p.sellPrice||'';
+document.getElementById('pos_qty').value=1;
+posCalcLine();
+// Stock warning
 var cur=getCurStock(p.id);
 var sw=document.getElementById('posStockWarn');var sm=document.getElementById('posStockWarnMsg');
-if(cur<=0){sw.style.display='flex';sm.textContent=p.genericName+' is OUT OF STOCK. Sale will be recorded but stock may go negative.';}
-else if(cur<=p.minStock){sw.style.display='flex';sm.textContent='Low stock: '+cur+' '+( p.sellUnit||'units')+' remaining.';}
+if(cur<=0){sw.style.display='flex';sm.textContent=p.genericName+' is OUT OF STOCK.';}
+else if(cur<=p.minStock){sw.style.display='flex';sm.textContent='Low stock: '+cur+' '+(p.sellUnit||'units')+' left.';}
 else{sw.style.display='none';}
+// Scroll to step 2
+document.getElementById('posStep2').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+var posCurrentUnit='base';
+function posSelectUnit(key){
+var p=posSelectedProd;if(!p)return;
+posCurrentUnit=key;
+// Update button styles
+['base','u2','u3'].forEach(function(k){
+var btn=document.getElementById('punit_'+k);
+if(!btn)return;
+var active=k===key;
+btn.style.background=active?'var(--blu)':'var(--surf)';
+btn.style.color=active?'#fff':'var(--txt)';
+btn.style.border=active?'none':'1px solid var(--bdr)';
+});
+var price=key==='u2'?(p.unit2price||0):key==='u3'?(p.unit3price||0):(p.sellPrice||0);
+document.getElementById('pos_price').value=price||'';
+posCalcLine();
 }
 function posUnitChange(){
 var p=posSelectedProd;if(!p)return;
-var unit=document.getElementById('pos_unit').value;
+var unit=posCurrentUnit;
 var price=unit==='u2'?(p.unit2price||0):unit==='u3'?(p.unit3price||0):(p.sellPrice||0);
 document.getElementById('pos_price').value=price||'';
 posCalcLine();
+}
+function toggleDiscSection(){
+var sec=document.getElementById('discSection');
+var btn=document.getElementById('discToggle');
+if(!sec)return;
+var open=sec.style.display!=='none';
+sec.style.display=open?'none':'block';
+if(btn)btn.innerHTML=(open?'&#127991;&#65039; Add Discount (optional) &#9660;':'&#127991;&#65039; Discount &#9650;');
 }
 function posCalcLine(){
 var qty=Number(document.getElementById('pos_qty').value)||0;
@@ -2866,38 +2998,39 @@ function posAddItem(){
 var p=posSelectedProd;if(!p){toast('Select a product first');return;}
 var qty=Number(document.getElementById('pos_qty').value)||1;
 var price=Number(document.getElementById('pos_price').value)||0;
-var unitSel=document.getElementById('pos_unit').value;
+var unitSel=posCurrentUnit||'base';
 var unitName=unitSel==='u2'?(p.unit2||'Unit2'):unitSel==='u3'?(p.unit3||'Unit3'):(p.sellUnit||'unit');
 var baseQty=unitSel==='u2'?(p.unit2qty||1)*qty:unitSel==='u3'?(p.unit3qty||1)*qty:qty;
 if(!price){toast('Enter selling price');return;}
 basket.push({prodId:p.id,name:p.genericName+(p.strength?' '+p.strength:''),
 unit:unitName,qty:qty,baseQty:baseQty,price:price,total:qty*price,id:Date.now()});
 document.getElementById('pos_name').value='';
-document.getElementById('posUnitRow').style.display='none';
-document.getElementById('posAddBtn').style.display='none';
+var s2=document.getElementById('posStep2');if(s2)s2.style.display='none';
 document.getElementById('posLineTotal').style.display='none';
 document.getElementById('posStockWarn').style.display='none';
-posSelectedProd=null;
+posSelectedProd=null;posCurrentUnit='base';
+document.getElementById('pos_qty').value=1;
+document.getElementById('pos_price').value='';
 renderBasket();
-toast(p.genericName+' added to basket');
+var srch=document.getElementById('pos_name');if(srch)srch.focus();
+toast(p.genericName+' added to basket',1500);
 }
 function renderBasket(){
 var el=document.getElementById('posBasket');if(!el)return;
 var tot=basket.reduce(function(s,i){return s+i.total;},0);
 var units=basket.reduce(function(s,i){return s+i.qty;},0);
-var bt=document.getElementById('basketTotal');if(bt)bt.textContent=tot.toLocaleString('en-NG');
-var bc=document.getElementById('basketCount');if(bc)bc.textContent=basket.length+' item(s) in basket';
-var bi=document.getElementById('basketItems');if(bi)bi.textContent=basket.length;
-var bu=document.getElementById('basketUnits');if(bu)bu.textContent=units;
-var cc=document.getElementById('posConfirmCard');if(cc)cc.style.display=basket.length?'block':'none';
-if(!basket.length){el.innerHTML='<div class="empty"><div class="ei">&#128717;</div><div class="et">Basket empty. Add items above.</div></div>';return;}
+var s3=document.getElementById('posStep3');if(s3)s3.style.display=basket.length?'block':'none';
+var lbl=document.getElementById('basketCountLabel');if(lbl)lbl.textContent=basket.length?basket.length+' item(s) — '+N(tot):'';
+var sub=document.getElementById('posSubtotal');if(sub)sub.textContent=N(tot);
+var tdEl=document.getElementById('pos_total_due');if(tdEl)tdEl.textContent=N(Math.max(0,tot-posDiscount));
+if(!basket.length){el.innerHTML='<div class="empty"><div class="ei">&#128717;</div><div class="et">Basket empty.<br>Search a product above to start.</div></div>';return;}
 el.innerHTML=basket.map(function(item){
 return '<div style="background:var(--card);border-radius:12px;padding:12px 14px;margin-bottom:6px;border:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;">'+
-'<div><div style="font-size:14px;font-weight:700;color:var(--txt);">'+item.name+'</div>'+
-'<div style="font-size:12px;color:var(--mut);">'+item.qty+' '+item.unit+' x '+N(item.price)+'</div></div>'+
-'<div style="display:flex;align-items:center;gap:8px;">'+
-'<div style="font-family:var(--fh);font-size:18px;color:var(--grn);">'+N(item.total)+'</div>'+
-'<button onclick="posRemoveItem('+item.id+')" style="background:var(--red2);border:none;color:var(--red);border-radius:6px;padding:5px 9px;cursor:pointer;font-size:14px;">&#10005;</button>'+
+'<div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:700;color:var(--txt);">'+item.name+'</div>'+
+'<div style="font-size:12px;color:var(--mut);">'+item.qty+' '+item.unit+' × '+N(item.price)+'</div></div>'+
+'<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">'+
+'<div style="font-family:var(--fh);font-size:18px;color:var(--grn);font-weight:800;">'+N(item.total)+'</div>'+
+'<button onclick="posRemoveItem('+item.id+')" style="background:var(--red2);border:none;color:var(--red);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;">&#10005;</button>'+
 '</div></div>';
 }).join('');
 }
@@ -2988,7 +3121,18 @@ var pc=document.getElementById('pos_customer');if(pc)pc.value='';
 document.getElementById('pos_change').textContent='\u20A80';
 renderPosSalesLog();
 }
-function posClearBasket(){basket=[];renderBasket();}
+function posClearBasket(){
+basket=[];posDiscount=0;
+var dp=document.getElementById('pos_disc_pct');if(dp)dp.value='';
+var df=document.getElementById('pos_disc_flat');if(df)df.value='';
+var dr=document.getElementById('posDiscRow');if(dr)dr.style.display='none';
+var ds=document.getElementById('discSection');if(ds)ds.style.display='none';
+var dt=document.getElementById('discToggle');if(dt)dt.innerHTML='&#127991;&#65039; Add Discount (optional) &#9660;';
+var pc=document.getElementById('pos_cash');if(pc)pc.value='';
+var pt=document.getElementById('pos_transfer');if(pt)pt.value='';
+var pch=document.getElementById('pos_change');if(pch)pch.textContent='&#8358;0';
+renderBasket();
+}
 function renderPosSalesLog(){
 var el=document.getElementById('posSalesLog');if(!el)return;
 if(!S.sales||!S.sales.length){el.innerHTML='<div class="empty"><div class="ei">&#128203;</div><div class="et">No sales recorded yet.</div></div>';return;}
@@ -3631,7 +3775,9 @@ nav.style.boxShadow='0 -2px 10px rgba(0,0,0,0.06)';
 }
 }
 function initNavPos(){
+// Always default to bottom — sidebar/top was old layout, force bottom
 var pos=localStorage.getItem('pbsrx_nav_pos')||'bottom';
+if(pos==='left'||pos==='sidebar')pos='bottom'; // clear legacy values
 applyNavPos(pos);
 var topBtn=document.getElementById('navTopBtn');
 var botBtn=document.getElementById('navBotBtn');
@@ -4311,10 +4457,15 @@ w.document.close();
 
 // ══ ALL-CAMERAS AUTOFOCUS ═════════════════════════════════════════
 function applyAutofocus(stream){
-var track=stream&&stream.getVideoTracks&&stream.getVideoTracks()[0];
-if(track&&track.applyConstraints){
-track.applyConstraints({advanced:[{focusMode:'continuous'},{whiteBalanceMode:'continuous'},{exposureMode:'continuous'}]}).catch(function(){});
-}
+if(!stream)return stream;
+var track=stream.getVideoTracks&&stream.getVideoTracks()[0];
+if(!track)return stream;
+try{
+var caps=track.getCapabilities?track.getCapabilities():{};
+var focusModes=caps.focusMode||[];
+var mode=focusModes.indexOf('continuous')>=0?'continuous':focusModes.indexOf('auto')>=0?'auto':null;
+if(mode)track.applyConstraints({advanced:[{focusMode:mode}]}).catch(function(){});
+}catch(e){}
 return stream;
 }
 

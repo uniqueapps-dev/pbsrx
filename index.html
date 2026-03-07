@@ -60,6 +60,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .hso{background:none;border:none;color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fb);}
 .pages{flex:1;overflow:hidden;position:relative;}
 .pg{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 84px;display:none;}.pg.on{display:block;}
+#appWrap{min-height:100vh;}
 .nav{height:62px;background:var(--card);border-top:1px solid var(--bdr);display:flex;align-items:stretch;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.06);order:99;position:relative;z-index:100;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;}
 .nav::-webkit-scrollbar{display:none;}
 .nb{flex:0 0 auto;min-width:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;cursor:pointer;font-family:var(--fb);position:relative;color:var(--txt);padding:0 4px;}
@@ -277,10 +278,40 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .sgrid{grid-template-columns:repeat(4,1fr);}
 .sgr{grid-template-columns:repeat(4,1fr);}.bgrid{grid-template-columns:repeat(5,1fr);}
 .ov{align-items:center;justify-content:center;}.mb{border-radius:18px;max-width:520px;margin:0;}
+body{font-size:15px;}
+.nb{min-width:80px;padding:10px 14px;}
+.nbi{font-size:22px;}
+.nbl{font-size:11px;}
+.btn,.bsm{padding:12px 18px;font-size:13px;}
+.fi{padding:12px 14px;font-size:14px;}
+.card{padding:18px 20px;}
+.sh{font-size:13px;}
+.pgt{font-size:32px;}
+}
+@media(min-width:1024px){
+body{background:var(--bg);}
+#appWrap{max-width:900px;margin:0 auto;position:relative;}
+.pg{padding:20px 24px 100px;}
+.fr{gap:16px;}
+.card{border-radius:18px;}
+.pgt{font-size:36px;}
+.nb{min-width:90px;}
+/* Two-column layout for cards on wide screens */
+.desktop-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+/* Full-width tables */
+.pulse-table{font-size:13px;}
+.pulse-table td,.pulse-table th{padding:10px 12px;}
+/* Bigger click targets */
+.btn{min-height:44px;}
+.bsm{min-height:40px;}
+.fi{min-height:44px;}
+/* Sales history wider */
+#posSalesLog .cdc, #cashHist .cdc{padding:14px 16px;}
 }
 </style>
 </head>
 <body>
+<div id="appWrap">
 
 <div id="pin">
 <div class="plogo">PBS<span>Rx</span></div>
@@ -302,7 +333,7 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
 <div id="app">
 <div class="hdr">
-<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v6.5.060326</div>
+<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.1.070326</div>
 <div style="display:flex;align-items:center;gap:10px;">
 <div class="hrole" id="hrole">ADMIN</div>
 <button class="hso" onclick="signOut()">Sign out</button>
@@ -423,13 +454,13 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 </div>
 
 <div class="pg" id="pg2">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;"><div><div class="pgt" style="margin-bottom:0;">Snap-to-Stock</div><div class="pgs">Fast inventory capture engine</div></div><button onclick="showReceiveStock()" style="background:linear-gradient(135deg,var(--grn),var(--blu));border:none;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;">&#128230; Receive Stock</button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;"><div><div class="pgt" style="margin-bottom:0;">Snap</div><div class="pgs">AI product capture &amp; barcode scanner</div></div><button onclick="showReceiveStock()" style="background:linear-gradient(135deg,var(--grn),var(--blu));border:none;color:#fff;border-radius:10px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;">&#128230; Receive Stock</button></div>
 <div class="sgr">
 <div class="so on" id="so0" onclick="setSnap('aisnap',this)" style="border-color:var(--amb);"><div class="soi">&#129504;</div><div class="sot">AI Snap</div><div class="sos">Claude reads pack</div></div>
 <div class="so" id="so1" onclick="setSnap('bc',this)"><div class="soi">&#128247;</div><div class="sot">Scan Barcode</div><div class="sos">Real scanner</div></div>
 <div class="so" id="so3" onclick="setSnap('srch',this)"><div class="soi">&#128269;</div><div class="sot">Search DB</div><div class="sos">Find product</div></div>
 <div class="so" id="so2" onclick="setSnap('new',this)"><div class="soi">&#10133;</div><div class="sot">New Product</div><div class="sos">Add to database</div></div>
-<div class="so" id="so3" onclick="setSnap('imp',this)"><div class="soi">&#128229;</div><div class="sot">Import CSV</div><div class="sos">From QuickBooks</div></div>
+<div class="so" id="so4" onclick="setSnap('imp',this)"><div class="soi">&#128229;</div><div class="sot">Import CSV</div><div class="sos">From QuickBooks</div></div>
 </div>
 
 <div id="sAI" style="display:none;">
@@ -622,8 +653,12 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
 <div class="fg acw" style="margin-bottom:8px;">
 <label class="fl">&#128100; Customer name (optional)</label>
-<input class="fi" id="pos_customer" placeholder="Type or leave blank" list="custSuggestions">
+<input class="fi" id="pos_customer" placeholder="Type or leave blank" list="custSuggestions" oninput="posPrefillCustPhone()">
 <datalist id="custSuggestions"></datalist>
+</div>
+<div class="fg">
+<label class="fl">📱 WhatsApp Number (for receipt)</label>
+<input class="fi" id="pos_cust_phone" type="tel" inputmode="numeric" placeholder="e.g. 08012345678 — optional">
 </div>
 
 <button id="discToggle" onclick="toggleDiscSection()" style="background:var(--surf);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;color:var(--mut);cursor:pointer;width:100%;text-align:left;margin-bottom:6px;">&#127991;&#65039; Add Discount (optional) &#9660;</button>
@@ -884,17 +919,10 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div class="pg" id="pg6">
 <div class="pgt">AI Coach</div><div class="pgs" id="coachTime">Powered by Claude Intelligence</div>
 
-<div class="hero" style="margin-bottom:12px;">
-<div class="hl">DAILY BREAK-EVEN TARGET</div>
-<div class="hv"><span>&#8358;</span><span id="beTarget">18,566</span></div>
-<div class="hsub" id="beStatus">Loading today's position...</div>
-<div class="hrow">
-<div class="hm"><div class="hmv" id="beSales">&#8358;0</div><div class="hml">Today Sales</div></div>
-<div class="hm"><div class="hmv" id="beGap" style="color:#f87171;">&#8358;0</div><div class="hml" id="beGapLbl">Gap to Break-Even</div></div>
-<div class="hm"><div class="hmv" id="beDays">0</div><div class="hml">Days Logged</div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+<div style="font-size:11px;color:var(--mut);">Your live pharmacy intelligence</div>
+<button onclick="renderCoach()" style="background:linear-gradient(135deg,var(--blu),var(--pur));border:none;color:#fff;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;">⚡ Generate AI</button>
 </div>
-</div>
-
 <div class="sh">&#9889; Your 5 Priority Actions</div>
 <div id="coachActions">
 <div class="card" style="text-align:center;padding:28px;">
@@ -925,9 +953,9 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div class="sh">&#127793; Seasonal Intelligence</div>
 <div id="seasonAlerts"></div>
 
-<div class="sh">&#128444;&#65039; Upload QuickBooks Screenshot for Coach Analysis</div>
+<div class="sh">📊 Upload Screenshot for AI Analysis</div>
 <div class="card">
-<div class="al ag" style="margin-bottom:10px;"><div class="ai">&#129504;</div><div class="at">Upload any QuickBooks screenshot — profit &amp; loss, inventory, balance sheet. Claude reads it and integrates into your coaching.</div></div>
+<div class="al ag" style="margin-bottom:10px;"><div class="ai">&#129504;</div><div class="at">Upload any business screenshot — sales report, expense summary, stock sheet, bank statement. Claude AI reads it and integrates the data into your coaching session.</div></div>
 <label style="display:block;background:var(--surf);border:2px dashed var(--bdr);border-radius:12px;padding:18px;text-align:center;cursor:pointer;margin-bottom:10px;">
 <input type="file" accept="image/*" style="display:none;" onchange="analyseQBScreenshot(this)">
 <div style="font-size:28px;margin-bottom:6px;">&#128444;&#65039;</div>
@@ -950,90 +978,101 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div style="font-size:11px;color:var(--mut);margin-top:8px;font-weight:500;">&#128161; WhatsApp will open with your briefing pre-typed. Just tap Send.</div>
 </div>
 
-<div class="sh">&#9881;&#65039; Break-Even Settings</div>
-<div class="card">
-<div class="fr">
-<div class="fg"><label class="fl">Rent (&#8358;/mo)</label><input class="fi" id="be_rent" type="number" value="40000"></div>
-<div class="fg"><label class="fl">Salaries (&#8358;/mo)</label><input class="fi" id="be_sal" type="number" value="150000"></div>
+
+<div class="sh">🎯 Break-Even Target</div>
+<div style="background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(99,102,241,0.15));border:1px solid rgba(59,130,246,0.3);border-radius:14px;padding:14px 16px;margin-bottom:8px;">
+<div style="font-size:10px;font-weight:900;color:var(--mut);letter-spacing:1.5px;margin-bottom:6px;">🎯 DAILY BREAK-EVEN TARGET</div>
+<div style="display:flex;justify-content:space-between;align-items:center;">
+<div>
+<div style="font-family:var(--fh);font-size:28px;color:var(--blu);">₦<span id="beTarget2">—</span></div>
+<div style="font-size:11px;color:var(--mut);" id="beStatus2">Update costs below to calculate</div>
 </div>
-<div class="fr">
-<div class="fg"><label class="fl">Generator (&#8358;/mo)</label><input class="fi" id="be_gen" type="number" value="60000"></div>
-<div class="fg"><label class="fl">NAFDAC (&#8358;/mo)</label><input class="fi" id="be_naf" type="number" value="17000"></div>
-</div>
-<div class="fr">
-<div class="fg"><label class="fl">NEPA (&#8358;/mo)</label><input class="fi" id="be_nep" type="number" value="6000"></div>
-<div class="fg"><label class="fl">Security/Clean (&#8358;/mo)</label><input class="fi" id="be_sec" type="number" value="2000"></div>
-</div>
-<div class="fg"><label class="fl">Other Fixed Costs (&#8358;/mo)</label><input class="fi" id="be_oth" type="number" value="0"></div>
-<button class="btn bb" onclick="saveBeSettings()">&#128190; Save Break-Even Settings</button>
-<div style="margin-top:10px;padding:10px 12px;background:var(--surf);border-radius:10px;border:1px solid var(--bdr);">
-<div style="font-size:11px;color:var(--mut);font-weight:800;letter-spacing:1px;text-transform:uppercase;">Calculated Break-Even</div>
-<div style="font-family:var(--fh);font-size:28px;color:var(--blu);" id="beCalc">&#8358;18,566 / day</div>
-<div style="font-size:12px;color:var(--mut);" id="beCalcMo">&#8358;556,984 / month</div>
+<div style="text-align:right;">
+<div style="font-size:12px;color:var(--mut);">Today Sales</div>
+<div style="font-family:var(--fh);font-size:18px;" id="beSales2">₦0</div>
 </div>
 </div>
+</div>
+<div class="al ab" style="margin:0 0 8px;"><div class="ai">⚙️</div><div class="at" style="font-size:13px;"><b>Break-Even Settings</b> are in <button onclick="goTo(7,document.getElementById('nb7'))" style="background:none;border:none;color:var(--blu);font-weight:800;cursor:pointer;font-size:13px;padding:0;text-decoration:underline;">Guide → Settings</button></div></div>
+
 </div>
 
 <div class="pg" id="pg7">
 <div class="pgt">PBS Guide</div><div class="pgs">Workflows, tips &amp; daily checklist</div>
 <div class="gtabs">
-<button class="gtab on" onclick="gTab2(0,this)">&#9989; Daily</button>
-<button class="gtab" onclick="gTab2(1,this)">&#128202; Dashboard</button>
-<button class="gtab" onclick="gTab2(2,this)">&#128138; Stock</button>
-<button class="gtab" onclick="gTab2(3,this)">&#128247; Snap</button>
-<button class="gtab" onclick="gTab2(4,this)">&#128176; Cash</button>
-<button class="gtab" onclick="gTab2(5,this)">&#127981; Suppliers</button>
-<button class="gtab" onclick="gTab2(6,this)">&#9881; Settings</button>
+<button class="gtab on" onclick="gTab2(0,this)">✅ Daily</button>
+<button class="gtab" onclick="gTab2(1,this)">📊 Dashboard</button>
+<button class="gtab" onclick="gTab2(2,this)">📦 Stock</button>
+<button class="gtab" onclick="gTab2(3,this)">📸 Snap</button>
+<button class="gtab" onclick="gTab2(4,this)">🛒 POS</button>
+<button class="gtab" onclick="gTab2(5,this)">💰 Cash</button>
+<button class="gtab" onclick="gTab2(6,this)">⚙️ Settings</button>
 </div>
 
 <div class="gp on" id="gp0">
-<div class="gtip">&#128293; Use this checklist every day. Tap each item when done. Resets daily.</div>
-<div style="font-size:11px;font-weight:800;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">&#9728;&#65039; Morning Routine</div>
-<div class="chk-item" id="chk0" onclick="toggleChk(0)"><div class="chk-box" id="chkb0"></div><div class="chk-body"><div class="chk-title">Open Dashboard</div><div class="chk-desc">Check alerts — any out-of-stock or supplier deadlines?</div></div></div>
-<div class="chk-item" id="chk1" onclick="toggleChk(1)"><div class="chk-box" id="chkb1"></div><div class="chk-body"><div class="chk-title">Review Stock Pulse</div><div class="chk-desc">Filter by Critical and Out — reorder anything urgent</div></div></div>
-<div class="chk-item" id="chk2" onclick="toggleChk(2)"><div class="chk-box" id="chkb2"></div><div class="chk-body"><div class="chk-title">Check Supplier Deadlines</div><div class="chk-desc">Any payments due today or within 5 days?</div></div></div>
-<div class="chk-item" id="chk3" onclick="toggleChk(3)"><div class="chk-box" id="chkb3"></div><div class="chk-body"><div class="chk-title">Check Expiry Monitor</div><div class="chk-desc">Any items expiring within 30 days? Plan for returns or promotions</div></div></div>
-<div style="font-size:11px;font-weight:800;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin:16px 0 10px;">&#127763; Evening Routine</div>
-<div class="chk-item" id="chk4" onclick="toggleChk(4)"><div class="chk-box" id="chkb4"></div><div class="chk-body"><div class="chk-title">Transfer Notebook to QuickBooks</div><div class="chk-desc">Log all today's transactions from your physical notebook</div></div></div>
-<div class="chk-item" id="chk5" onclick="toggleChk(5)"><div class="chk-box" id="chkb5"></div><div class="chk-body"><div class="chk-title">Log Day in Cash Desk</div><div class="chk-desc">Enter total sales, cash received, expenses, and any notes</div></div></div>
-<div class="chk-item" id="chk6" onclick="toggleChk(6)"><div class="chk-box" id="chkb6"></div><div class="chk-body"><div class="chk-title">Update Any Stock Changes</div><div class="chk-desc">Add new deliveries received today via Snap or Stock tab</div></div></div>
-<div class="chk-item" id="chk7" onclick="toggleChk(7)"><div class="chk-box" id="chkb7"></div><div class="chk-body"><div class="chk-title">Review 5-Bucket Allocation</div><div class="chk-desc">Set aside supplier debt portion before spending on anything else</div></div></div>
-<div style="font-size:11px;font-weight:800;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin:16px 0 10px;">&#128197; Weekly (Fridays)</div>
-<div class="chk-item" id="chk8" onclick="toggleChk(8)"><div class="chk-box" id="chkb8"></div><div class="chk-body"><div class="chk-title">Export PBS Backup</div><div class="chk-desc">Go to Settings tab — Export Backup — save to Google Drive</div></div></div>
-<div class="chk-item" id="chk9" onclick="toggleChk(9)"><div class="chk-box" id="chkb9"></div><div class="chk-body"><div class="chk-title">Review Week Profit</div><div class="chk-desc">Cash Desk → This Week — is profit trending up or down?</div></div></div>
-<button class="btn bo" onclick="resetChk()" style="margin-top:14px;">&#128260; Reset Checklist</button>
+<div class="gtip">🔥 Tap each item when done. Resets automatically at midnight every day.</div>
+<div style="font-size:11px;font-weight:900;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin:14px 0 8px;">☀️ Morning Routine</div>
+<div class="chk-item" id="chk0" onclick="toggleChk(0)"><div class="chk-box" id="chkb0"></div><div class="chk-body"><div class="chk-title">Open Dashboard</div><div class="chk-desc">Check break-even target, stock alerts, and supplier deadlines. Know your number before you open the shop.</div></div></div>
+<div class="chk-item" id="chk1" onclick="toggleChk(1)"><div class="chk-box" id="chkb1"></div><div class="chk-body"><div class="chk-title">Review Stock Pulse</div><div class="chk-desc">Filter by Critical and Out-of-Stock. Reorder anything urgent via Reorder Manager in Coach tab.</div></div></div>
+<div class="chk-item" id="chk2" onclick="toggleChk(2)"><div class="chk-box" id="chkb2"></div><div class="chk-body"><div class="chk-title">Check Supplier Deadlines</div><div class="chk-desc">Any payments due today or overdue? Open Suppliers tab — collapsed cards show balance at a glance. Pay from Supplier Debt bucket first.</div></div></div>
+<div class="chk-item" id="chk3" onclick="toggleChk(3)"><div class="chk-box" id="chkb3"></div><div class="chk-body"><div class="chk-title">Check Expiry Monitor</div><div class="chk-desc">Stock tab → scroll past Stock Pulse. Items within 30 days are highlighted. Plan returns or promotions before they expire.</div></div></div>
+<div style="font-size:11px;font-weight:900;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin:14px 0 8px;">🌙 Evening Routine</div>
+<div class="chk-item" id="chk4" onclick="toggleChk(4)"><div class="chk-box" id="chkb4"></div><div class="chk-body"><div class="chk-title">Review POS Sales</div><div class="chk-desc">POS tab → Sales History. Check Today filter. Confirm total matches the physical cash + transfer in your drawer.</div></div></div>
+<div class="chk-item" id="chk5" onclick="toggleChk(5)"><div class="chk-box" id="chkb5"></div><div class="chk-body"><div class="chk-title">Log Day in Cash Desk</div><div class="chk-desc">Cash tab → Log a Day. Enter sales, cash received, all expenses. Run the 5-Bucket allocation to protect your financial structure.</div></div></div>
+<div class="chk-item" id="chk6" onclick="toggleChk(6)"><div class="chk-box" id="chkb6"></div><div class="chk-body"><div class="chk-title">Receive Any New Stock</div><div class="chk-desc">Snap tab → photograph pack → Save &amp; Receive Stock. Or Stock Pulse → Receive button on any product row.</div></div></div>
+<div class="chk-item" id="chk7" onclick="toggleChk(7)"><div class="chk-box" id="chkb7"></div><div class="chk-body"><div class="chk-title">Review 5-Bucket Allocation</div><div class="chk-desc">Set aside the Supplier Debt portion before any personal spending. This is what separates surviving pharmacies from thriving ones.</div></div></div>
+<div style="font-size:11px;font-weight:900;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin:14px 0 8px;">📅 Weekly (Fridays)</div>
+<div class="chk-item" id="chk8" onclick="toggleChk(8)"><div class="chk-box" id="chkb8"></div><div class="chk-body"><div class="chk-title">Export PBS Backup</div><div class="chk-desc">Guide → Settings → Export Backup. Save the JSON file to Google Drive or WhatsApp it to yourself. One minute. Weekly habit.</div></div></div>
+<div class="chk-item" id="chk9" onclick="toggleChk(9)"><div class="chk-box" id="chkb9"></div><div class="chk-body"><div class="chk-title">Review Week Profit</div><div class="chk-desc">Cash tab → This Week filter. Is net profit above break-even? Check the summary cards at the top. If not — investigate before Monday.</div></div></div>
+<button class="btn bo" onclick="resetChk()" style="margin-top:14px;">🔄 Reset Checklist</button>
 </div>
+
 <div class="gp" id="gp1">
-<div class="gtip">Open Dashboard every morning and evening. It is your command centre.</div>
-<div class="gst"><div class="gsi gsib">&#128202;</div><div><div class="gsh">Today's Snapshot</div><div class="gsd">4 cards: Today Sales, Today Expenses, This Week total, Week Profit. All auto-populate when you log in Cash Desk.</div></div></div>
-<div class="gst"><div class="gsi gsir">&#128138;</div><div><div class="gsh">Stock Pulse Alerts</div><div class="gsd"><b>Red</b> = out of stock or critical. Costing you money every hour. Reorder before anything else.</div></div></div>
-<div class="gst"><div class="gsi gsio">&#128176;</div><div><div class="gsh">Cash Allocation</div><div class="gsd">Shows today's 5-bucket split. Log sales in Cash Desk first for this to appear.</div></div></div>
-<div class="gst"><div class="gsi gsip">&#127981;</div><div><div class="gsh">Supplier Obligations</div><div class="gsd">All suppliers with balances, highest priority first. Total obligations shown at bottom.</div></div></div>
+<div class="gtip">Open Dashboard every morning and evening. It is your operational command centre.</div>
+<div class="gst"><div class="gsi gsib">📊</div><div><div class="gsh">Today's Snapshot (4 Cards)</div><div class="gsd">Sales, Expenses, This Week, Week Profit. These update automatically when you log a day in Cash Desk. Green = profitable. Red = below target.</div></div></div>
+<div class="gst"><div class="gsi gsir">🎯</div><div><div class="gsh">Break-Even Hero</div><div class="gsd">Your daily sales target based on fixed costs. Green when you pass it. Set your actual costs in Guide → Settings → Break-Even Settings. The target auto-recalculates.</div></div></div>
+<div class="gst"><div class="gsi gsio">📦</div><div><div class="gsh">Stock Pulse Alerts</div><div class="gsd"><b>Red</b> = Out of Stock (losing money now). <b>Orange</b> = Critical. <b>Yellow</b> = Low. <b>Green</b> = OK. Tap any alert card to go directly to that product.</div></div></div>
+<div class="gst"><div class="gsi gsip">🏭</div><div><div class="gsh">Supplier Obligations</div><div class="gsd">Total outstanding across all suppliers with overdue count. Tap the card to open Suppliers tab and action payments.</div></div></div>
+<div class="gst"><div class="gsi gsig">🧠</div><div><div class="gsh">AI Morning/Evening Brief</div><div class="gsd">PBS auto-schedules briefings at 5:30 AM and 9:00 PM. Coach tab → ⚡ Generate for AI 5-priority actions. Requires OpenRouter API key (free).</div></div></div>
 </div>
+
 <div class="gp" id="gp2">
-<div class="gtip">Monitor as many products as you like — no limit. Every product marked Monitor appears in Stock Pulse.</div>
-<div class="gst"><div class="gsi gsig">&#9989;</div><div><div class="gsh">Status Colours</div><div class="gsd"><b>Green</b> = OK &nbsp;&#183;&nbsp; <b>Orange</b> = Low &nbsp;&#183;&nbsp; <b>Red</b> = Critical &nbsp;&#183;&nbsp; <b>Dark Red</b> = Out of Stock &nbsp;&#183;&nbsp; <b>Red border top</b> = Expiring within 30 days</div></div></div>
-<div class="gst"><div class="gsi gsib">&#128230;</div><div><div class="gsh">Reorder Cost Estimate</div><div class="gsd">Tap Reorder on any product. PBS shows you exactly how many to order AND the estimated cost based on last recorded cost price.</div></div></div>
-<div class="gst"><div class="gsi gsir">&#128337;</div><div><div class="gsh">Expiry Monitor</div><div class="gsd">Scroll down on Stock tab. Lists all batches expiring within 90 days. Red = 30 days. Orange = 60 days. Plan returns or promotions early.</div></div></div>
+<div class="gtip">Every product marked Monitor appears in Stock Pulse. No limit on products.</div>
+<div class="gst"><div class="gsi gsig">🔴🟠🟡🟢</div><div><div class="gsh">Status Colours</div><div class="gsd"><b>Green</b> = OK (above minimum). <b>Yellow</b> = Low (at/below min). <b>Orange</b> = Critical (below 50% of min). <b>Red</b> = Out of Stock. Set minimum stock level when adding a product in Snap.</div></div></div>
+<div class="gst"><div class="gsi gsib">📥</div><div><div class="gsh">Two Ways to Receive Stock</div><div class="gsd">(1) Snap tab → AI reads pack photo → tap <b>Save &amp; Receive Stock</b>. (2) Stock Pulse → tap Receive on any product row. Both open the Receive Stock modal with the product pre-filled.</div></div></div>
+<div class="gst"><div class="gsi gsio">📋</div><div><div class="gsh">Stocktake Mode</div><div class="gsd">Tap the Stocktake button top-right of Stock Pulse. Enter your actual physical counts. PBS calculates variance and adjusts records automatically. Do this monthly.</div></div></div>
+<div class="gst"><div class="gsi gsir">⏱️</div><div><div class="gsh">Expiry Monitor</div><div class="gsd">Scroll past Stock Pulse. Colour-coded by time remaining: Red = under 30 days, Orange = 30–60 days, Yellow = 60–90 days. Take action before items expire worthless.</div></div></div>
+<div class="gst"><div class="gsi gsig">📦</div><div><div class="gsh">Reorder Manager</div><div class="gsd">Coach tab → scroll down. Lists all Out-of-Stock and Low products with estimated reorder cost. Tick items, edit quantities, tap <b>Send to Supplier</b> to order via WhatsApp.</div></div></div>
 </div>
+
 <div class="gp" id="gp3">
-<div class="gtip">The Snap engine learns. After first entry, future scans bring up all details instantly.</div>
-<div class="gst"><div class="gsi gsib">&#128247;</div><div><div class="gsh">Real Barcode Scanner</div><div class="gsd">Tap <b>Start Barcode Scanner</b>. Point camera at barcode on drug pack. It reads automatically — no typing. If product found, all details fill. If not, tap Add as New.</div></div></div>
-<div class="gst"><div class="gsi gsig">&#128269;</div><div><div class="gsh">Search Database</div><div class="gsd">Type 2+ letters of drug name. Tap result. All product details fill — just enter batch, expiry and qty.</div></div></div>
-<div class="gst"><div class="gsi gsio">&#10133;</div><div><div class="gsh">New Product</div><div class="gsd">First time only. Fill all fields. One-time entry — every future scan brings it up instantly. Always enter cost price for profit tracking.</div></div></div>
+<div class="gtip">Snap is your product intelligence engine. The more packs you scan, the richer your database becomes.</div>
+<div class="gst"><div class="gsi gsib">🤖</div><div><div class="gsh">AI Snap (Camera)</div><div class="gsd">Tap AI Snap → photograph any drug pack → Claude AI reads the label and extracts name, strength, category, dosage form, price. Review and confirm. Then choose: <b>Save to Database</b>, <b>Save &amp; Receive Stock</b>, or <b>Sell Now</b>.</div></div></div>
+<div class="gst"><div class="gsi gsig">🛒</div><div><div class="gsh">Sell with Snap</div><div class="gsd">After AI reads a pack, tap the purple <b>Sell Now</b> button. PBS sends the product directly to POS basket with name and price pre-filled. Just enter quantity and confirm the sale.</div></div></div>
+<div class="gst"><div class="gsi gsio">📥</div><div><div class="gsh">Save &amp; Receive Stock</div><div class="gsd">After AI Snap, tap the green <b>Save &amp; Receive Stock</b> button. Saves product to database then immediately opens the Receive Stock modal with the product name pre-filled — enter supplier, cost, quantity, expiry and save.</div></div></div>
+<div class="gst"><div class="gsi gsir">🔍</div><div><div class="gsh">Search Database</div><div class="gsd">Type 2+ characters to search your full product database. Tap any result to view details, edit the product, or open Receive Stock for it directly.</div></div></div>
+<div class="gst"><div class="gsi gsib">📷</div><div><div class="gsh">Barcode Scanner</div><div class="gsd">Tap Scan Barcode mode → hold barcode in the box. Auto-detects EAN-13, EAN-8, Code 128, QR codes. Camera uses continuous autofocus — give it 1–2 seconds to lock on.</div></div></div>
 </div>
+
 <div class="gp" id="gp4">
-<div class="gtip">Log each day in the evening after transferring your notebook to QuickBooks.</div>
-<div class="gst"><div class="gsi gsib">&#128221;</div><div><div class="gsh">Log a Day</div><div class="gsd">Enter Total Sales and Cash Received. Add expenses with categories. Use Day Notes for holidays, generator issues, prayer days — anything unusual.</div></div></div>
-<div class="gst"><div class="gsi gsio">&#128176;</div><div><div class="gsh">5-Bucket Allocation</div><div class="gsd">Inventory 35% — Supplier Debt 25% — Expenses 20% — Owner Pay 15% — Reserve 5%. Protects your working capital every day.</div></div></div>
-<div class="gst"><div class="gsi gsig">&#128197;</div><div><div class="gsh">Custom Date Range</div><div class="gsd">In Cash History, set From Date and To Date then tap Apply. Useful for comparing specific weeks or seeing any period you choose.</div></div></div>
+<div class="gtip">3-step guided sales flow. Each step auto-advances to the next. The fastest POS for community pharmacy.</div>
+<div class="gst"><div class="gsi gsib">1️⃣</div><div><div class="gsh">Step 1 — Search Product</div><div class="gsd">Type the drug name. Matching products appear as buttons — tap to select. If the product doesn't exist, add it via Snap tab first.</div></div></div>
+<div class="gst"><div class="gsi gsig">2️⃣</div><div><div class="gsh">Step 2 — Pack &amp; Quantity</div><div class="gsd">Choose pack size (Tablet / Strip / Bottle etc). Tap the <b>Qty field</b> — number keyboard opens immediately. Type quantity and price auto-fills. Tap <b>Add to Basket</b>.</div></div></div>
+<div class="gst"><div class="gsi gsio">3️⃣</div><div><div class="gsh">Step 3 — Payment</div><div class="gsd">Enter customer name (optional — auto-completes from Customers). Enter customer WhatsApp number to send receipt. Apply discount (% or flat ₦). Enter Cash and/or Transfer. Change calculates automatically. Tap <b>Confirm Sale</b>.</div></div></div>
+<div class="gst"><div class="gsi gsib">🧾</div><div><div class="gsh">Receipt &amp; Thermal Print</div><div class="gsd">Receipt appears after every sale. Toggle <b>Print ON/OFF</b> at the top of the receipt. Print dialog opens — select your 58mm thermal printer. WhatsApp sends the receipt text to the customer number you entered.</div></div></div>
+<div class="gst"><div class="gsi gsir">📋</div><div><div class="gsh">Sales History</div><div class="gsd">Below the basket. Filter: Today / This Week / Month / All Time. Tap <b>Filter</b> for product name search or custom date range. Each sale row is collapsed — tap to expand full items, totals, and reprint receipt.</div></div></div>
+<div class="gst"><div class="gsi gsig">⏸️</div><div><div class="gsh">Hold Basket</div><div class="gsd">Tap <b>Hold</b> to park the current basket and start a new sale. Tap <b>Held</b> to resume any parked basket. No limit on held baskets.</div></div></div>
 </div>
+
 <div class="gp" id="gp5">
-<div class="gtip">Tap any supplier card to auto-load into the edit form.</div>
-<div class="gst"><div class="gsi gsib">&#127981;</div><div><div class="gsh">Supplier Cards</div><div class="gsd">Full payment timeline, deadline warnings, and total obligations shown at the bottom of the list.</div></div></div>
-<div class="gst"><div class="gsi gsig">&#128179;</div><div><div class="gsh">Pay Button</div><div class="gsd">Opens payment modal. Enter amount and reference. Select your banking app to pay directly. Balance updates instantly.</div></div></div>
-<div class="gst"><div class="gsi gsio">&#128203;</div><div><div class="gsh">Share Statement</div><div class="gsd">Generates full statement with all payment history. Share on WhatsApp as proof of payment.</div></div></div>
+<div class="gtip">Log every day in the evening. Consistency transforms data into financial intelligence.</div>
+<div class="gst"><div class="gsi gsib">📝</div><div><div class="gsh">Log a Day</div><div class="gsd">Enter: Total Sales (from POS Sales History → Today), Cash Received (physical cash only — not transfer), and expenses by category. Tap <b>Save Day Record</b>. That's it.</div></div></div>
+<div class="gst"><div class="gsi gsio">💰</div><div><div class="gsh">5-Bucket Cash Allocation</div><div class="gsd">Splits today's cash automatically: Inventory 35%, Supplier Debt 25%, Expenses 20%, Owner Draw 15%, Reserve 5%. The discipline of not mixing these buckets is what makes pharmacies financially healthy long-term.</div></div></div>
+<div class="gst"><div class="gsi gsig">📊</div><div><div class="gsh">History Summary Cards</div><div class="gsd">Top of Cash History shows 4 coloured total cards for the selected period: Sales, Net Profit, Expenses, Cash In. Instantly see your performance without scrolling through every record.</div></div></div>
+<div class="gst"><div class="gsi gsir">📅</div><div><div class="gsh">Date Range Filter</div><div class="gsd">Cash History → tap <b>Filter</b> → set From and To dates. Analyse any specific period. Useful for month-end summaries, tax preparation, or comparing two months.</div></div></div>
+<div class="gst"><div class="gsi gsib">📤</div><div><div class="gsh">Export Reports</div><div class="gsd">CSV Export: full date-range data for spreadsheet or accounting software. PDF Daily: one-page formatted summary for the selected period, suitable for printing or sharing.</div></div></div>
 </div>
+
 <div class="gp" id="gp6_settings">
 <div class="gtip">&#9881;&#65039; Manage pharmacy identity, voice, API key and app settings here.</div>
 <div class="sh">&#128138; Pharmacy Identity</div>
@@ -1043,16 +1082,16 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div class="fg"><label class="fl">Owner Name</label><input class="fi" id="set_ownerName" placeholder="e.g. Pharm. Ngozi"></div>
 </div>
 <div class="fg"><label class="fl">WhatsApp Number (for briefings)</label><input class="fi" id="set_waNum" placeholder="2348XXXXXXXXX" type="tel"></div>
-<button class="btn bb" onclick="saveSettings()">&#128190; Save Settings</button>
+<button type="button" class="btn bb" onclick="saveSettings()">&#128190; Save Settings</button>
 <div id="settingsStatus" style="font-size:12px;color:var(--grn);margin-top:6px;font-weight:600;"></div>
 </div>
-<div class="sh">&#128203; Navigation Position</div><div class="card"><div style="display:flex;gap:8px;margin-bottom:8px;"><button id="navTopBtn" class="bsm" style="flex:1;background:var(--surf);" onclick="setNavPos('top')">&#8593; Top</button><button id="navBotBtn" class="bsm bsb" style="flex:1;" onclick="setNavPos('bottom')">&#8595; Bottom</button></div><div style="font-size:11px;color:var(--mut);" id="navPosTxt">Navigation is at the bottom.</div></div>
+<div class="sh">&#128203; Navigation Position</div><div class="card"><div style="display:flex;gap:8px;margin-bottom:8px;"><button type="button" id="navTopBtn" class="bsm" style="flex:1;background:var(--surf);" onclick="setNavPos('top')">&#8593; Top</button><button type="button" id="navBotBtn" class="bsm bsb" style="flex:1;" onclick="setNavPos('bottom')">&#8595; Bottom</button></div><div style="font-size:11px;color:var(--mut);" id="navPosTxt">Navigation is at the bottom.</div></div>
 <div class="sh">&#127482;&#65039; Voice Settings</div>
 <div class="card">
 <div style="display:flex;gap:8px;margin-bottom:10px;">
-<button id="voiceToggleBtn" class="btn" style="flex:1;background:var(--grn);border:none;color:#fff;font-size:12px;" onclick="toggleVoice()">&#128266; Voice ON</button>
-<button id="voiceMaleBtn" class="bsm bsb" style="flex:1;" onclick="setVoiceGender('male')">&#128104; Male</button>
-<button id="voiceFemaleBtn" class="bsm" style="flex:1;background:var(--surf);" onclick="setVoiceGender('female')">&#128105; Female</button>
+<button type="button" id="voiceToggleBtn" class="btn" style="flex:1;background:var(--grn);border:none;color:#fff;font-size:12px;" onclick="toggleVoice()">&#128266; Voice ON</button>
+<button type="button" id="voiceMaleBtn" class="bsm bsb" style="flex:1;" onclick="setVoiceGender('male')">&#128104; Male</button>
+<button type="button" id="voiceFemaleBtn" class="bsm" style="flex:1;background:var(--surf);" onclick="setVoiceGender('female')">&#128105; Female</button>
 </div>
 <div style="font-size:11px;color:var(--mut);" id="voiceStatusTxt">Select voice preference above.</div>
 </div>
@@ -1060,29 +1099,29 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div class="card" id="apiKeyCard">
 <div class="al ao" style="margin-bottom:10px;"><div class="ai">&#128161;</div><div class="at">Enter your OpenRouter API key to enable AI Coach, AI Snap and QB analysis. Stored only on this device.</div></div>
 <div class="fg"><label class="fl">OpenRouter API Key</label><input class="fi" id="apiKeyInput" type="password" placeholder="sk-or-..." autocomplete="off"></div>
-<button class="btn bb" onclick="saveApiKey()" style="margin-top:6px;">&#128190; Save Key</button>
+<button type="button" class="btn bb" onclick="saveApiKey()" style="margin-top:6px;">&#128190; Save Key</button>
 <div id="apiKeyStatus" style="font-size:12px;color:var(--mut);margin-top:8px;font-weight:600;"></div>
 <div style="font-size:11px;color:var(--mut);margin-top:6px;">Get key: <span style="color:var(--blu);">openrouter.ai</span> &#8594; Sign in &#8594; Keys</div>
 </div>
 <div class="sh">&#9881;&#65039; Break-Even Settings</div>
 <div class="card">
 <div class="fr">
-<div class="fg"><label class="fl">Rent (&#8358;/mo)</label><input class="fi" id="be_rent" type="number" value="40000"></div>
-<div class="fg"><label class="fl">Salaries (&#8358;/mo)</label><input class="fi" id="be_sal" type="number" value="150000"></div>
+<div class="fg"><label class="fl">Rent (&#8358;/mo)</label><input class="fi" id="be_rent" type="number" inputmode="numeric" oninput="updBECalc()"></div>
+<div class="fg"><label class="fl">Salaries (&#8358;/mo)</label><input class="fi" id="be_sal" type="number" inputmode="numeric" oninput="updBECalc()"></div>
 </div>
 <div class="fr">
-<div class="fg"><label class="fl">Generator (&#8358;/mo)</label><input class="fi" id="be_gen" type="number" value="60000"></div>
-<div class="fg"><label class="fl">NAFDAC (&#8358;/mo)</label><input class="fi" id="be_naf" type="number" value="17000"></div>
+<div class="fg"><label class="fl">Generator (&#8358;/mo)</label><input class="fi" id="be_gen" type="number" inputmode="numeric" oninput="updBECalc()"></div>
+<div class="fg"><label class="fl">NAFDAC (&#8358;/mo)</label><input class="fi" id="be_naf" type="number" inputmode="numeric" oninput="updBECalc()"></div>
 </div>
 <div class="fr">
-<div class="fg"><label class="fl">NEPA (&#8358;/mo)</label><input class="fi" id="be_nep" type="number" value="6000"></div>
-<div class="fg"><label class="fl">Security/Clean (&#8358;/mo)</label><input class="fi" id="be_sec" type="number" value="2000"></div>
+<div class="fg"><label class="fl">NEPA (&#8358;/mo)</label><input class="fi" id="be_nep" type="number" inputmode="numeric" oninput="updBECalc()"></div>
+<div class="fg"><label class="fl">Security/Clean (&#8358;/mo)</label><input class="fi" id="be_sec" type="number" inputmode="numeric" oninput="updBECalc()"></div>
 </div>
-<div class="fg"><label class="fl">Other Fixed Costs (&#8358;/mo)</label><input class="fi" id="be_oth" type="number" value="0"></div>
-<button class="btn bb" onclick="saveBeSettings()">&#128190; Save Break-Even Settings</button>
+<div class="fg"><label class="fl">Other Fixed Costs (&#8358;/mo)</label><input class="fi" id="be_oth" type="number" ></div>
+<button type="button" class="btn bb" onclick="saveBeSettings()">&#128190; Save Break-Even Settings</button>
 <div style="margin-top:10px;padding:10px 12px;background:var(--surf);border-radius:10px;border:1px solid var(--bdr);">
 <div style="font-size:11px;color:var(--mut);font-weight:800;letter-spacing:1px;text-transform:uppercase;">Calculated Break-Even</div>
-<div style="font-family:var(--fh);font-size:28px;color:var(--blu);" id="beCalc">&#8358;18,566 / day</div>
+<div style="font-family:var(--fh);font-size:28px;color:var(--blu);" id="beCalc">— / day</div>
 <div style="font-size:12px;color:var(--mut);" id="beCalcMo">&#8358;556,984 / month</div>
 </div>
 </div>
@@ -1090,9 +1129,12 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
 <div class="sh" style="margin-top:24px;background:var(--amb);color:#000;border-radius:8px;padding:8px 14px;border:none;">&#128190; BACKUP &amp; RESTORE</div>
 <div class="card">
-<div class="al ab"><div class="ai">&#128161;</div><div class="at">Export every <b>Friday</b>. Save JSON file to Google Drive → folder called <b>"PBSRx Backups"</b>. Never clear browser cache without exporting first — it will wipe all data.</div></div>
-<button class="btn bb" onclick="expBk()">&#128228; Export Backup — Download Now</button>
-<button class="btn bo" onclick="document.getElementById('bkF').click()" style="margin-top:8px;">&#128229; Import / Restore Backup</button>
+<div class="al ab" style="margin-bottom:12px;"><div class="ai">💡</div><div class="at">Back up every <b>Friday</b>. Use <b>Save to Drive</b> — on Android it opens your share sheet so you can save directly to Google Drive, WhatsApp yourself the file, or any app. Never clear browser cache without backing up first.</div></div>
+<button type="button" class="btn" onclick="saveToDrive()" style="width:100%;background:linear-gradient(135deg,#1a73e8,#0d47a1);border:none;color:#fff;border-radius:12px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M6.28 3L1 12l5.28 9h11.44L23 12 17.72 3H6.28zm1.14 2h9.16L20.6 12l-4.02 7H7.42L3.4 12l4.02-7z"/><path d="M12 8l-4 7h8l-4-7z"/></svg>
+📤 Save to Google Drive</button>
+<button type="button" class="btn bb" onclick="expBk()" style="width:100%;margin-bottom:8px;">⬇️ Download JSON (local)</button>
+<button type="button" class="btn bo" onclick="document.getElementById('bkF').click()" style="width:100%;">📥 Import / Restore Backup</button>
 <input type="file" id="bkF" accept=".json" style="display:none" onchange="impBk(this)">
 </div>
 
@@ -1103,12 +1145,14 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div class="fg"><label class="fl">New Staff PIN</label><input class="fi" id="nSt" type="password" inputmode="numeric" maxlength="4" placeholder="4 digits"></div>
 </div>
 <div class="fg"><label class="fl">Current Admin PIN (to confirm)</label><input class="fi" id="cAd" type="password" inputmode="numeric" maxlength="4" placeholder="Your current admin PIN"></div>
-<button class="btn bb" onclick="chgPins()">&#128273; Save New PINs</button>
+<button type="button" class="btn bb" onclick="chgPins()">&#128273; Save New PINs</button>
 </div>
 
 <div class="sh" style="margin-top:8px;background:var(--grn);color:#fff;border-radius:8px;padding:8px 14px;border:none;">&#128241; INSTALL AS APP</div>
 <div class="card">
-<div class="al ab"><div class="ai">&#128241;</div><div class="at">To install PBSRx as an app on your LG G8X:<br><b>1.</b> Tap the 3-dot menu (&#8942;) in Chrome<br><b>2.</b> Tap <b>"Add to Home Screen"</b><br><b>3.</b> Pharmacy cross icon appears on your home screen<br><b>4.</b> Open from there — runs like a proper app, no browser bar</div></div>
+<div class="al ab" style="margin-bottom:8px;"><div class="ai">🤖</div><div class="at"><b>Android (Chrome):</b><br>Tap the 3-dot menu (⋮) → <b>"Add to Home Screen"</b> or <b>"Install App"</b> → Install. Opens fullscreen, works offline.</div></div>
+<div class="al ab" style="margin-bottom:8px;"><div class="ai">🍎</div><div class="at"><b>iPhone (Safari):</b><br>Tap the Share button (□↑) → <b>"Add to Home Screen"</b> → Add. Appears as an app icon.</div></div>
+<div class="al ab"><div class="ai">💻</div><div class="at"><b>Desktop (Chrome/Edge):</b><br>Look for the install icon (⊕) in the address bar → Click Install. Opens in its own window like a native app.</div></div>
 </div>
 </div>
 </div>
@@ -1121,22 +1165,22 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 <div class="fg"><label class="fl">Phone</label><input class="fi" id="cust_phone" type="tel" placeholder="08XXXXXXXXX"></div>
 </div>
 <div class="fg"><label class="fl">Notes (optional)</label><input class="fi" id="cust_notes" placeholder="e.g. Hypertensive, regular paracetamol"></div>
-<button class="btn bb" onclick="saveCustomer()">&#128190; Save Customer</button>
+<button type="button" class="btn bb" onclick="saveCustomer()">&#128190; Save Customer</button>
 </div>
 <div class="sh">&#128101; Customer List</div>
 <div style="position:relative;margin-bottom:8px;"><span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:14px;">&#128269;</span><input id="custSearch" class="fi" placeholder="Search by name or phone..." style="padding-left:32px;margin:0;" oninput="renderCustomers()"></div>
 <div id="custList"></div>
 </div>
 <nav class="nav" id="mainNav">
-<button class="nb on" onclick="goTo(0,this)" id="nb0"><span class="nbi">&#128202;</span><span class="nbl">Dashboard</span></button>
-<button class="nb" onclick="goTo(1,this)" id="nb1"><span class="nbi">&#128138;</span><span class="nbl">Stock</span><span class="nbg" id="sbg" style="display:none;"></span></button>
-<button class="nb" onclick="goTo(2,this)" id="nb2"><span class="nbi">&#128247;</span><span class="nbl">Snap</span></button>
-<button class="nb" onclick="goTo(3,this)" id="nb3"><span class="nbi">&#128182;</span><span class="nbl">POS</span><span class="nbg" id="posbg" style="display:none;"></span></button>
-<button class="nb" onclick="goTo(4,this)" id="nb4"><span class="nbi">&#128200;</span><span class="nbl">Cash</span></button>
-<button class="nb" onclick="goTo(5,this)" id="nb5"><span class="nbi">&#127981;</span><span class="nbl">Suppliers</span><span class="nbg" id="supbg" style="display:none;"></span></button>
-<button class="nb" onclick="goTo(8,this)" id="nb8"><span class="nbi">&#128101;</span><span class="nbl">Customers</span></button>
-<button class="nb" onclick="goTo(6,this)" id="nb6"><span class="nbi">&#129504;</span><span class="nbl">Coach</span><span class="nbg" id="coachbg" style="display:none;">!</span></button>
-<button class="nb" onclick="goTo(7,this)" id="nb7"><span class="nbi">&#128214;</span><span class="nbl">Guide</span></button>
+<button type="button" class="nb on" onclick="goTo(0,this)" id="nb0"><span class="nbi">&#128202;</span><span class="nbl">Dashboard</span></button>
+<button type="button" class="nb" onclick="goTo(1,this)" id="nb1"><span class="nbi">&#128138;</span><span class="nbl">Stock</span><span class="nbg" id="sbg" style="display:none;"></span></button>
+<button type="button" class="nb" onclick="goTo(2,this)" id="nb2"><span class="nbi">&#128247;</span><span class="nbl">Snap</span></button>
+<button type="button" class="nb" onclick="goTo(3,this)" id="nb3"><span class="nbi">&#128182;</span><span class="nbl">POS</span><span class="nbg" id="posbg" style="display:none;"></span></button>
+<button type="button" class="nb" onclick="goTo(4,this)" id="nb4"><span class="nbi">&#128200;</span><span class="nbl">Cash</span></button>
+<button type="button" class="nb" onclick="goTo(5,this)" id="nb5"><span class="nbi">&#127981;</span><span class="nbl">Suppliers</span><span class="nbg" id="supbg" style="display:none;"></span></button>
+<button type="button" class="nb" onclick="goTo(8,this)" id="nb8"><span class="nbi">&#128101;</span><span class="nbl">Customers</span></button>
+<button type="button" class="nb" onclick="goTo(6,this)" id="nb6"><span class="nbi">&#129504;</span><span class="nbl">Coach</span><span class="nbg" id="coachbg" style="display:none;">!</span></button>
+<button type="button" class="nb" onclick="goTo(7,this)" id="nb7"><span class="nbi">&#128214;</span><span class="nbl">Guide</span></button>
 </nav>
 </div>
 
@@ -1231,7 +1275,7 @@ if(idx===1){renderPulse();renderExpiry();}
 if(idx===3)renderPOS();
 if(idx===4)renderCashHist();
 if(idx===5){renderSup();renderLoans();}
-if(idx===6)renderCoach();
+if(idx===6){try{renderRuleBasedCoach();}catch(e){}}
 if(idx===8)renderCustomers();
 }
 function gTab(idx,el){
@@ -1858,6 +1902,8 @@ if(diff<0)return{cls:'rd',msg:'&#9940; Overdue by '+Math.abs(diff)+' day(s)'};
 if(diff<=5)return{cls:'am',msg:'&#9888; Deadline in '+diff+' day(s) — '+fd(deadline,{day:'numeric',month:'short'})};
 return null;
 }
+var supExpanded={};
+function toggleSup(id,e){if(e)e.stopPropagation();supExpanded[id]=!supExpanded[id];renderSup();}
 function renderSup(){
 var el=document.getElementById('supList');if(!el)return;
 if(!S.suppliers.length){el.innerHTML='<div class="empty"><div class="ei">&#127981;</div><div class="et">No suppliers added yet.</div></div>';return;}
@@ -1866,24 +1912,53 @@ var sorted=S.suppliers.slice().sort(function(a,b){return(ord[a.priority]||1)-(or
 var totalOwed=S.suppliers.reduce(function(s,x){return s+(x.balance||0);},0);
 el.innerHTML=sorted.map(function(s){
 var pcls={high:'cr',medium:'co',low:'cg'}[s.priority]||'';
-var plbl={high:'&#128308; Pay First',medium:'&#127885; Pay Soon',low:'&#128994; Can Wait'}[s.priority]||'';
+var pico={high:'🔴',medium:'🟡',low:'🟢'}[s.priority]||'';
+var plbl={high:'Pay First',medium:'Pay Soon',low:'Can Wait'}[s.priority]||'';
 var pays=S.supplierPayments.filter(function(p){return p.supId===s.id;}).sort(function(a,b){return b.date.localeCompare(a.date);});
 var ddl=getDDL(s.deadline);
-return '<div class="sup" onclick="loadSup('+s.id+')">'+
-'<div style="display:flex;justify-content:space-between;align-items:flex-start;">'+
-'<div><div class="sco">'+s.company+'</div>'+
-(s.rep?'<div class="srep">Rep: '+s.rep+(s.phone?' | &#128241; '+s.phone:'')+'</div>':'')+
-'<div class="smeta">Credit: '+s.creditDays+' days'+(s.deadline?' | Deadline: '+fd(s.deadline,{day:'numeric',month:'short'}):'')+(s.notes?'<br>'+s.notes:'')+'</div></div>'+
-'<span class="chip '+pcls+'">'+plbl+'</span></div>'+
-(ddl?'<div class="ddl '+ddl.cls+'">'+ddl.msg+'</div>':'')+
-'<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">'+
-'<div><div style="font-size:10px;color:var(--mut);font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;">Balance Owed</div>'+
-'<div class="sbal'+(s.balance===0?' ok':'')+'">'+N(s.balance)+'</div></div></div>'+
-(pays.length?'<div class="ptl"><div class="ptlh">Payment History</div>'+pays.slice(0,5).map(function(p){return '<div class="ptlr"><div><div class="ptld">'+fd(p.date,{day:'numeric',month:'short',year:'numeric'})+'</div>'+(p.ref?'<div class="ptlref">'+p.ref+'</div>':'')+' </div><div class="ptla">'+N(p.amount)+'</div></div>';}).join('')+(pays.length>5?'<div style="font-size:11px;color:var(--mut);text-align:center;padding:4px;">+  '+(pays.length-5)+' more payments</div>':'')+'</div>':'')+
-'<div class="sacts" onclick="event.stopPropagation()">'+
-'<button class="bsm bsb" onclick="openPay('+s.id+')">&#128179; Pay</button>'+
-'<button class="bsm bsg" onclick="shareSup('+s.id+')">&#128203; Share Statement</button>'+
+var isExp=!!supExpanded[s.id];
+var balCol=s.balance>0?'var(--red)':'var(--grn)';
+var row='<div style="background:var(--card);border-radius:14px;margin-bottom:8px;border:1px solid var(--bdr);overflow:hidden;">';
+// Always-visible collapsed header
+row+='<div onclick="toggleSup('+s.id+',event)" style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;gap:10px;">'+
+'<div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">'+
+'<div style="width:40px;height:40px;border-radius:10px;background:var(--blu3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🏭</div>'+
+'<div style="min-width:0;">'+
+'<div style="font-size:14px;font-weight:800;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+s.company+'</div>'+
+'<div style="font-size:11px;color:var(--mut);margin-top:2px;">'+pico+' '+plbl+(s.phone?' · 📞 '+s.phone:'')+'</div>'+
+'</div></div>'+
+'<div style="text-align:right;flex-shrink:0;">'+
+'<div style="font-family:var(--fh);font-size:18px;color:'+balCol+';">'+N(s.balance)+'</div>'+
+'<div style="font-size:10px;color:var(--mut);margin-top:2px;">'+(isExp?'▲ hide':'▼ details')+'</div>'+
 '</div></div>';
+// Deadline alert row (always show if relevant)
+if(ddl)row+='<div class="ddl '+ddl.cls+'" style="margin:0 12px 8px;border-radius:8px;font-size:12px;">'+ddl.msg+'</div>';
+// Expandable detail section
+if(isExp){
+row+='<div style="border-top:1px solid var(--bdr);padding:14px 16px;">';
+// Info grid
+row+='<div style="display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px;">';
+if(s.rep)row+='<div style="font-size:12px;"><span style="color:var(--mut);">Rep: </span><b>'+s.rep+'</b></div>';
+if(s.phone)row+='<div style="font-size:12px;"><span style="color:var(--mut);">Phone: </span><b>'+s.phone+'</b></div>';
+row+='<div style="font-size:12px;"><span style="color:var(--mut);">Credit: </span><b>'+s.creditDays+' days</b></div>';
+if(s.deadline)row+='<div style="font-size:12px;"><span style="color:var(--mut);">Deadline: </span><b>'+fd(s.deadline,{day:'numeric',month:'short'})+'</b></div>';
+if(s.notes)row+='<div style="font-size:12px;color:var(--mut);width:100%;">📝 '+s.notes+'</div>';
+row+='</div>';
+// Payment history
+if(pays.length){
+row+='<div style="font-size:10px;font-weight:800;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Payment History</div>';
+row+=pays.slice(0,5).map(function(p){return '<div class="ptlr"><div><div class="ptld">'+fd(p.date,{day:'numeric',month:'short',year:'numeric'})+'</div>'+(p.ref?'<div class="ptlref">'+p.ref+'</div>':'')+' </div><div class="ptla">'+N(p.amount)+'</div></div>';}).join('');
+if(pays.length>5)row+='<div style="font-size:11px;color:var(--mut);text-align:center;padding:4px;">+  '+(pays.length-5)+' more payments</div>';
+}
+// Actions
+row+='<div class="sacts" style="margin-top:10px;">'+
+'<button class="bsm bsb" onclick="event.stopPropagation();openPay('+s.id+')">💳 Pay</button>'+
+'<button class="bsm" onclick="event.stopPropagation();loadSup('+s.id+')" style="background:var(--surf);border:1px solid var(--bdr);color:var(--txt);">✏️ Edit</button>'+
+'<button class="bsm bsg" onclick="event.stopPropagation();shareSup('+s.id+')">📋 Statement</button>'+
+'</div></div>';
+}
+row+='</div>';
+return row;
 }).join('');
 var tw=document.getElementById('supTotalWrap');
 if(tw&&S.suppliers.length){
@@ -1975,6 +2050,29 @@ var spb=document.getElementById('supbg');if(spb){spb.style.display=hs?'flex':'no
 function renderAll(){renderPulse();renderExpiry();renderCashHist();renderSup();renderDash();}
 
 // ── BACKUP / PINS ────────────────────────────────────────────────────────────
+function saveToDrive(){
+var data=JSON.stringify(S,null,2);
+var blob=new Blob([data],{type:'application/json'});
+var fname='PBSRx_Backup_'+td()+'.json';
+// Try Web Share API first (Android shows Drive, WhatsApp, etc. in share sheet)
+if(navigator.share){
+var file=new File([blob],fname,{type:'application/json'});
+navigator.share({title:'PBSRx Backup — '+td(),files:[file]})
+.then(function(){toast('Shared successfully!');})
+.catch(function(e){if(e.name!=='AbortError')fallbackDriveDownload(blob,fname);});
+}else{
+fallbackDriveDownload(blob,fname);
+}
+}
+function fallbackDriveDownload(blob,fname){
+var url=URL.createObjectURL(blob);
+var a=document.createElement('a');
+a.href=url;a.download=fname;
+document.body.appendChild(a);a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+toast('Downloaded — move to Google Drive to save permanently');
+}
 function expBk(){
 var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
 var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;
@@ -2037,7 +2135,10 @@ if(!swM)return;
 if(Date.now()-swT>500)return;
 var dx=e.changedTouches[0].clientX-swX,dy=Math.abs(e.changedTouches[0].clientY-swY);
 if(Math.abs(dx)>50&&dy<100){
-var next=dx<0?Math.min(curPg+1,8):Math.max(curPg-1,0);
+var pgOrder=[0,1,2,3,4,5,8,6,7];
+var curIdx=pgOrder.indexOf(curPg);
+var nextIdx=dx<0?Math.min(curIdx+1,pgOrder.length-1):Math.max(curIdx-1,0);
+var next=pgOrder[nextIdx];
 if(next!==curPg)goTo(next,document.getElementById('nb'+next));
 }
 },{passive:true});
@@ -2051,11 +2152,35 @@ var LOAN={original:0,balance:0,days:0,startDate:'',payments:[]};
 
 function getBEMonthly(){
 var be=BE_SETTINGS;
-var loanMonthly=(LOAN.balance>0?(LOAN.balance/LOAN.days)*30:0);
-return (be.rent||0)+(be.sal||0)+(be.gen||0)+(be.naf||0)+(be.nep||0)+(be.sec||0)+(be.oth||0)+loanMonthly;
+// Use S.loans multi-loan system for monthly payment estimate
+var totalLoanBal=S.loans?S.loans.reduce(function(a,l){return a+getLoanBalance(l);},0):0;
+var nearestLoan=S.loans?S.loans.filter(function(l){return getLoanBalance(l)>0&&l.dueDate;}).sort(function(a,b){return a.dueDate.localeCompare(b.dueDate);})[0]:null;
+var loanMonthly=nearestLoan?(getLoanBalance(nearestLoan)/Math.max(1,Math.ceil((new Date(nearestLoan.dueDate+'T00:00:00')-new Date())/(1000*60*60*24))))*30:0;
+var extraTotal=(be.extra||beExtraRows||[]).reduce(function(s,r){return s+(r.amt||0);},0);
+return (be.rent||0)+(be.sal||0)+(be.gen||0)+(be.naf||0)+(be.nep||0)+(be.sec||0)+(be.oth||0)+extraTotal+Math.round(loanMonthly);
 }
 function getBEDaily(){return Math.ceil(getBEMonthly()/30);}
 
+var beExtraRows=[];
+function addBERow(label,amt){
+beExtraRows.push({label:label||'',amt:amt||0});
+renderBERows();
+}
+function renderBERows(){
+var el=document.getElementById('be_extra_rows');if(!el)return;
+// Ensure there's always one empty row at the end
+if(!beExtraRows.length||beExtraRows[beExtraRows.length-1].label||beExtraRows[beExtraRows.length-1].amt){
+beExtraRows.push({label:'',amt:0});
+}
+el.innerHTML=beExtraRows.map(function(r,i){
+var isLast=(i===beExtraRows.length-1);
+return '<div class="fr" style="align-items:center;gap:6px;margin-bottom:6px;">'+
+'<div class="fg" style="flex:2;margin:0;"><input class="fi" style="margin:0;" placeholder="'+(isLast?'+ Add cost name...':'Cost name')+'" value="'+r.label+'" oninput="beExtraRows['+i+'].label=this.value;if(this.value)renderBERows();"></div>'+
+'<div class="fg" style="flex:1;margin:0;"><input class="fi" style="margin:0;" type="number" inputmode="numeric" placeholder="₦/mo" value="'+(r.amt||'')+'" oninput="beExtraRows['+i+'].amt=Number(this.value)||0;updBECalc();if(this.value)renderBERows();"></div>'+
+(!isLast?'<button type="button" onclick="beExtraRows.splice('+i+',1);renderBERows();updBECalc();" style="background:var(--red2);border:none;border-radius:8px;padding:8px 10px;color:var(--red);cursor:pointer;font-size:14px;flex-shrink:0;">✕</button>':'<div style="width:36px;flex-shrink:0;"></div>')+
+'</div>';
+}).join('');
+}
 function saveBeSettings(){
 BE_SETTINGS={
 rent:Number(document.getElementById('be_rent').value)||0,
@@ -2064,9 +2189,10 @@ gen:Number(document.getElementById('be_gen').value)||0,
 naf:Number(document.getElementById('be_naf').value)||0,
 nep:Number(document.getElementById('be_nep').value)||0,
 sec:Number(document.getElementById('be_sec').value)||0,
-oth:Number(document.getElementById('be_oth').value)||0
+oth:0,
+extra:beExtraRows.slice()
 };
-S.beSettings=Object.assign({},BE_SETTINGS);save();updBECalc();renderCoach();toast('Break-even settings saved.');
+S.beSettings=Object.assign({},BE_SETTINGS);save();updBECalc();renderRuleBasedCoach();toast('✅ Break-even settings saved.');
 }
 function updBECalc(){
 var daily=getBEDaily(),monthly=getBEMonthly();
@@ -2100,7 +2226,7 @@ function gTab2(idx,el){
 var gps=document.querySelectorAll('#pg7 .gp');
 gps.forEach(function(p,i){p.classList.toggle('on',i===idx);});
 document.querySelectorAll('#pg7 .gtab').forEach(function(t,i){t.classList.toggle('on',i===idx);});
-if(idx===6){initVoiceToggle();initApiKeyDisplay();}
+if(idx===6){initVoiceToggle();initApiKeyDisplay();renderBERows();}
 }
 
 // ── DEMAND LOG ───────────────────────────────────────────────────────────────
@@ -2581,15 +2707,22 @@ var labels=["CASH","STOCK","SUPPLIER","SALES","GROWTH"];
 var colors=["#ef4444","#f97316","#3b82f6","#22c55e","#a855f7"];
 var bgs=["rgba(239,68,68,0.13)","rgba(249,115,22,0.13)","rgba(59,130,246,0.13)","rgba(34,197,94,0.13)","rgba(168,85,247,0.13)"];
 var bds=["rgba(239,68,68,0.4)","rgba(249,115,22,0.4)","rgba(59,130,246,0.4)","rgba(34,197,94,0.4)","rgba(168,85,247,0.4)"];
-// Parse numbered lines 1-5
+// Parse numbered lines 1-5 — stop at separator/analysis section
 var lines=txt.split("\n");
-var actions=[];var cur=null;
+var actions=[];var cur=null;var doneActions=false;
 for(var i=0;i<lines.length;i++){
 var l=lines[i].trim();
+if(doneActions)break;
+// Stop when we hit analysis section or separator
+if(/^[━\-=]{3,}$/.test(l)||/^\*{0,2}(BRUTAL )?ANALYSIS/i.test(l)||/^ACTION NOW/i.test(l)||/^ONE LINE/i.test(l)){
+if(cur!==null){actions.push(cur);cur=null;}
+doneActions=true;break;
+}
 if(/^[1-5][.)\s]/.test(l)){
 if(cur!==null)actions.push(cur);
+if(actions.length>=5){doneActions=true;break;}
 cur=l.replace(/^[1-5][.)\s]+/,"").trim();
-} else if(cur!==null&&l.length>0){
+} else if(cur!==null&&l.length>0&&!/^\u26A1/.test(l)){
 cur+=" "+l;
 }
 }
@@ -2755,21 +2888,31 @@ setInterval(checkScheduledBriefing,60000);
 
 // ── INIT ADDITIONS ───────────────────────────────────────────────────────────
 function initCoach(){
-if(S.beSettings)BE_SETTINGS=S.beSettings;
-if(S.loanData){LOAN.balance=S.loanData.balance||131592;LOAN.payments=S.loanData.payments||[];LOAN.days=S.loanData.days||14;}
-var ld=document.getElementById('loan_dt');if(ld)ld.value=td();
+if(S.beSettings)BE_SETTINGS=Object.assign({rent:40000,sal:150000,gen:60000,naf:17000,nep:6000,sec:2000,oth:0},S.beSettings);
+// Populate BE input fields from saved settings
+// Restore extra cost rows
+if(BE_SETTINGS.extra&&BE_SETTINGS.extra.length){
+beExtraRows=BE_SETTINGS.extra.slice();
+}
+setTimeout(renderBERows,100);
+['rent','sal','gen','naf','nep','sec','oth'].forEach(function(k){
+var el=document.getElementById('be_'+k);
+if(el)el.value=(BE_SETTINGS[k]||0);
+});
 updBECalc();
-// Force update BE hero display after settings loaded
+// Update Coach hero BE display
 var daily=getBEDaily();
 var bt=document.getElementById('beTarget');if(bt)bt.textContent=daily.toLocaleString('en-NG');
+var bt2=document.getElementById('beTarget2');if(bt2)bt2.textContent=daily.toLocaleString('en-NG');
+var bs2=document.getElementById('beSales2');if(bs2)bs2.innerHTML='&#8358;'+sales.toLocaleString('en-NG');
+var bst2=document.getElementById('beStatus2');if(bst2)bst2.textContent=gap>=0?'✅ Above break-even':'❌ ₦'+Math.abs(gap).toLocaleString('en-NG')+' below target';
 var today=S.cashDays.find(function(d){return d.date===td();});
 var sales=today?today.sales:0;var gap=sales-daily;
 var bg=document.getElementById('beGap');var bgl=document.getElementById('beGapLbl');
 var bst=document.getElementById('beStatus');
 if(bg&&bgl){bg.innerHTML='&#8358;'+Math.abs(gap).toLocaleString('en-NG');bg.style.color=gap>=0?'var(--grn)':'var(--red)';bgl.textContent=gap>=0?'Above Break-Even ✅':'Gap to Break-Even';}
 if(bst)bst.textContent=today?(gap>=0?'✅ Profitable today — ₦'+gap.toLocaleString('en-NG')+' above break-even':'❌ ₦'+Math.abs(gap).toLocaleString('en-NG')+' below break-even today'):'No sales logged today yet';
-// Force save/reload input fields from saved settings
-['rent','sal','gen','naf','nep','sec','oth'].forEach(function(k){var el=document.getElementById('be_'+k);if(el&&BE_SETTINGS[k]!==undefined)el.value=BE_SETTINGS[k]||0;});
+var ld=document.getElementById('loan_dt');if(ld)ld.value=td();
 }
 
 // ══ AI SNAP (Claude reads drug pack image) ═══════════════════════════════════
@@ -3161,11 +3304,12 @@ var tot=basket.reduce(function(s,i){return s+i.total;},0);
 var due=Math.max(0,tot-posDiscount);
 var note=document.getElementById('pos_note').value.trim();
 var custName=(document.getElementById('pos_customer')||{value:''}).value.trim();
+var custPhone=(document.getElementById('pos_cust_phone')||{value:''}).value.trim().replace(/\D/g,'');
 var cash=Number(document.getElementById('pos_cash').value)||0;
 var transfer=Number((document.getElementById('pos_transfer')||{value:0}).value)||0;
 var saleId=Date.now();
 var saleRecord={id:saleId,date:td(),time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),
-items:basket.slice(),total:tot,due:due,discount:posDiscount,cash:cash,transfer:transfer,note:note,customer:custName};
+items:basket.slice(),total:tot,due:due,discount:posDiscount,cash:cash,transfer:transfer,note:note,customer:custName,phone:custPhone};
 if(!S.sales)S.sales=[];
 S.sales.unshift(saleRecord);
 // Deduct stock for each item
@@ -3189,7 +3333,8 @@ else{S.cashDays.push({id:saleId,date:td(),sales:due,cash:collected,expenses:[],e
 if(custName){
 if(!S.customers)S.customers=[];
 var cust=S.customers.find(function(c){return c.name.toLowerCase()===custName.toLowerCase();});
-if(!cust){cust={id:Date.now()+1,name:custName,phone:'',notes:'',addedDate:td(),purchases:[]};S.customers.push(cust);}
+if(!cust){cust={id:Date.now()+1,name:custName,phone:custPhone||'',notes:'',addedDate:td(),purchases:[]};S.customers.push(cust);}
+else if(custPhone&&!cust.phone){cust.phone=custPhone;}
 if(!cust.purchases)cust.purchases=[];
 cust.purchases.unshift({date:td(),total:due,items:basket.map(function(i){return i.qty+'x '+i.name;}).join(', ')});
 cust.lastVisit=td();
@@ -3197,6 +3342,9 @@ cust.lastVisit=td();
 save();
 // Show receipt
 showReceipt(saleRecord);
+// Pre-fill WA phone in receipt from sale data
+var rcp=document.getElementById('receiptCustPhone');
+if(rcp){var rawPhone=saleRecord.phone||'';rcp.value=rawPhone;}
 // Reset
 basket=[];posDiscount=0;
 var discPct=document.getElementById('pos_disc_pct');var discFlat=document.getElementById('pos_disc_flat');
@@ -3206,8 +3354,16 @@ renderBasket();renderPulse();updBadges();
 document.getElementById('pos_note').value='';document.getElementById('pos_cash').value='';
 var pt=document.getElementById('pos_transfer');if(pt)pt.value='';
 var pc=document.getElementById('pos_customer');if(pc)pc.value='';
+var pcp=document.getElementById('pos_cust_phone');if(pcp)pcp.value='';
 document.getElementById('pos_change').textContent='\u20A80';
 renderPosSalesLog();
+}
+function posPrefillCustPhone(){
+var name=(document.getElementById('pos_customer')||{value:''}).value.trim();
+var ph=document.getElementById('pos_cust_phone');if(!ph)return;
+if(!name||!S.customers){return;}
+var c=S.customers.find(function(x){return x.name&&x.name.toLowerCase().startsWith(name.toLowerCase());});
+if(c&&c.phone)ph.value=c.phone;
 }
 function posClearBasket(){
 basket=[];posDiscount=0;
@@ -3286,7 +3442,7 @@ html+='<div style="font-size:11px;color:var(--mut);font-weight:700;margin:8px 0 
 s.items.forEach(function(i){html+='<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;"><span>'+i.qty+' '+i.unit+' '+i.name+'</span><span style="font-weight:700;">'+N(i.total)+'</span></div>';});
 if(s.discount>0)html+='<div style="color:var(--red);font-size:12px;padding:3px 0;">Discount: -'+N(s.discount)+'</div>';
 html+='<div style="display:flex;gap:6px;margin-top:10px;">'+
-'<button onclick="event.stopPropagation();showReceipt(S.sales.find(function(x){return x.id==='+s.id+';})||S.sales[0])" style="flex:1;background:var(--surf);border:1px solid var(--bdr);border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);">🧾 Receipt</button>'+
+'<button onclick="event.stopPropagation();(function(){var _r=S.sales.find(function(x){return x.id==='+s.id+';});if(_r)showReceipt(_r);})()" style="flex:1;background:var(--surf);border:1px solid var(--bdr);border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);">🧾 Receipt</button>'+
 '</div></div>';
 }
 html+='</div>';
@@ -4399,7 +4555,7 @@ w.document.write(
 (r.customer?'<div style="font-size:10px;">Customer: '+r.customer+'</div>':'')+
 '<div class="footer">Thank you for your patronage!<br>PBSRx Pharmacy System</div>'+
 '<div class="noprint" style="text-align:center;margin-top:16px;"><button onclick="window.print()" style="padding:12px 24px;font-size:14px;cursor:pointer;">Print</button></div>'+
-'</body></html>'
+'</div></div></body></html>'
 );
 w.document.close();w.focus();
 setTimeout(function(){w.print();},500);
@@ -4466,6 +4622,8 @@ save();
 ['cust_name','cust_phone','cust_notes'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
 renderCustomers();toast('Customer saved: '+name);
 }
+var custExpanded={};
+function toggleCust(id,e){if(e)e.stopPropagation();custExpanded[id]=!custExpanded[id];renderCustomers();}
 function renderCustomers(){
 var el=document.getElementById('custList');if(!el)return;
 if(!S.customers)S.customers=[];
@@ -4474,22 +4632,42 @@ var list=S.customers.filter(function(c){return !srch||c.name.toLowerCase().inclu
 if(!list.length){el.innerHTML='<div class="empty"><div class="ei">&#128101;</div><div class="et">No customers yet.<br>They are auto-added when you enter a name at POS.</div></div>';return;}
 el.innerHTML=list.map(function(c){
 var purchases=c.purchases||[];
-var histStr=purchases.slice(0,3).map(function(p){return p.date+': '+N(p.total)+' ('+p.items+')';}).join('<br>');
-return '<div class="cust-card">'+
-'<div style="display:flex;justify-content:space-between;align-items:flex-start;">'+
-'<div><div class="cust-name">'+c.name+'</div>'+
-'<div class="cust-meta">'+(c.phone?'&#128241; '+c.phone:'')+
-(c.lastVisit?' | Last visit: '+c.lastVisit:'')+
-' | '+purchases.length+' purchase(s)</div></div>'+
-'<div style="text-align:right;">'+
-'<div style="font-family:var(--fh);font-size:18px;color:var(--grn);">'+N(purchases.reduce(function(s,p){return s+p.total;},0))+'</div>'+
-'<div style="font-size:10px;color:var(--mut);">lifetime</div></div></div>'+
-(c.notes?'<div style="font-size:11px;color:var(--mut);margin-top:4px;font-style:italic;">'+c.notes+'</div>':'')+
-(histStr?'<div class="cust-hist">'+histStr+'</div>':'')+
-'<div style="display:flex;gap:6px;margin-top:8px;" onclick="event.stopPropagation()">'+
-'<button class="bsm bsb" onclick="loadCustEdit('+c.id+')">&#9999;&#65039; Edit</button>'+
-'<button class="bsm bsr" onclick="deleteCustomer('+c.id+')">&#128465;</button>'+
+var lifetime=purchases.reduce(function(s,p){return s+p.total;},0);
+var isExp=!!custExpanded[c.id];
+var row='<div style="background:var(--card);border-radius:14px;margin-bottom:8px;border:1px solid var(--bdr);overflow:hidden;">';
+// Collapsed header
+row+='<div onclick="toggleCust('+c.id+',event)" style="display:flex;justify-content:space-between;align-items:center;padding:13px 15px;cursor:pointer;gap:10px;">'+
+'<div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">'+
+'<div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blu),var(--pur));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0;">'+c.name[0].toUpperCase()+'</div>'+
+'<div style="min-width:0;">'+
+'<div style="font-size:14px;font-weight:800;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+c.name+'</div>'+
+'<div style="font-size:11px;color:var(--mut);margin-top:2px;">'+(c.phone?'📞 '+c.phone+' · ':'')+purchases.length+' purchase(s)'+(c.lastVisit?' · Last: '+c.lastVisit:'')+'</div>'+
+'</div></div>'+
+'<div style="text-align:right;flex-shrink:0;">'+
+'<div style="font-family:var(--fh);font-size:18px;color:var(--grn);">'+N(lifetime)+'</div>'+
+'<div style="font-size:10px;color:var(--mut);">'+(isExp?'▲':'▼')+'</div>'+
 '</div></div>';
+// Expanded detail
+if(isExp){
+row+='<div style="border-top:1px solid var(--bdr);padding:12px 15px;">';
+if(c.notes)row+='<div style="font-size:12px;color:var(--mut);font-style:italic;margin-bottom:8px;">📝 '+c.notes+'</div>';
+// Purchase history
+if(purchases.length){
+row+='<div style="font-size:10px;font-weight:800;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Purchase History</div>';
+row+=purchases.slice(0,5).map(function(p){
+return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--bdr);">'+
+'<div><span style="color:var(--mut);">'+p.date+'</span> <span style="font-size:11px;">'+p.items+'</span></div>'+
+'<div style="font-weight:700;">'+N(p.total)+'</div></div>';
+}).join('');
+if(purchases.length>5)row+='<div style="font-size:11px;color:var(--mut);text-align:center;padding:4px;">+  '+(purchases.length-5)+' more purchases</div>';
+}
+row+='<div style="display:flex;gap:6px;margin-top:10px;" onclick="event.stopPropagation()">'+
+'<button class="bsm bsb" style="flex:1;" onclick="event.stopPropagation();loadCustEdit('+c.id+')">✏️ Edit</button>'+
+'<button class="bsm bsr" style="flex:0;" onclick="event.stopPropagation();deleteCustomer('+c.id+')">🗑️</button>'+
+'</div></div>';
+}
+row+='</div>';
+return row;
 }).join('');
 // Update POS suggestions
 var dl=document.getElementById('custSuggestions');
@@ -4680,14 +4858,30 @@ w.document.close();
 // ══ ALL-CAMERAS AUTOFOCUS ═════════════════════════════════════════
 function applyAutofocus(stream){
 if(!stream)return stream;
+// Try immediately, then retry after delay for Android cameras that need init time
+function tryFocus(){
 var track=stream.getVideoTracks&&stream.getVideoTracks()[0];
-if(!track)return stream;
+if(!track)return;
 try{
 var caps=track.getCapabilities?track.getCapabilities():{};
 var focusModes=caps.focusMode||[];
 var mode=focusModes.indexOf('continuous')>=0?'continuous':focusModes.indexOf('auto')>=0?'auto':null;
-if(mode)track.applyConstraints({advanced:[{focusMode:mode}]}).catch(function(){});
-}catch(e){}
+if(mode){
+track.applyConstraints({advanced:[{focusMode:mode}]}).catch(function(){
+// Fallback: try setting via direct constraints
+track.applyConstraints({focusMode:mode}).catch(function(){});
+});
+} else if(focusModes.length===0){
+// Capabilities not ready yet — retry after 800ms
+return false;
+}
+return true;
+}catch(e){return false;}
+}
+if(!tryFocus()){
+setTimeout(function(){tryFocus();},800);
+setTimeout(function(){tryFocus();},2000);
+}
 return stream;
 }
 

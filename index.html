@@ -333,7 +333,7 @@ body{background:var(--bg);}
 
 <div id="app">
 <div class="hdr">
-<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.1.070326</div>
+<div class="hlogo">PBS<span>Rx</span></div><div style="font-size:9px;color:var(--mut);margin-top:-2px;">v7.2.070326</div>
 <div style="display:flex;align-items:center;gap:10px;">
 <div class="hrole" id="hrole">ADMIN</div>
 <button class="hso" onclick="signOut()">Sign out</button>
@@ -767,7 +767,7 @@ body{background:var(--bg);}
 <div class="fg"><label class="fl" style="color:rgba(255,255,255,0.6);">Date</label><input class="fi" id="cd_d" type="date" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff;"></div>
 <div class="fg"><label class="fl" style="color:rgba(255,255,255,0.6);">Total Sales (&#8358;)</label><input class="fi" id="cd_s" type="number" inputmode="numeric" placeholder="0" oninput="calcB()" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff;"></div>
 </div>
-<div class="fg"><label class="fl" style="color:rgba(255,255,255,0.6);">Cash Received (&#8358;)</label><input class="fi" id="cd_c" type="number" inputmode="numeric" placeholder="0" oninput="calcB()" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff;"></div>
+<div class="fg"><label class="fl" style="color:rgba(255,255,255,0.6);">Cash + Transfer Received (&#8358;)</label><input class="fi" id="cd_c" type="number" inputmode="numeric" placeholder="0" oninput="calcB()" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#fff;"></div>
 <div class="sh" style="margin-top:12px;">&#128184; Expenses</div>
 <div style="display:flex;gap:7px;align-items:flex-end;margin-bottom:8px;">
 <div style="flex:1;"><label class="fl">Category</label><input class="fi" id="ex_c" list="exCL" placeholder="Type category..."><datalist id="exCL"></datalist></div>
@@ -1018,7 +1018,7 @@ body{background:var(--bg);}
 <div class="chk-item" id="chk3" onclick="toggleChk(3)"><div class="chk-box" id="chkb3"></div><div class="chk-body"><div class="chk-title">Check Expiry Monitor</div><div class="chk-desc">Stock tab → scroll past Stock Pulse. Items within 30 days are highlighted. Plan returns or promotions before they expire.</div></div></div>
 <div style="font-size:11px;font-weight:900;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin:14px 0 8px;">🌙 Evening Routine</div>
 <div class="chk-item" id="chk4" onclick="toggleChk(4)"><div class="chk-box" id="chkb4"></div><div class="chk-body"><div class="chk-title">Review POS Sales</div><div class="chk-desc">POS tab → Sales History. Check Today filter. Confirm total matches the physical cash + transfer in your drawer.</div></div></div>
-<div class="chk-item" id="chk5" onclick="toggleChk(5)"><div class="chk-box" id="chkb5"></div><div class="chk-body"><div class="chk-title">Log Day in Cash Desk</div><div class="chk-desc">Cash tab → Log a Day. Enter sales, cash received, all expenses. Run the 5-Bucket allocation to protect your financial structure.</div></div></div>
+<div class="chk-item" id="chk5" onclick="toggleChk(5)"><div class="chk-box" id="chkb5"></div><div class="chk-body"><div class="chk-title">Log Day in Cash Desk</div><div class="chk-desc">Cash tab → Log a Day. Enter sales, cash + transfers received (all money in), all expenses. Run 5-Bucket allocation.</div></div></div>
 <div class="chk-item" id="chk6" onclick="toggleChk(6)"><div class="chk-box" id="chkb6"></div><div class="chk-body"><div class="chk-title">Receive Any New Stock</div><div class="chk-desc">Snap tab → photograph pack → Save &amp; Receive Stock. Or Stock Pulse → Receive button on any product row.</div></div></div>
 <div class="chk-item" id="chk7" onclick="toggleChk(7)"><div class="chk-box" id="chkb7"></div><div class="chk-body"><div class="chk-title">Review 5-Bucket Allocation</div><div class="chk-desc">Set aside the Supplier Debt portion before any personal spending. This is what separates surviving pharmacies from thriving ones.</div></div></div>
 <div style="font-size:11px;font-weight:900;color:var(--mut);letter-spacing:2px;text-transform:uppercase;margin:14px 0 8px;">📅 Weekly (Fridays)</div>
@@ -1042,7 +1042,7 @@ body{background:var(--bg);}
 <div class="gst"><div class="gsi gsib">📥</div><div><div class="gsh">Two Ways to Receive Stock</div><div class="gsd">(1) Snap tab → AI reads pack photo → tap <b>Save &amp; Receive Stock</b>. (2) Stock Pulse → tap Receive on any product row. Both open the Receive Stock modal with the product pre-filled.</div></div></div>
 <div class="gst"><div class="gsi gsio">📋</div><div><div class="gsh">Stocktake Mode</div><div class="gsd">Tap the Stocktake button top-right of Stock Pulse. Enter your actual physical counts. PBS calculates variance and adjusts records automatically. Do this monthly.</div></div></div>
 <div class="gst"><div class="gsi gsir">⏱️</div><div><div class="gsh">Expiry Monitor</div><div class="gsd">Scroll past Stock Pulse. Colour-coded by time remaining: Red = under 30 days, Orange = 30–60 days, Yellow = 60–90 days. Take action before items expire worthless.</div></div></div>
-<div class="gst"><div class="gsi gsig">📦</div><div><div class="gsh">Reorder Manager</div><div class="gsd">Coach tab → scroll down. Lists all Out-of-Stock and Low products with estimated reorder cost. Tick items, edit quantities, tap <b>Send to Supplier</b> to order via WhatsApp.</div></div></div>
+<div class="gst"><div class="gsi gsig">📦</div><div><div class="gsh">Reorder Manager</div><div class="gsd">Coach tab → scroll down past Priority Actions. Lists all Out-of-Stock and Low products with estimated reorder cost. Tick items, edit quantities, tap <b>Send to Supplier</b> to order via WhatsApp directly.</div></div></div>
 </div>
 
 <div class="gp" id="gp3">
@@ -1066,7 +1066,7 @@ body{background:var(--bg);}
 
 <div class="gp" id="gp5">
 <div class="gtip">Log every day in the evening. Consistency transforms data into financial intelligence.</div>
-<div class="gst"><div class="gsi gsib">📝</div><div><div class="gsh">Log a Day</div><div class="gsd">Enter: Total Sales (from POS Sales History → Today), Cash Received (physical cash only — not transfer), and expenses by category. Tap <b>Save Day Record</b>. That's it.</div></div></div>
+<div class="gst"><div class="gsi gsib">📝</div><div><div class="gsh">Log a Day</div><div class="gsd">Enter: Total Sales (from POS Sales History → Today), Cash + Transfer Received (all money that came in today — cash and bank transfers go to the same account so record both), and expenses by category. Tap <b>Save Day Record</b>.</div></div></div>
 <div class="gst"><div class="gsi gsio">💰</div><div><div class="gsh">5-Bucket Cash Allocation</div><div class="gsd">Splits today's cash automatically: Inventory 35%, Supplier Debt 25%, Expenses 20%, Owner Draw 15%, Reserve 5%. The discipline of not mixing these buckets is what makes pharmacies financially healthy long-term.</div></div></div>
 <div class="gst"><div class="gsi gsig">📊</div><div><div class="gsh">History Summary Cards</div><div class="gsd">Top of Cash History shows 4 coloured total cards for the selected period: Sales, Net Profit, Expenses, Cash In. Instantly see your performance without scrolling through every record.</div></div></div>
 <div class="gst"><div class="gsi gsir">📅</div><div><div class="gsh">Date Range Filter</div><div class="gsd">Cash History → tap <b>Filter</b> → set From and To dates. Analyse any specific period. Useful for month-end summaries, tax preparation, or comparing two months.</div></div></div>
@@ -2226,7 +2226,7 @@ function gTab2(idx,el){
 var gps=document.querySelectorAll('#pg7 .gp');
 gps.forEach(function(p,i){p.classList.toggle('on',i===idx);});
 document.querySelectorAll('#pg7 .gtab').forEach(function(t,i){t.classList.toggle('on',i===idx);});
-if(idx===6){initVoiceToggle();initApiKeyDisplay();renderBERows();}
+if(idx===6){try{initVoiceToggle();}catch(e){}try{initApiKeyDisplay();}catch(e){}try{renderBERows();}catch(e){}}
 }
 
 // ── DEMAND LOG ───────────────────────────────────────────────────────────────
@@ -2779,7 +2779,11 @@ var sales=today?today.sales:0;var beDaily=getBEDaily();var gap=sales-beDaily;
 var out=S.products.filter(function(p){return p.isFastMover&&getStatus(p)==='out';});
 var crit=S.products.filter(function(p){return p.isFastMover&&getStatus(p)==='critical';});
 var hpSup=S.suppliers.filter(function(s){return s.priority==='high'&&s.balance>0;});
-var loanBal=LOAN.balance,dRemain=Math.max(0,LOAN.days-LOAN.payments.length);
+// Use multi-loan system
+var totalLoanBal=S.loans?S.loans.reduce(function(a,l){return a+getLoanBalance(l);},0):0;
+var nearestLoan=S.loans?S.loans.filter(function(l){return getLoanBalance(l)>0&&l.dueDate;}).sort(function(a,b){return a.dueDate.localeCompare(b.dueDate);})[0]:null;
+var loanBal=totalLoanBal;
+var dRemain=nearestLoan?Math.max(1,Math.ceil((new Date(nearestLoan.dueDate+'T00:00:00')-new Date())/(1000*60*60*24))):0;
 var loanDaily=dRemain>0?Math.ceil(loanBal/dRemain):0;
 var actions=[];
 if(out.length){
@@ -4091,6 +4095,7 @@ if(txt)txt.textContent='Navigation is at the '+(pos==='top'?'top':'bottom')+'.';
 }
 
 function initVoiceToggle(){
+try{
 var btn=document.getElementById('voiceToggleBtn');
 voiceEnabled=localStorage.getItem('pbsrx_voice')!=='off';
 if(btn){
@@ -4100,6 +4105,7 @@ btn.style.color=voiceEnabled?'#fff':'var(--txt)';
 }
 var gender=localStorage.getItem('pbsrx_voice_gender')||'male';
 setVoiceGender(gender);
+}catch(e){console.warn('Voice init error',e);}
 }
 
 function showAddLoan(id){

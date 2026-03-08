@@ -53,7 +53,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .perr{color:#f87171;font-size:13px;font-weight:600;margin-top:14px;min-height:20px;}
 
 #app{position:fixed;inset:0;display:none;flex-direction:column;}#app.on{display:flex;flex-direction:column;}
-.hdr{background:var(--hdr-bg);height:52px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.hdr{background:var(--hdr-bg);height:52px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.05);position:sticky;top:0;z-index:150;}
 .hlogo{font-family:var(--fh);font-size:28px;color:#fff;letter-spacing:3px;}.hlogo span{color:var(--amb);}
 .hrole{font-size:9px;color:rgba(255,255,255,0.35);font-weight:800;letter-spacing:2.5px;text-transform:uppercase;background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:99px;}
 .hso{background:none;border:none;color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fb);}
@@ -1244,6 +1244,7 @@ if(S.customPins){PINS.admin=S.customPins.admin;PINS.staff=S.customPins.staff||'5
 }catch(e){}
 }
 function N(v){return '\u20a6'+(Number(v)||0).toLocaleString('en-NG');}
+function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function td(){return new Date().toISOString().slice(0,10);}
 function fd(d,o){try{return new Date(d+'T00:00:00').toLocaleDateString('en-GB',o||{day:'numeric',month:'short',year:'numeric'});}catch(e){return d||'';}}
 function iD(id){var el=document.getElementById(id);if(el)el.value=td();}
@@ -2297,6 +2298,7 @@ var pct=Math.round(d.count/Math.max(total,1)*100);
 var heat=pct>30?'var(--red)':pct>15?'var(--ora)':'var(--blu)';
 return '<div class="demand-row" onclick="toggleDemandRow('+i+')" style="cursor:pointer;">'+
 '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surf);border-radius:10px;margin-bottom:3px;border:1px solid var(--bdr);">'+
+'<input type="checkbox" id="dm_chk_'+i+'" onclick="event.stopPropagation();demandToOrder('+i+',this.checked)" style="width:20px;height:20px;cursor:pointer;flex-shrink:0;accent-color:var(--grn);">'+
 '<div style="width:8px;height:8px;border-radius:50%;background:'+heat+';flex-shrink:0;"></div>'+
 '<div style="flex:1;font-size:13px;font-weight:700;color:var(--txt);">'+d.name+'</div>'+
 '<div style="display:flex;align-items:center;gap:4px;">'+
@@ -2485,6 +2487,13 @@ if(cb&&cb.checked){reorderSelected[pid]={qty:qty,cost:cost||0};}
 else delete reorderSelected[pid];
 updReorderSummary();
 }
+function demandToOrder(idx,checked){
+var d=S.demandLog[idx];if(!d)return;
+var key='demand_'+idx;
+if(checked){reorderSelected[key]={qty:d.count||1,cost:0,name:d.name,isDemand:true};}
+else delete reorderSelected[key];
+updReorderSummary();
+}
 function reorderQtyChange(pid,val,cost){
 val=Number(val)||0;
 if(reorderSelected[pid])reorderSelected[pid].qty=val;
@@ -2522,13 +2531,17 @@ var pharmName=localStorage.getItem('pbsrx_pharm_name')||'Our Pharmacy';
 var waNum=localStorage.getItem('pbsrx_wa_num')||'';
 var lines=['REORDER REQUEST — '+pharmName,'Date: '+td(),'================================'];
 var total=0;
-keys.forEach(function(pid){
-var p=S.products.find(function(x){return x.id==pid;});
+keys.forEach(function(key){
+var r=reorderSelected[key];
+if(r.isDemand){
+lines.push(r.name+' — Qty needed: '+r.qty+' (customer demand)');
+}else{
+var p=S.products.find(function(x){return x.id==key;});
 if(!p)return;
-var r=reorderSelected[pid];
 var qty=r.qty;var cost=r.cost||0;
 var est=qty*cost;total+=est;
 lines.push(p.genericName+(p.strength?' '+p.strength:'')+' — Qty: '+qty+(cost>0?' | Est: '+N(est):''));
+}
 });
 lines.push('================================');
 if(total>0)lines.push('Total Est. Cost: '+N(total));

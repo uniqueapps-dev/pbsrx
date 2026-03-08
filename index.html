@@ -13,8 +13,6 @@
 <link rel="manifest" href="#" id="manifestPlaceholder">
 <meta name="theme-color" content="#0a1e3d">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="PBSRx">
 <style>
@@ -39,7 +37,6 @@
 html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg);color:var(--txt);}
 ::-webkit-scrollbar{width:3px;height:3px;}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px;}
 
-/* PIN */
 #pin{position:fixed;inset:0;background:linear-gradient(160deg,#040d1a,#0a1e3d,#061428);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;padding:24px;}
 .plogo{font-family:var(--fh);font-size:60px;color:#fff;letter-spacing:4px;line-height:1;}.plogo span{color:var(--amb);}
 .ptag{font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:4px;text-transform:uppercase;margin:6px 0;font-weight:600;}
@@ -55,7 +52,6 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .pbtn.del{font-size:18px;color:rgba(255,255,255,0.5);}.pbtn.emp{background:transparent;border:none;pointer-events:none;}
 .perr{color:#f87171;font-size:13px;font-weight:600;margin-top:14px;min-height:20px;}
 
-/* APP */
 #app{position:fixed;inset:0;display:none;flex-direction:column;}#app.on{display:flex;flex-direction:column;}
 .hdr{background:var(--hdr-bg);height:52px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.05);}
 .hlogo{font-family:var(--fh);font-size:28px;color:#fff;letter-spacing:3px;}.hlogo span{color:var(--amb);}
@@ -72,7 +68,6 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .nbl{font-size:9px;font-weight:800;color:var(--mut);letter-spacing:.4px;text-transform:uppercase;}.nb.on .nbl{color:var(--blu);}
 .nbg{position:absolute;top:7px;right:calc(50% - 20px);background:var(--red);color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;}
 
-/* LAYOUT */
 .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:10px;border:1px solid var(--bdr);box-shadow:var(--sh);}
 .sh{font-size:10px;font-weight:800;color:var(--mut);letter-spacing:2.5px;text-transform:uppercase;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--bdr);}
 .pgt{font-family:var(--fh);font-size:36px;letter-spacing:1px;margin-bottom:2px;color:var(--txt);}.pgs{font-size:13px;color:var(--mut);font-weight:500;margin-bottom:16px;}
@@ -82,7 +77,6 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .scv{font-family:var(--fh);font-size:28px;}.scv.b{color:var(--blu);}.scv.g{color:var(--grn);}.scv.r{color:var(--red);}.scv.o{color:var(--ora);}
 .scs{font-size:11px;color:var(--mut);font-weight:500;margin-top:3px;}
 
-/* HERO */
 .hero{background:var(--hero-bg);border-radius:18px;padding:20px;margin-bottom:12px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04);}
 .hero::after{content:'';position:absolute;bottom:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:rgba(245,158,11,0.06);}
 .hl{font-size:10px;color:rgba(255,255,255,0.35);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
@@ -92,7 +86,6 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .hm{flex:1;text-align:center;border-right:1px solid rgba(255,255,255,0.06);}.hm:last-child{border-right:none;}
 .hmv{font-size:17px;font-weight:800;color:var(--amb);}.hml{font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;margin-top:2px;}
 
-/* BUTTONS */
 .btn{width:100%;padding:14px;border-radius:12px;border:none;font-size:15px;font-weight:800;cursor:pointer;font-family:var(--fb);transition:all .15s;margin-top:8px;color:var(--txt);}
 .btn:active{transform:scale(.97);}.bb{background:linear-gradient(135deg,var(--blu),var(--blu2));color:#fff;}
 .bg2{background:linear-gradient(135deg,#16a34a,#145e30);color:#fff;}.bo{background:var(--surf);border:1.5px solid var(--bdr);}
@@ -101,14 +94,12 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .bsb{background:var(--blu3);color:var(--blu);}.bsr{background:var(--red2);color:var(--red);}
 .bsg{background:var(--grn2);color:var(--grn);}.bso{background:var(--ora2);color:var(--ora);}.bsp{background:var(--pur2);color:var(--pur);}
 
-/* FORMS */
 .fg{margin-bottom:11px;}.fr{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
 .fl{font-size:10px;font-weight:800;color:var(--mut);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:5px;}
 .fi{width:100%;padding:12px 13px;border-radius:10px;border:1.5px solid var(--bdr);background:var(--surf);font-size:15px;font-weight:500;color:var(--txt);font-family:var(--fb);outline:none;transition:border .2s;}
 .fi:focus{border-color:var(--blu);}
 select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:var(--surf);}
 
-/* CHIPS & ALERTS */
 .chip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;}
 .cg{background:var(--grn2);color:var(--grn);}.cr{background:var(--red2);color:var(--red);}
 .co{background:var(--ora2);color:var(--ora);}.cb{background:var(--blu3);color:var(--blu);}.cp{background:var(--pur2);color:var(--pur);}
@@ -117,7 +108,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .ag{background:var(--grn2);border-color:var(--grn);}.ab{background:var(--blu3);border-color:var(--blu);}
 .ai{font-size:18px;flex-shrink:0;}.at{font-size:13px;font-weight:600;line-height:1.6;color:var(--txt);}
 
-/* PULSE */
 .pi{background:var(--card);border-radius:14px;padding:14px;margin-bottom:9px;border:1px solid var(--bdr);border-left:4px solid var(--grn);box-shadow:var(--sh);}
 .pi.low{border-left-color:var(--ora);}.pi.critical{border-left-color:var(--red);}.pi.out{border-left-color:#7f1d1d;}
 .pi.exp30{border-left-color:var(--red);border-top:2px solid var(--red);}
@@ -129,7 +119,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .piqty{font-size:13px;font-weight:800;white-space:nowrap;color:var(--txt);}.pimeta{font-size:11px;color:var(--mut);margin-top:5px;line-height:1.7;}
 .piacts{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
 
-/* SUPPLIER */
 .sup{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid var(--bdr);box-shadow:var(--sh);cursor:pointer;}
 .sco{font-size:17px;font-weight:800;color:var(--txt);}.srep{font-size:12px;color:var(--mut);font-weight:600;margin-top:2px;}
 .smeta{font-size:12px;color:var(--mut);line-height:1.8;margin-top:4px;}
@@ -146,7 +135,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .sup-total-lbl{font-size:12px;font-weight:800;color:var(--red);letter-spacing:1px;text-transform:uppercase;}
 .sup-total-val{font-family:var(--fh);font-size:32px;color:var(--red);}
 
-/* BUCKETS */
 .bgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
 .bkt{border-radius:12px;padding:13px;border:1px solid transparent;}
 .bkti{background:var(--blu3);border-color:var(--blu);}.bkts{background:var(--red2);border-color:var(--red);}
@@ -154,7 +142,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .bkl{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;color:var(--txt);}
 .bkv{font-family:var(--fh);font-size:26px;color:var(--txt);}.bkp{font-size:11px;color:var(--mut);font-weight:600;margin-top:2px;}
 
-/* SNAP */
 .sgr{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;}
 .so{background:var(--card);border:2px solid var(--bdr);border-radius:14px;padding:16px 10px;text-align:center;cursor:pointer;transition:all .2s;}
 .so.on{background:var(--blu3);border-color:var(--blu);}.so:active{transform:scale(.95);}
@@ -171,18 +158,15 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .aci{padding:10px 13px;cursor:pointer;border-bottom:1px solid var(--bdr);}.aci:last-child{border-bottom:none;}.aci:active{background:var(--surf);}
 .acin{font-size:14px;font-weight:700;color:var(--txt);}.acis{font-size:11px;color:var(--mut);}
 
-/* RECEIPT */
 .receipt-modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:none;align-items:flex-end;justify-content:center;}
 .receipt-modal.on{display:flex;}
 .receipt-body{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:0;font-family:'Courier New',monospace;}
 
-/* CUSTOMER LOG */
 .cust-card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:9px;border:1px solid var(--bdr);box-shadow:var(--sh);cursor:pointer;}
 .cust-name{font-size:15px;font-weight:800;color:var(--txt);}
 .cust-meta{font-size:12px;color:var(--mut);font-weight:600;margin-top:2px;}
 .cust-hist{font-size:11px;color:var(--mut);margin-top:6px;line-height:1.7;padding-top:6px;border-top:1px solid var(--bdr);}
 
-/* STOCKTAKE */
 .st-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--card);border-radius:10px;margin-bottom:6px;border:1px solid var(--bdr);}
 .st-name{flex:1;font-size:13px;font-weight:700;color:var(--txt);}
 .st-cur{font-size:12px;color:var(--mut);min-width:50px;text-align:center;}
@@ -190,13 +174,11 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .st-inp:focus{border-color:var(--blu);outline:none;}
 .st-diff{min-width:52px;text-align:right;font-size:13px;font-weight:800;}
 
-/* HOLD BASKET */
 .held-basket{background:var(--ora2);border:1.5px solid var(--ora);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;}
 .held-label{font-size:11px;font-weight:800;color:var(--ora);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
 .held-items{font-size:13px;font-weight:700;color:var(--txt);}
 .held-total{font-size:15px;font-weight:900;color:var(--ora);margin-top:4px;}
 
-/* SCANNER */
 .scan-wrap{position:relative;width:100%;border-radius:14px;overflow:hidden;background:#000;margin-bottom:12px;display:none;}
 .scan-video{width:100%;display:block;}
 .scan-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
@@ -206,7 +188,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .scan-label{position:absolute;bottom:16px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.7);font-size:12px;font-weight:600;}
 .scan-close{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.5);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
-/* CASH HISTORY */
 .cph{background:linear-gradient(135deg,var(--blu),var(--blu2));border-radius:10px;padding:10px 14px;margin:10px 0 6px;display:flex;justify-content:space-between;align-items:center;}
 .cphl{font-size:12px;font-weight:800;color:rgba(255,255,255,0.6);letter-spacing:1px;}.cpht{font-family:var(--fh);font-size:22px;color:#fff;}
 .cdc{background:var(--card);border-radius:12px;padding:12px 14px;margin-bottom:7px;border:1px solid var(--bdr);box-shadow:var(--sh);}
@@ -220,7 +201,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .date-range{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;background:var(--surf);border-radius:12px;padding:12px;margin-bottom:12px;border:1px solid var(--bdr);}
 .date-range .fg{margin:0;flex:1;min-width:120px;}
 
-/* GUIDE / CHECKLIST */
 .gtabs{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;margin-bottom:14px;}
 .gtabs::-webkit-scrollbar{display:none;}
 .gtab{padding:8px 14px;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;border:1.5px solid var(--bdr);background:var(--surf);color:var(--mut);font-family:var(--fb);transition:all .2s;flex-shrink:0;}
@@ -239,7 +219,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .chk-body{flex:1;}
 .chk-title{font-size:14px;font-weight:800;color:var(--txt);}.chk-desc{font-size:11px;color:var(--mut);margin-top:2px;line-height:1.5;}
 
-/* MODAL */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:none;align-items:flex-end;backdrop-filter:blur(3px);}
 .ov.on{display:flex;}
 .mb{background:var(--card);border-radius:20px 20px 0 0;padding:20px 16px 44px;width:100%;max-height:90vh;overflow-y:auto;animation:su .22s ease;}
@@ -252,7 +231,6 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .pay-app-icon{font-size:28px;margin-bottom:5px;}
 .pay-app-name{font-size:11px;font-weight:700;color:var(--txt);}
 
-/* MOTIV */
 .motiv{background:var(--hero-bg);border-radius:18px;padding:20px 18px;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04);}
 .motiv::before{content:'';position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(245,158,11,0.08);}
 .mvt{font-size:9px;color:var(--amb);letter-spacing:3px;text-transform:uppercase;font-weight:800;margin-bottom:10px;}
@@ -261,19 +239,17 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .mvd{height:1px;background:rgba(255,255,255,0.06);margin:10px 0;}
 .mvtg{font-size:10px;color:var(--amb);font-weight:800;letter-spacing:1.5px;text-transform:uppercase;text-align:right;}
 
-/* EXPIRY WARNING */
 .exp-card{background:var(--red2);border:1.5px solid var(--red);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
 .exp-card.warn{background:var(--ora2);border-color:var(--ora);}
 .exp-name{font-size:14px;font-weight:800;color:var(--txt);}.exp-detail{font-size:12px;color:var(--mut);margin-top:3px;line-height:1.6;}
 
-/* POS */
 .pos-basket-item{background:var(--card);border-radius:12px;padding:12px 14px;margin-bottom:6px;border:1px solid var(--bdr);}
-/* COACH */
+
 .mv-bar{height:6px;background:var(--bdr);border-radius:4px;overflow:hidden;margin-top:6px;}
 .be-ring{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;}
 .coach-msg{background:var(--surf);border-radius:4px 14px 14px 14px;padding:12px 14px;margin-bottom:8px;font-size:14px;color:var(--txt);line-height:1.65;border:1px solid var(--bdr);}
 .user-msg{background:var(--blu3);border-radius:14px 4px 14px 14px;padding:12px 14px;margin-bottom:8px;font-size:14px;color:var(--blu);font-weight:600;text-align:right;}
-/* MISC */
+
 .empty{text-align:center;padding:36px 20px;}.ei{font-size:44px;margin-bottom:10px;}.et{font-size:14px;color:var(--mut);font-weight:600;line-height:1.6;}
 #toast{position:fixed;bottom:74px;left:50%;transform:translateX(-50%) translateY(14px);background:#1a2332;color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:700;z-index:900;opacity:0;transition:all .27s;pointer-events:none;white-space:nowrap;max-width:88vw;text-align:center;}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -299,16 +275,16 @@ body{background:var(--bg);}
 .card{border-radius:18px;}
 .pgt{font-size:36px;}
 .nb{min-width:90px;}
-/* Two-column layout for cards on wide screens */
+
 .desktop-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
-/* Full-width tables */
+
 .pulse-table{font-size:13px;}
 .pulse-table td,.pulse-table th{padding:10px 12px;}
-/* Bigger click targets */
+
 .btn{min-height:44px;}
 .bsm{min-height:40px;}
 .fi{min-height:44px;}
-/* Sales history wider */
+
 #posSalesLog .cdc, #cashHist .cdc{padding:14px 16px;}
 }
 </style>
@@ -444,14 +420,46 @@ body{background:var(--bg);}
 </div>
 </div>
 
-      <div class="sh">&#128229; QuickBooks Bridge</div>
+      <div class="sh">&#128202; Stock History</div>
+<div class="card" style="padding:0;overflow:hidden;">
+<div style="display:flex;gap:6px;padding:10px;background:var(--surf);border-bottom:1px solid var(--bdr);">
+<button type="button" onclick="renderStockHistory('all')" id="shBtnAll" style="flex:1;padding:7px 4px;border-radius:8px;border:none;font-size:11px;font-weight:700;background:var(--blu);color:#fff;cursor:pointer;">All</button>
+<button type="button" onclick="renderStockHistory('in')" id="shBtnIn" style="flex:1;padding:7px 4px;border-radius:8px;border:1px solid var(--bdr);font-size:11px;font-weight:700;background:var(--surf);color:var(--txt);cursor:pointer;">&#128230; Received</button>
+<button type="button" onclick="renderStockHistory('sale')" id="shBtnSale" style="flex:1;padding:7px 4px;border-radius:8px;border:1px solid var(--bdr);font-size:11px;font-weight:700;background:var(--surf);color:var(--txt);cursor:pointer;">&#128200; Sales</button>
+<button type="button" onclick="renderStockHistory('supplier')" id="shBtnSupplier" style="flex:1;padding:7px 4px;border-radius:8px;border:1px solid var(--bdr);font-size:11px;font-weight:700;background:var(--surf);color:var(--txt);cursor:pointer;">&#127981; Supplier</button>
+</div>
+<div id="stockHistoryList" style="max-height:320px;overflow-y:auto;padding:8px;"></div>
+</div>
+
+      <div class="sh">&#128229; Data Import / Export</div>
 <div class="card">
-<div class="al ab" style="margin-bottom:10px;"><div class="ai">&#128200;</div><div class="at">Export your PBS inventory to QuickBooks format, or import from QuickBooks. One tap each direction.</div></div>
-<button class="btn" style="background:var(--grn);border:none;color:#fff;margin-bottom:8px;" onclick="exportQB()">&#128229; Export Inventory to QuickBooks CSV</button>
-<button class="btn" style="background:var(--blu3);border:1px solid var(--blu);color:var(--blu);margin-bottom:8px;" onclick="document.getElementById('qbImportFile').click()">&#128228; Import from QuickBooks CSV
-<input type="file" id="qbImportFile" accept=".csv" style="display:none;" onchange="importQB(this)">
-</button>
-<div style="font-size:11px;color:var(--mut);font-weight:500;">QB Export includes: Product name, SKU, description, unit cost, sell price, qty on hand, category.</div>
+<div class="al ab" style="margin-bottom:12px;"><div class="ai">&#128161;</div><div class="at">Import your data from QuickBooks, Excel, or any CSV. Download a template, fill it in, upload it back.</div></div>
+
+<div style="font-size:11px;font-weight:900;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">&#128229; Import Data</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+<button type="button" class="btn" style="font-size:11px;padding:10px 6px;background:var(--surf);border:1px solid var(--bdr);color:var(--txt);" onclick="downloadTemplate('products')">&#128229; Products Template</button>
+<button type="button" class="btn" style="font-size:11px;padding:10px 6px;background:var(--surf);border:1px solid var(--bdr);color:var(--txt);" onclick="downloadTemplate('suppliers')">&#128229; Suppliers Template</button>
+<button type="button" class="btn" style="font-size:11px;padding:10px 6px;background:var(--surf);border:1px solid var(--bdr);color:var(--txt);" onclick="downloadTemplate('customers')">&#128229; Customers Template</button>
+<button type="button" class="btn" style="font-size:11px;padding:10px 6px;background:var(--surf);border:1px solid var(--bdr);color:var(--txt);" onclick="downloadTemplate('sales')">&#128229; Sales Template</button>
+</div>
+<div style="background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:12px;margin-bottom:10px;">
+<div style="font-size:12px;font-weight:700;margin-bottom:8px;">Upload CSV / Excel to import:</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+<button type="button" class="btn bb" style="font-size:11px;padding:10px 4px;" onclick="document.getElementById('importFileProducts').click()">&#128230; Import Products<input type="file" id="importFileProducts" accept=".csv,.xlsx" style="display:none;" onchange="handleImport(this,'products')"></button>
+<button type="button" class="btn bb" style="font-size:11px;padding:10px 4px;" onclick="document.getElementById('importFileSuppliers').click()">&#128230; Import Suppliers<input type="file" id="importFileSuppliers" accept=".csv,.xlsx" style="display:none;" onchange="handleImport(this,'suppliers')"></button>
+<button type="button" class="btn bb" style="font-size:11px;padding:10px 4px;" onclick="document.getElementById('importFileCustomers').click()">&#128230; Import Customers<input type="file" id="importFileCustomers" accept=".csv,.xlsx" style="display:none;" onchange="handleImport(this,'customers')"></button>
+<button type="button" class="btn bb" style="font-size:11px;padding:10px 4px;" onclick="document.getElementById('importFileSales').click()">&#128230; Import Sales<input type="file" id="importFileSales" accept=".csv,.xlsx" style="display:none;" onchange="handleImport(this,'sales')"></button>
+</div>
+</div>
+<div id="importResult" style="display:none;padding:10px;border-radius:8px;font-size:13px;margin-bottom:8px;"></div>
+
+<div style="font-size:11px;font-weight:900;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;margin-top:4px;">&#128228; Export Data</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+<button type="button" class="btn" style="font-size:11px;padding:10px 4px;background:var(--grn);border:none;color:#fff;" onclick="exportData('products')">&#128229; Export Products</button>
+<button type="button" class="btn" style="font-size:11px;padding:10px 4px;background:var(--grn);border:none;color:#fff;" onclick="exportData('suppliers')">&#128229; Export Suppliers</button>
+<button type="button" class="btn" style="font-size:11px;padding:10px 4px;background:var(--grn);border:none;color:#fff;" onclick="exportData('customers')">&#128229; Export Customers</button>
+<button type="button" class="btn" style="font-size:11px;padding:10px 4px;background:var(--grn);border:none;color:#fff;" onclick="exportData('sales')">&#128229; Export Sales</button>
+</div>
 </div>
 </div>
 </div>
@@ -987,7 +995,6 @@ body{background:var(--bg);}
 <div style="font-size:11px;color:var(--mut);margin-top:8px;font-weight:500;">&#128161; WhatsApp will open with your briefing pre-typed. Just tap Send.</div>
 </div>
 
-
 <div class="sh">🎯 Break-Even Target</div>
 <div style="background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(99,102,241,0.15));border:1px solid rgba(59,130,246,0.3);border-radius:14px;padding:14px 16px;margin-bottom:8px;">
 <div style="font-size:10px;font-weight:900;color:var(--mut);letter-spacing:1.5px;margin-bottom:6px;">🎯 DAILY BREAK-EVEN TARGET</div>
@@ -1096,11 +1103,16 @@ body{background:var(--bg);}
 </div>
 <div class="sh">&#127482;&#65039; Voice Settings</div>
 <div class="card">
-<div style="display:flex;gap:8px;margin-bottom:10px;">
+<div style="display:flex;gap:8px;margin-bottom:8px;">
 <button type="button" id="voiceToggleBtn" class="btn" style="flex:1;background:var(--grn);border:none;color:#fff;font-size:12px;" onclick="toggleVoice()">&#128266; Voice ON</button>
 <button type="button" id="voiceMaleBtn" class="bsm bsb" style="flex:1;" onclick="setVoiceGender('male')">&#128104; Male</button>
 <button type="button" id="voiceFemaleBtn" class="bsm" style="flex:1;background:var(--surf);" onclick="setVoiceGender('female')">&#128105; Female</button>
 </div>
+<div style="display:flex;gap:8px;margin-bottom:8px;">
+<button type="button" onclick="voicePauseResume()" style="flex:1;padding:10px;background:var(--surf);border:1px solid var(--bdr);border-radius:10px;color:var(--txt);font-size:13px;font-weight:700;cursor:pointer;">&#9208; Pause / Resume</button>
+<button type="button" onclick="voiceStop()" style="flex:1;padding:10px;background:var(--surf);border:1px solid var(--bdr);border-radius:10px;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;">&#9209; Stop</button>
+</div>
+<button type="button" onclick="speak('Hello. I am your pharmacy business coach. Voice is working correctly. Naira 50000 daily target.')" style="width:100%;padding:10px;background:var(--surf);border:1px dashed var(--bdr);border-radius:10px;color:var(--mut);font-size:12px;cursor:pointer;margin-bottom:6px;">&#128266; Test Voice</button>
 <div style="font-size:11px;color:var(--mut);" id="voiceStatusTxt">Select voice preference above.</div>
 </div>
 <div class="sh">&#128273; API Key Setup</div>
@@ -1113,25 +1125,16 @@ body{background:var(--bg);}
 </div>
 <div class="sh">&#9881;&#65039; Break-Even Settings</div>
 <div class="card">
-<div class="fr">
-<div class="fg"><label class="fl">Rent (&#8358;/mo)</label><input class="fi" autocomplete="off" id="be_rent" type="number" inputmode="numeric" oninput="updBECalc()"></div>
-<div class="fg"><label class="fl">Salaries (&#8358;/mo)</label><input class="fi" autocomplete="off" id="be_sal" type="number" inputmode="numeric" oninput="updBECalc()"></div>
-</div>
-<div class="fr">
-<div class="fg"><label class="fl">Generator (&#8358;/mo)</label><input class="fi" autocomplete="off" id="be_gen" type="number" inputmode="numeric" oninput="updBECalc()"></div>
-<div class="fg"><label class="fl">NAFDAC (&#8358;/mo)</label><input class="fi" autocomplete="off" id="be_naf" type="number" inputmode="numeric" oninput="updBECalc()"></div>
-</div>
-<div class="fr">
-<div class="fg"><label class="fl">NEPA (&#8358;/mo)</label><input class="fi" autocomplete="off" id="be_nep" type="number" inputmode="numeric" oninput="updBECalc()"></div>
-<div class="fg"><label class="fl">Security/Clean (&#8358;/mo)</label><input class="fi" autocomplete="off" id="be_sec" type="number" inputmode="numeric" oninput="updBECalc()"></div>
-</div>
-<div class="fg"><label class="fl">Other Fixed Costs (&#8358;/mo)</label><input class="fi" autocomplete="off" id="be_oth" type="number" ></div>
+<div style="font-size:11px;color:var(--mut);margin-bottom:10px;">Enter your monthly fixed costs. Add as many rows as you need.</div>
+<div id="be_rows_container"></div>
+<button type="button" onclick="addBECostRow()" style="width:100%;padding:10px;background:transparent;border:1px dashed var(--bdr);border-radius:10px;color:var(--blu);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;">+ Add Cost Row</button>
 <button type="button" class="btn bb" onclick="saveBeSettings()">&#128190; Save Break-Even Settings</button>
 <div style="margin-top:10px;padding:10px 12px;background:var(--surf);border-radius:10px;border:1px solid var(--bdr);">
 <div style="font-size:11px;color:var(--mut);font-weight:800;letter-spacing:1px;text-transform:uppercase;">Calculated Break-Even</div>
 <div style="font-family:var(--fh);font-size:28px;color:var(--blu);" id="beCalc">— / day</div>
-<div style="font-size:12px;color:var(--mut);" id="beCalcMo">&#8358;556,984 / month</div>
+<div style="font-size:12px;color:var(--mut);" id="beCalcMo"></div>
 </div>
+
 </div>
 </div>
 
@@ -2156,9 +2159,7 @@ if(next!==curPg)goTo(next,document.getElementById('nb'+next));
 },{passive:true});
 }
 // ── INIT ─────────────────────────────────────────────────────────────────────
-try{load();}catch(e){console.error('load() error:',e);}
-try{initSwipe();}catch(e){console.error('initSwipe() error:',e);}
-try{installPWA();}catch(e){console.error('installPWA() error:',e);}
+try{load();}catch(e){console.error("load:",e);}try{initSwipe();}catch(e){}try{installPWA();}catch(e){}
 
 // ── BREAK-EVEN ────────────────────────────────────────────────────────────────
 var BE_SETTINGS={rent:40000,sal:150000,gen:60000,naf:17000,nep:6000,sec:2000,oth:0};
@@ -2166,46 +2167,83 @@ var LOAN={original:0,balance:0,days:0,startDate:'',payments:[]};
 
 function getBEMonthly(){
 var be=BE_SETTINGS;
-// Use S.loans multi-loan system for monthly payment estimate
 var totalLoanBal=S.loans?S.loans.reduce(function(a,l){return a+getLoanBalance(l);},0):0;
 var nearestLoan=S.loans?S.loans.filter(function(l){return getLoanBalance(l)>0&&l.dueDate;}).sort(function(a,b){return a.dueDate.localeCompare(b.dueDate);})[0]:null;
 var loanMonthly=nearestLoan?(getLoanBalance(nearestLoan)/Math.max(1,Math.ceil((new Date(nearestLoan.dueDate+'T00:00:00')-new Date())/(1000*60*60*24))))*30:0;
-var extraTotal=(be.extra||beExtraRows||[]).reduce(function(s,r){return s+(r.amt||0);},0);
-return (be.rent||0)+(be.sal||0)+(be.gen||0)+(be.naf||0)+(be.nep||0)+(be.sec||0)+(be.oth||0)+extraTotal+Math.round(loanMonthly);
+var rows=be.extra||beCostRows||[];
+var total=rows.reduce(function(s,r){return s+(Number(r.amt)||0);},0);
+return total+Math.round(loanMonthly);
 }
 function getBEDaily(){return Math.ceil(getBEMonthly()/30);}
 
-var beExtraRows=[];
-function addBERow(label,amt){
-beExtraRows.push({label:label||'',amt:amt||0});
-renderBERows();
+var beCostRows=[];
+var BE_DEFAULT_ROWS=[
+{label:'Rent',amt:0},{label:'Salaries',amt:0},{label:'Generator',amt:0},
+{label:'NAFDAC',amt:0},{label:'NEPA',amt:0},{label:'Security / Cleaning',amt:0}
+];
+function initBERows(){
+var saved=BE_SETTINGS&&BE_SETTINGS.extra;
+if(saved&&saved.length){beCostRows=saved.map(function(r){return {label:r.label||'',amt:Number(r.amt)||0};});}
+else{beCostRows=BE_DEFAULT_ROWS.map(function(r){return {label:r.label,amt:r.amt};});}
 }
-function renderBERows(){
-var el=document.getElementById('be_extra_rows');if(!el)return;
-// Ensure there's always one empty row at the end
-if(!beExtraRows.length||beExtraRows[beExtraRows.length-1].label||beExtraRows[beExtraRows.length-1].amt){
-beExtraRows.push({label:'',amt:0});
-}
-el.innerHTML=beExtraRows.map(function(r,i){
-var isLast=(i===beExtraRows.length-1);
-return '<div class="fr" style="align-items:center;gap:6px;margin-bottom:6px;">'+
-'<div class="fg" style="flex:2;margin:0;"><input class="fi" autocomplete="off" style="margin:0;" placeholder="'+(isLast?'+ Add cost name...':'Cost name')+'" value="'+r.label+'" oninput="beExtraRows['+i+'].label=this.value;if(this.value)renderBERows();"></div>'+
-'<div class="fg" style="flex:1;margin:0;"><input class="fi" autocomplete="off" style="margin:0;" type="number" inputmode="numeric" placeholder="₦/mo" value="'+(r.amt||'')+'" oninput="beExtraRows['+i+'].amt=Number(this.value)||0;updBECalc();if(this.value)renderBERows();"></div>'+
-(!isLast?'<button type="button" onclick="beExtraRows.splice('+i+',1);renderBERows();updBECalc();" style="background:var(--red2);border:none;border-radius:8px;padding:8px 10px;color:var(--red);cursor:pointer;font-size:14px;flex-shrink:0;">✕</button>':'<div style="width:36px;flex-shrink:0;"></div>')+
+function renderBECostRows(){
+var el=document.getElementById('be_rows_container');if(!el)return;
+el.innerHTML=beCostRows.map(function(r,i){
+return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">'+
+'<input class="fi" autocomplete="off" style="flex:2;margin:0;" placeholder="Cost name e.g. Rent" value="'+escH(r.label)+'" oninput="beCostRows['+i+'].label=this.value;">'+
+'<input class="fi" autocomplete="off" style="flex:1;margin:0;" type="number" inputmode="numeric" placeholder="₦/mo" value="'+(r.amt||'')+'" oninput="beCostRows['+i+'].amt=Number(this.value)||0;updBECalc();">'+
+'<button type="button" onclick="beCostRows.splice('+i+',1);renderBECostRows();updBECalc();" style="background:var(--red2);border:none;border-radius:8px;padding:8px 10px;color:var(--red);cursor:pointer;font-size:14px;flex-shrink:0;">✕</button>'+
 '</div>';
 }).join('');
 }
+function addBECostRow(){beCostRows.push({label:'',amt:0});renderBECostRows();}
+function addBERow(label,amt){beCostRows.push({label:label||'',amt:amt||0});renderBECostRows();}
+function renderStockHistory(filter){
+filter=filter||'all';
+// Update button states
+['all','in','sale','supplier'].forEach(function(f){
+var btn=document.getElementById('shBtn'+f.charAt(0).toUpperCase()+f.slice(1));
+if(btn){btn.style.background=f===filter?'var(--blu)':'var(--surf)';btn.style.color=f===filter?'#fff':'var(--txt)';btn.style.border=f===filter?'none':'1px solid var(--bdr)';}
+});
+var el=document.getElementById('stockHistoryList');if(!el)return;
+var events=[];
+// Stock received
+if(filter==='all'||filter==='in'){
+(S.stock||[]).forEach(function(sk){
+var p=S.products.find(function(x){return x.id===sk.productId;});
+events.push({date:sk.date||'',type:'in',label:(p?p.genericName+(p.strength?' '+p.strength:''):'Unknown')+' — qty: '+sk.qty,sub:sk.expiry?'Exp: '+sk.expiry:'',color:'var(--grn)',icon:'📦'});
+});
+}
+// Sales
+if(filter==='all'||filter==='sale'){
+(S.sales||[]).forEach(function(s){
+events.push({date:s.date||'',type:'sale',label:s.product+' × '+(s.qty||1)+' — ₦'+(s.total||0).toLocaleString('en-NG'),sub:s.customer?'Customer: '+s.customer:'',color:'var(--blu)',icon:'💊'});
+});
+}
+// Supplier payments
+if(filter==='all'||filter==='supplier'){
+(S.supplierPayments||[]).forEach(function(p){
+var sup=S.suppliers?S.suppliers.find(function(s){return s.id===p.supplierId;}):null;
+events.push({date:p.date||'',type:'supplier',label:(sup?sup.name:'Supplier')+' — ₦'+(p.amount||0).toLocaleString('en-NG'),sub:p.note||'',color:'var(--amb)',icon:'🏭'});
+});
+}
+if(!events.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--mut);font-size:13px;">No history yet</div>';return;}
+events.sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+el.innerHTML=events.slice(0,100).map(function(ev){
+return '<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 4px;border-bottom:1px solid var(--bdr);">'+
+'<div style="font-size:18px;flex-shrink:0;">'+ev.icon+'</div>'+
+'<div style="flex:1;min-width:0;">'+
+'<div style="font-size:13px;font-weight:600;color:var(--txt);">'+escH(ev.label)+'</div>'+
+(ev.sub?'<div style="font-size:11px;color:var(--mut);">'+escH(ev.sub)+'</div>':'')+
+'</div>'+
+'<div style="font-size:10px;color:var(--mut);flex-shrink:0;">'+ev.date+'</div>'+
+'</div>';
+}).join('');
+}
+function renderBERows(){renderBECostRows();}
+function populateBEInputs(){initBERows();renderBECostRows();updBECalc();}
 function saveBeSettings(){
-BE_SETTINGS={
-rent:Number(document.getElementById('be_rent').value)||0,
-sal:Number(document.getElementById('be_sal').value)||0,
-gen:Number(document.getElementById('be_gen').value)||0,
-naf:Number(document.getElementById('be_naf').value)||0,
-nep:Number(document.getElementById('be_nep').value)||0,
-sec:Number(document.getElementById('be_sec').value)||0,
-oth:0,
-extra:beExtraRows.slice()
-};
+BE_SETTINGS={extra:beCostRows.filter(function(r){return r.label&&r.amt;}).slice()};
 S.beSettings=Object.assign({},BE_SETTINGS);save();updBECalc();renderRuleBasedCoach();toast('✅ Break-even settings saved.');
 }
 function updBECalc(){
@@ -2225,14 +2263,6 @@ var daily=dRemain>0?Math.ceil(bal/dRemain):0;
 var dEl=document.getElementById('loanDaily');if(dEl)dEl.innerHTML='&#8358;'+daily.toLocaleString('en-NG');
 var meta=document.getElementById('loanMeta');
 if(meta)meta.textContent='Days remaining: '+dRemain+' | Paid: ₦'+paid.toLocaleString('en-NG')+' | Progress: '+pct+'%';
-}
-function logLoan(){
-var amt=Number(document.getElementById('loan_amt').value)||0,dt=document.getElementById('loan_dt').value||td();
-if(!amt){toast('Enter repayment amount');return;}
-LOAN.payments.push({amt:amt,date:dt});S.loanData=LOAN;save();
-document.getElementById('loan_amt').value='';
-updLoanBar();toast('Loan repayment logged: ₦'+amt.toLocaleString('en-NG'));
-renderCoach();
 }
 
 // ── GUIDE TAB FN ─────────────────────────────────────────────────────────────
@@ -2848,14 +2878,54 @@ recognition.onerror=function(){document.getElementById('voiceBtn').textContent='
 recognition.onend=function(){document.getElementById('voiceBtn').textContent='🎙 Speak';recognition=null;};
 recognition.start();
 }
-function speak(text){
-if(!synth)return;synth.cancel();
-var utt=new SpeechSynthesisUtterance(text);utt.lang='en-GB';utt.rate=0.92;utt.pitch=1;
-// Try to find a good voice
-var voices=synth.getVoices();var voice=voices.find(function(v){return v.lang.startsWith('en')&&v.name.includes('Female');});
-if(!voice)voice=voices.find(function(v){return v.lang.startsWith('en');});
-if(voice)utt.voice=voice;synth.speak(utt);
+function cleanForSpeech(text){
+// Remove markdown, symbols, emojis, punctuation clutter — read words and money figures naturally
+return text
+.replace(/₦([\d,]+)/g,'Naira $1') // ₦ → "Naira"
+.replace(/[#*_~`>|\\]/g,' ') // markdown symbols
+.replace(/━+|═+|─+/g,' ') // line separators
+.replace(/:[a-z_]+:/g,'') // :emoji_codes:
+.replace(/[\u{1F000}-\u{1FFFF}]/gu,' ') // emojis (unicode range)
+.replace(/[\u2600-\u27BF]/g,' ') // misc symbols
+.replace(/[(){}\[\]<>]/g,' ')
+.replace(/\s*,\s*/g,' ') // commas → space
+.replace(/\s*\.\s*/g,'. ') // normalise full stops
+.replace(/\s*;\s*/g,' ') // semicolons
+.replace(/\s*:\s*/g,' ') // colons
+.replace(/[!?]{2,}/g,'!') // multiple !!! → single
+.replace(/\.{2,}/g,' ') // ellipsis
+.replace(/\s{2,}/g,' ') // multiple spaces
+.trim();
 }
+function speak(text){
+if(!synth||!voiceEnabled)return;
+synth.cancel();
+var clean=cleanForSpeech(text);
+if(!clean)return;
+var utt=new SpeechSynthesisUtterance(clean);
+utt.lang='en-GB';utt.rate=0.9;utt.pitch=0.85;
+var voices=synth.getVoices();
+var gender=localStorage.getItem('pbsrx_voice_gender')||'male';
+var voice=null;
+if(gender==='male'){
+voice=voices.find(function(v){return v.lang.startsWith('en')&&/male|man|david|george|james|daniel|aaron|rishi/i.test(v.name);});
+if(!voice)voice=voices.find(function(v){return v.lang.startsWith('en-GB');});
+if(!voice)voice=voices.find(function(v){return v.lang.startsWith('en')&&!v.name.includes('Female');});
+}else{
+voice=voices.find(function(v){return v.lang.startsWith('en')&&/female|woman|samantha|victoria|karen|moira|fiona|tessa/i.test(v.name);});
+if(!voice)voice=voices.find(function(v){return v.lang.startsWith('en');});
+}
+if(!voice)voice=voices.find(function(v){return v.lang.startsWith('en');});
+if(voice)utt.voice=voice;
+window._currentUtt=utt;
+synth.speak(utt);
+}
+function voicePauseResume(){
+if(!synth)return;
+if(synth.paused){synth.resume();return;}
+if(synth.speaking){synth.pause();return;}
+}
+function voiceStop(){if(synth)synth.cancel();}
 function clearChat(){coachHistory=[];document.getElementById('coachChat').innerHTML='';document.getElementById('coachQ').value='';}
 async function askCoach(){
 var q=document.getElementById('coachQ').value.trim();if(!q)return;
@@ -3618,6 +3688,142 @@ var a=document.createElement('a');a.href=URL.createObjectURL(blob);
 a.download='PBS_Inventory_QB_'+td()+'.csv';a.click();
 toast('Inventory exported for QuickBooks. '+S.products.length+' products.');
 }
+function parseCSV(text){
+var lines=text.split(/\r?\n/).filter(function(l){return l.trim();});
+if(!lines.length)return[];
+var hdr=lines[0].split(',').map(function(h){return h.replace(/"/g,'').trim().toLowerCase().replace(/[\s/()]+/g,'_');});
+return lines.slice(1).map(function(line){
+var cols=[];var cur='';var inQ=false;
+for(var i=0;i<line.length;i++){var c=line[i];if(c==='"'){inQ=!inQ;}else if(c===','&&!inQ){cols.push(cur.trim());cur='';}else cur+=c;}
+cols.push(cur.trim());
+var obj={};hdr.forEach(function(h,i){obj[h]=(cols[i]||'').replace(/^"|"$/g,'').trim();});
+return obj;
+});
+}
+function findCol(row,candidates){
+for(var i=0;i<candidates.length;i++){var k=candidates[i].toLowerCase().replace(/[\s/()]+/g,'_');if(row[k]!==undefined)return row[k]||'';}
+return '';
+}
+function downloadTemplate(type){
+var headers={
+products:'Generic Name,Brand Name,Strength/Size,Form,Category,Barcode/NAFDAC,Cost Price,Sell Price,Qty on Hand,Reorder Level,Supplier,Expiry Date (YYYY-MM)',
+suppliers:'Supplier Name,Contact Person,Phone,Email,Address,Notes',
+customers:'Full Name,Phone,Notes',
+sales:'Date (YYYY-MM-DD),Product Name,Qty Sold,Unit Price,Total,Customer Name,Payment Method'
+};
+var example={
+products:'Amoxicillin,Amoxil,500mg,Capsule,Antibiotics,A4-1234,850,1200,50,10,Emzor,2027-06',
+suppliers:'Emzor Pharmaceuticals,Sales Rep,08012345678,emzor@email.com,Lagos,Pay within 30 days',
+customers:'Mrs Adaeze Obi,08098765432,Hypertensive - regular customer',
+sales:'2024-01-15,Amoxicillin 500mg,2,1200,2400,Mrs Adaeze Obi,Cash'
+};
+var csv=headers[type]+'\n'+example[type]+'\n';
+var blob=new Blob([csv],{type:'text/csv'});
+var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='PBSRx_'+type+'_template.csv';
+document.body.appendChild(a);a.click();document.body.removeChild(a);
+toast('📥 Template downloaded — fill it in and import back');
+}
+function handleImport(input,type){
+var file=input.files[0];if(!file)return;
+var reader=new FileReader();
+reader.onload=function(e){
+try{
+var rows=parseCSV(e.target.result);
+if(!rows.length){showImportResult('No data found in file','error');return;}
+var count=0;
+if(type==='products'){
+rows.forEach(function(r){
+var name=findCol(r,['generic name','generic_name','item name','name','product']);
+if(!name)return;
+var existing=S.products.find(function(p){return p.genericName.toLowerCase()===name.toLowerCase()&&(findCol(r,['strength','strength/size','size'])?p.strength===findCol(r,['strength','strength/size','size']):true);});
+if(existing){
+existing.costPrice=Number(findCol(r,['cost price','cost_price','purchase price','unit cost']))||existing.costPrice;
+existing.sellPrice=Number(findCol(r,['sell price','sell_price','sales price','selling price']))||existing.sellPrice;
+}else{
+S.products.push({
+id:'p'+Date.now()+Math.random().toString(36).slice(2,5),
+genericName:name,
+brandName:findCol(r,['brand name','brand_name','brand','item description']),
+strength:findCol(r,['strength','strength/size','size','dosage']),
+form:findCol(r,['form','dosage form','unit of measure'])||'Tablet',
+category:findCol(r,['category','type'])||'General',
+barcode:findCol(r,['barcode','barcode/nafdac','sku','nafdac']),
+nafdac:findCol(r,['nafdac','nafdac number']),
+costPrice:Number(findCol(r,['cost price','cost_price','purchase price','unit cost']))||0,
+sellPrice:Number(findCol(r,['sell price','sell_price','sales price','selling price']))||0,
+reorderLevel:Number(findCol(r,['reorder level','reorder_level','reorder point']))||5,
+supplier:findCol(r,['supplier','vendor']),
+});
+var qty=Number(findCol(r,['qty on hand','qty','quantity','stock']));
+if(qty>0){var pid=S.products[S.products.length-1].id;S.stock.push({id:'sk'+Date.now(),productId:pid,qty:qty,expiry:findCol(r,['expiry date','expiry','expiry_date'])||'',date:td()});}
+count++;
+}
+});
+}else if(type==='suppliers'){
+rows.forEach(function(r){
+var name=findCol(r,['supplier name','name','company']);
+if(!name)return;
+if(S.suppliers.find(function(s){return s.name.toLowerCase()===name.toLowerCase();}))return;
+S.suppliers.push({id:'sup'+Date.now()+Math.random().toString(36).slice(2,4),name:name,contact:findCol(r,['contact person','contact']),phone:findCol(r,['phone','telephone','mobile']),email:findCol(r,['email']),address:findCol(r,['address']),notes:findCol(r,['notes'])});
+count++;
+});
+}else if(type==='customers'){
+rows.forEach(function(r){
+var name=findCol(r,['full name','name','customer']);
+if(!name)return;
+if(!S.customers)S.customers=[];
+if(S.customers.find(function(c){return c.name.toLowerCase()===name.toLowerCase();}))return;
+S.customers.push({id:'c'+Date.now()+Math.random().toString(36).slice(2,4),name:name,phone:findCol(r,['phone','telephone','mobile']),notes:findCol(r,['notes']),created:td(),purchases:[]});
+count++;
+});
+}else if(type==='sales'){
+if(!S.sales)S.sales=[];
+rows.forEach(function(r){
+var prod=findCol(r,['product name','product','item']);
+if(!prod)return;
+S.sales.push({id:'s'+Date.now()+Math.random().toString(36).slice(2,5),date:findCol(r,['date','date_(yyyy-mm-dd)'])||td(),product:prod,qty:Number(findCol(r,['qty sold','qty','quantity']))||1,price:Number(findCol(r,['unit price','price']))||0,total:Number(findCol(r,['total','amount']))||0,customer:findCol(r,['customer name','customer']),payment:findCol(r,['payment method','payment'])||'Cash'});
+count++;
+});
+}
+save();input.value='';
+showImportResult('✅ Imported '+count+' '+type+' successfully!','success');
+}catch(err){showImportResult('❌ Error: '+err.message,'error');}
+};
+reader.readAsText(file);
+}
+function showImportResult(msg,type){
+var el=document.getElementById('importResult');if(!el)return;
+el.style.display='block';
+el.style.background=type==='success'?'rgba(34,197,94,0.15)':'rgba(239,68,68,0.15)';
+el.style.border='1px solid '+(type==='success'?'var(--grn)':'var(--red)');
+el.style.color=type==='success'?'var(--grn)':'var(--red)';
+el.textContent=msg;
+setTimeout(function(){el.style.display='none';},5000);
+}
+function exportData(type){
+var rows=[];var filename='PBSRx_'+type+'_'+td()+'.csv';
+if(type==='products'){
+rows.push('Generic Name,Brand Name,Strength,Form,Category,Barcode,NAFDAC,Cost Price,Sell Price,Current Stock,Reorder Level,Supplier');
+S.products.forEach(function(p){rows.push([p.genericName,p.brandName||'',p.strength||'',p.form||'',p.category||'',p.barcode||'',p.nafdac||'',p.costPrice||0,p.sellPrice||0,getCurStock(p.id),p.reorderLevel||0,p.supplier||''].map(function(v){return '"'+String(v).replace(/"/g,"'")+'"';}).join(','));});
+}else if(type==='suppliers'){
+rows.push('Supplier Name,Contact,Phone,Email,Address,Notes');
+(S.suppliers||[]).forEach(function(s){rows.push([s.name,s.contact||'',s.phone||'',s.email||'',s.address||'',s.notes||''].map(function(v){return '"'+String(v).replace(/"/g,"'")+'"';}).join(','));});
+}else if(type==='customers'){
+rows.push('Full Name,Phone,Notes,Total Purchases');
+(S.customers||[]).forEach(function(c){var total=(c.purchases||[]).reduce(function(a,p){return a+(p.total||0);},0);rows.push([c.name,c.phone||'',c.notes||'',total].map(function(v){return '"'+String(v).replace(/"/g,"'")+'"';}).join(','));});
+}else if(type==='sales'){
+rows.push('Date,Product,Qty,Unit Price,Total,Customer,Payment');
+(S.sales||[]).forEach(function(s){rows.push([s.date||'',s.product||'',s.qty||0,s.price||0,s.total||0,s.customer||'',s.payment||''].map(function(v){return '"'+String(v).replace(/"/g,"'")+'"';}).join(','));});
+}
+if(rows.length<=1){toast('No data to export yet');return;}
+var blob=new Blob([rows.join('\n')],{type:'text/csv'});
+var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;
+document.body.appendChild(a);a.click();document.body.removeChild(a);
+toast('📤 Exported '+filename);
+}
+function importQB(input){handleImport(input,'products');}
+function exportQB(){exportData('products');}
+
 function importQB(input){
 var file=input.files[0];if(!file)return;
 var reader=new FileReader();
@@ -4091,48 +4297,6 @@ var st=document.getElementById('voiceStatusTxt');
 if(st)st.textContent=voiceEnabled?'Voice is ON':'Voice is OFF';
 }
 
-function setNavPos(pos){
-localStorage.setItem('pbsrx_nav_pos',pos);
-applyNavPos(pos);
-var topBtn=document.getElementById('navTopBtn');
-var botBtn=document.getElementById('navBotBtn');
-var txt=document.getElementById('navPosTxt');
-if(topBtn){topBtn.style.background=pos==='top'?'var(--blu)':'var(--surf)';topBtn.style.color=pos==='top'?'#fff':'var(--txt)';topBtn.style.border=pos==='top'?'none':'1px solid var(--bdr)';}
-if(botBtn){botBtn.style.background=pos==='bottom'?'var(--blu)':'var(--surf)';botBtn.style.color=pos==='bottom'?'#fff':'var(--txt)';botBtn.style.border=pos==='bottom'?'none':'1px solid var(--bdr)';}
-if(txt)txt.textContent='Navigation is at the '+(pos==='top'?'top':'bottom')+'.';
-toast('Navigation moved to '+(pos==='top'?'top':'bottom'),1500);
-}
-
-function applyNavPos(pos){
-var nav=document.querySelector('nav.nav');
-if(!nav)return;
-var hdr=document.querySelector('.hdr');if(hdr)hdr.style.order='0';
-var pgs=document.querySelector('.pages');if(pgs)pgs.style.order='2';
-if(pos==='top'){
-nav.style.order='1';
-nav.style.borderTop='none';
-nav.style.borderBottom='1px solid var(--bdr)';
-nav.style.boxShadow='0 2px 10px rgba(0,0,0,0.06)';
-} else {
-nav.style.order='99';
-nav.style.borderTop='1px solid var(--bdr)';
-nav.style.borderBottom='none';
-nav.style.boxShadow='0 -2px 10px rgba(0,0,0,0.06)';
-}
-}
-function initNavPos(){
-// Always default to bottom — sidebar/top was old layout, force bottom
-var pos=localStorage.getItem('pbsrx_nav_pos')||'bottom';
-if(pos==='left'||pos==='sidebar')pos='bottom'; // clear legacy values
-applyNavPos(pos);
-var topBtn=document.getElementById('navTopBtn');
-var botBtn=document.getElementById('navBotBtn');
-var txt=document.getElementById('navPosTxt');
-if(topBtn){topBtn.style.background=pos==='top'?'var(--blu)':'var(--surf)';topBtn.style.color=pos==='top'?'#fff':'var(--txt)';}
-if(botBtn){botBtn.style.background=pos==='bottom'?'var(--blu)':'var(--surf)';botBtn.style.color=pos==='bottom'?'#fff':'var(--txt)';}
-if(txt)txt.textContent='Navigation is at the '+(pos==='top'?'top':'bottom')+'.';
-}
-
 function initVoiceToggle(){
 try{
 var btn=document.getElementById('voiceToggleBtn');
@@ -4349,7 +4513,6 @@ if(sv)sv.textContent='\u20A6'+sales.toLocaleString('en-NG');
 if(gv){gv.textContent=(gap>=0?'+':'')+' \u20A6'+Math.abs(gap).toLocaleString('en-NG');gv.style.color=gap>=0?'var(--grn)':'var(--red)';}
 if(st){st.textContent=gap>=0?'\u2705 On track — \u20A6'+gap.toLocaleString('en-NG')+' above break-even':'\u274C \u20A6'+Math.abs(gap).toLocaleString('en-NG')+' below break-even';st.style.color=gap>=0?'var(--grn)':'var(--red)';}
 }
-
 
 // ══ RECEIVE STOCK MODAL ════════════════════════════════════════
 var rsItemCount=0;
@@ -4934,9 +5097,18 @@ return stream;
 // ══ OVERRIDE INIT ──
 var _origLoad=load;load=function(){
 _origLoad();
-initCoach();renderSalesChart(30);initApiKeyDisplay();renderStockBalance();initVoiceToggle();renderDashBE();renderDashLoans();renderLoans();
-initSettings();
 if(!S.customers)S.customers=[];
+try{initCoach();}catch(e){}
+try{renderSalesChart(30);}catch(e){}
+try{initApiKeyDisplay();}catch(e){}
+try{renderStockBalance();}catch(e){}
+try{initVoiceToggle();}catch(e){}
+try{renderDashBE();}catch(e){}
+try{renderDashLoans();}catch(e){}
+try{renderLoans();}catch(e){}
+try{initSettings();}catch(e){}
+try{initBERows();}catch(e){}
+try{renderStockHistory('all');}catch(e){}
 };
 </script>
 <!-- RECEIPT MODAL -->

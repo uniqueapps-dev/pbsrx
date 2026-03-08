@@ -60,7 +60,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg)
 .pages{flex:1;overflow:hidden;position:relative;}
 .pg{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 84px;display:none;}.pg.on{display:block;}
 #appWrap{min-height:100vh;}
-.nav{height:62px;background:var(--card);border-top:1px solid var(--bdr);display:flex;align-items:stretch;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.06);order:99;position:relative;z-index:100;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;}
+.nav{height:62px;background:var(--card);border-top:1px solid var(--bdr);display:flex;align-items:stretch;flex-shrink:0;box-shadow:0 -2px 10px rgba(0,0,0,0.06);position:fixed;bottom:0;left:0;right:0;z-index:200;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;}
 .nav::-webkit-scrollbar{display:none;}
 .nb{flex:0 0 auto;min-width:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;cursor:pointer;font-family:var(--fb);position:relative;color:var(--txt);padding:0 4px;}
 .nb.on{background:linear-gradient(180deg,rgba(26,95,168,0.07),transparent);}
@@ -3086,18 +3086,21 @@ return {type:'image_url',image_url:{url:'data:'+mt+';base64,'+b64}};
 });
 contents.push({type:'text',text:'IMPORTANT: Only read text you can literally see in these images. These '+camShots.length+' photos show different angles of the same Nigerian pharmaceutical drug pack. Return ONLY a JSON object: {"genericName":"","brandName":"","strength":"","form":"","category":"","batchNumber":"","expiryDate":"","nafdacNumber":"","manufacturer":"","packSize":""}. No markdown, no explanation, raw JSON only.'});
 camShots=[];
+var ctrl=new AbortController();var tid=setTimeout(function(){ctrl.abort();},30000);
+msg.textContent='AI reading '+camShots.length+' photo(s)... (up to 30s)';
 fetch('https://openrouter.ai/api/v1/chat/completions',{
-method:'POST',headers:getApiHeaders(),
+method:'POST',headers:getApiHeaders(),signal:ctrl.signal,
 body:JSON.stringify({model:'openai/gpt-4o',max_tokens:800,messages:[{role:'user',content:contents}]})
-}).then(function(r){return r.json();}).then(function(data){
+}).then(function(r){clearTimeout(tid);return r.json();}).then(function(data){
 var txt=data.choices&&data.choices[0]?data.choices[0].message.content:'{}';
-txt=txt.replace(/\`\`\`json|\`\`\`/g,'').trim();
-aiExtracted=JSON.parse(txt);
+txt=txt.replace(/```json|```/g,'').trim();
+try{aiExtracted=JSON.parse(txt);}catch(pe){aiExtracted={genericName:'',brandName:'',strength:'',form:'',category:'',batchNumber:'',expiryDate:'',nafdacNumber:'',manufacturer:'',packSize:''};}
 status.style.display='none';
 renderAIExtracted();
 }).catch(function(e){
+clearTimeout(tid);
 icon.textContent='❌';
-msg.textContent='Could not read pack. Try Upload Photos option.';
+msg.textContent=e.name==='AbortError'?'Timed out (30s). Check connection and try again.':'Could not read pack. Try Upload Photos option.';
 setTimeout(function(){status.style.display='none';document.getElementById('aiSnapUpload').style.display='block';},4000);
 });
 }
@@ -3127,8 +3130,9 @@ var mediaType=dataUrl.indexOf('image/png')>0?'image/png':'image/jpeg';
 var prompt='You are reading a Nigerian pharmaceutical drug pack. Extract ALL visible product information and return ONLY a JSON object with these exact keys (use empty string if not visible): genericName, brandName, strength, form (tablet/capsule/syrup/injection/cream/etc), category (Analgesic/Antibiotic/Antimalarial/Antifungal/Cardiovascular/Gastrointestinal/Vitamin/Supplement/Antihistamine/Other), batchNumber, expiryDate (format YYYY-MM), nafdacNumber, manufacturer, packSize (e.g. 10 tablets, 1 bottle 100ml). Return ONLY the JSON object, no other text.';
 
 try{
+var ctrl2=new AbortController();var tid2=setTimeout(function(){ctrl2.abort();},30000);
 var resp=await fetch('https://openrouter.ai/api/v1/chat/completions',{
-method:'POST',headers:getApiHeaders(),
+method:'POST',headers:getApiHeaders(),signal:ctrl2.signal,
 body:JSON.stringify({
 model:'openai/gpt-4o',max_tokens:800,
 messages:[{role:'user',content:[
@@ -3137,13 +3141,15 @@ messages:[{role:'user',content:[
 ]}]
 })
 });
+clearTimeout(tid2);
 var data=await resp.json();
 var txt=data.choices&&data.choices[0]?data.choices[0].message.content:'{}';
 txt=txt.replace(/```json|```/g,'').trim();
-aiExtracted=JSON.parse(txt);
+try{aiExtracted=JSON.parse(txt);}catch(pe){aiExtracted={genericName:'',brandName:'',strength:'',form:'',category:'',batchNumber:'',expiryDate:'',nafdacNumber:'',manufacturer:'',packSize:''};}
 status.style.display='none';
 renderAIExtracted();
 }catch(e){
+if(e.name==='AbortError'){icon.textContent='❌';msg.textContent='Timed out (30s). Check your connection.';setTimeout(function(){status.style.display='none';document.getElementById('aiSnapUpload').style.display='block';},4000);return;}
 icon.textContent='\u274C';
 if(!getApiKey()){msg.textContent='No API key. Go to Guide \u2192 Settings \u2192 API Key Setup.';}
 else{msg.textContent='Could not read pack. Try the Upload Photos option instead (more reliable than camera).';}
